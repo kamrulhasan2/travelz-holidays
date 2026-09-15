@@ -1762,3 +1762,178 @@ body.tz-locked {
 #tz-app .tz-hotel__name {
 	overflow-wrap: anywhere;
 }
+
+/* ---------- Package detail screen ---------- */
+
+#tz-app .tz-hero__badge {
+	margin-bottom: 12px;
+}
+
+#tz-app .tz-detail__main {
+	min-width: 0;
+}
+
+#tz-app .tz-tabbar {
+	margin-inline: -16px;
+	padding-inline: 16px;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-tabbar {
+		margin-inline: 0;
+		padding-inline: 0;
+	}
+}
+
+#tz-app .tz-panel--pair {
+	display: grid;
+	gap: 24px;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-panel--pair {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		align-items: start;
+	}
+}
+
+#tz-app .tz-heading--yes {
+	color: var(--tz-success);
+}
+
+#tz-app .tz-heading--no {
+	color: var(--tz-urgency);
+}
+
+#tz-app .tz-panel .tz-heading + .tz-ticks,
+#tz-app .tz-panel .tz-heading + .tz-bullets,
+#tz-app .tz-panel .tz-heading + .tz-prose,
+#tz-app .tz-panel .tz-heading + .tz-acc {
+	margin-top: 16px;
+}
+
+#tz-app .tz-acc__title {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+#tz-app .tz-acc__aside {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex: none;
+}
+
+#tz-app .tz-highlights {
+	position: static;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-highlights {
+		position: sticky;
+		top: 96px;
+	}
+}
+
+#tz-app .tz-price-note,
+#tz-app .tz-variants__note {
+	margin-top: 8px;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-bigprice {
+	margin-top: 6px;
+}
+
+/* A tier the tour does not offer is a statement, not a control. */
+
+#tz-app .tz-tier.is-unavailable {
+	background: var(--tz-muted);
+	color: var(--tz-muted-fg);
+	opacity: .6;
+}
+
+#tz-app .tz-tier.is-unavailable .tz-tier__name .tz-icon {
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-visa__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+#tz-app .tz-visa__note {
+	margin-top: 12px;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-visa__doc {
+	margin-top: 16px;
+	overflow: hidden;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius);
+	background: var(--tz-surface);
+}
+
+#tz-app .tz-visa__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 16px;
+}
+
+#tz-app .tz-booking__air,
+#tz-app .tz-stickybar__air {
+	margin-bottom: 4px;
+}
+
+#tz-app .tz-booking__book {
+	flex: 1;
+}
+
+#tz-app .tz-booking__pdf {
+	height: 44px;
+	margin-top: 12px;
+	font-size: 0.8125rem;
+}
+
+#tz-app .tz-stickybar__price {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#tz-app .tz-stickybar__price b {
+	font-size: 1.25rem;
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-stickybar__book {
+	flex: 1;
+	max-width: 14rem;
+}
+
+/*
+ * Without a banner the hero would be a tall grey slab. Give it the brand
+ * gradient and less height, so a package published before its photography is
+ * ready still looks deliberate.
+ */
+
+#tz-app .tz-hero--empty {
+	height: 240px;
+	background-image: linear-gradient(150deg, #2ca89e, #14505a 65%, #0f172a);
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-hero--empty {
+		height: 300px;
+	}
+}
+
+#tz-app .tz-hero--empty .tz-hero__shade {
+	background-image: linear-gradient(to top, rgba(0, 0, 0, .45), transparent 70%);
+}

@@ -211,7 +211,7 @@ class TZH_Admin_Menu {
 			'tzh-admin',
 			TZH_URL . 'assets/css/admin.css',
 			array(),
-			TZH_VERSION
+			TZH_Assets::version( 'assets/css/admin.css' )
 		);
 	}
 

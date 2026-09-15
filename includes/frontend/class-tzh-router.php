@@ -103,6 +103,12 @@ class TZH_Router {
 			return 'archive-packages';
 		}
 
+		// The book and PDF screens hang off the same URL as the package; they
+		// arrive in later phases and take over from here.
+		if ( is_singular( TZH_Package::POST_TYPE ) && '' === TZH_Rewrites::current_action() ) {
+			return 'single-package';
+		}
+
 		return '';
 	}
 }

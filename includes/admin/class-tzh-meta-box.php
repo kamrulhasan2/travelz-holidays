@@ -397,7 +397,7 @@ class TZH_Meta_Box {
 			'tzh-media-picker',
 			TZH_URL . 'assets/js/media-picker.js',
 			array(),
-			TZH_VERSION,
+			TZH_Assets::version( 'assets/js/media-picker.js' ),
 			true
 		);
 
@@ -405,7 +405,7 @@ class TZH_Meta_Box {
 			'tzh-package-editor',
 			TZH_URL . 'assets/js/package-editor.js',
 			array( 'tzh-media-picker' ),
-			TZH_VERSION,
+			TZH_Assets::version( 'assets/js/package-editor.js' ),
 			true
 		);
 

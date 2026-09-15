@@ -209,7 +209,7 @@ class TZH_Term_Fields {
 			'tzh-media-picker',
 			TZH_URL . 'assets/js/media-picker.js',
 			array(),
-			TZH_VERSION,
+			TZH_Assets::version( 'assets/js/media-picker.js' ),
 			true
 		);
 

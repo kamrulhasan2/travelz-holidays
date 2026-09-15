@@ -388,6 +388,145 @@ class TZH_Package {
 		return (string) $this->post->post_excerpt;
 	}
 
+
+	/**
+	 * The other comfort levels of this same tour, keyed by category slug.
+	 *
+	 * Packages are tied together by their tour group, so a Deluxe version can
+	 * be offered from the Standard page without either knowing about the other.
+	 *
+	 * @return array<string, TZH_Package>
+	 */
+	public function variants(): array {
+		$family = $this->family();
+
+		if ( ! $family instanceof WP_Term ) {
+			$tier = $this->tier();
+
+			return $tier ? array( $tier->slug => $this ) : array();
+		}
+
+		$ids = get_posts(
+			array(
+				'post_type'        => self::POST_TYPE,
+				'post_status'      => 'publish',
+				'numberposts'      => 20,
+				'fields'           => 'ids',
+				'suppress_filters' => false,
+				'tax_query'        => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					array(
+						'taxonomy' => self::TAX_FAMILY,
+						'field'    => 'term_id',
+						'terms'    => $family->term_id,
+					),
+				),
+			)
+		);
+
+		$variants = array();
+
+		foreach ( $ids as $id ) {
+			$package = self::from( $id );
+			$tier    = $package ? $package->tier() : null;
+
+			if ( $package && $tier instanceof WP_Term ) {
+				$variants[ $tier->slug ] = $package;
+			}
+		}
+
+		return $variants;
+	}
+
+	/**
+	 * Hero banner URL at a size worth showing full width.
+	 */
+	public function hero_url(): string {
+		return tzh_image_url( $this->hero_id(), 'full' );
+	}
+
+	/**
+	 * Headline shown on the detail page: destination, then the tour name.
+	 */
+	public function full_title(): string {
+		$destination = $this->destination();
+		$title       = get_the_title( $this->id() );
+
+		if ( ! $destination ) {
+			return $title;
+		}
+
+		return sprintf(
+			/* translators: 1: destination name, 2: tour name */
+			__( '%1$s (%2$s)', 'travelz-holidays' ),
+			$destination->name,
+			$title
+		);
+	}
+
+	/**
+	 * Quick facts shown as chips under the hero.
+	 *
+	 * @return array<int, array{icon: string, label: string}>
+	 */
+	public function quick_facts(): array {
+		$facts = array();
+
+		if ( $this->days() ) {
+			$facts[] = array(
+				'icon'  => 'clock',
+				/* translators: %s: duration, e.g. 05 Days 04 Nights */
+				'label' => sprintf( __( 'Duration: %s', 'travelz-holidays' ), $this->duration_label() ),
+			);
+		}
+
+		$facts[] = array(
+			'icon'  => 'users',
+			/* translators: %s: smallest number of travellers */
+			'label' => sprintf( __( 'Minimum Person: %s', 'travelz-holidays' ), number_format_i18n( $this->min_pax() ) ),
+		);
+
+		$facts[] = array(
+			'icon'  => 'shield-check',
+			/* translators: %s: tour type, e.g. Private */
+			'label' => sprintf( __( 'Tour Type: %s', 'travelz-holidays' ), $this->tour_type_label() ),
+		);
+
+		if ( '' !== $this->code() ) {
+			$facts[] = array(
+				'icon'  => 'sparkles',
+				/* translators: %s: package code, e.g. TZ 001 */
+				'label' => sprintf( __( 'Package Code: %s', 'travelz-holidays' ), $this->code() ),
+			);
+		}
+
+		$tier = $this->tier();
+
+		if ( $tier instanceof WP_Term ) {
+			$facts[] = array(
+				'icon'  => 'award',
+				/* translators: %s: category name, e.g. Standard */
+				'label' => sprintf( __( 'Category: %s', 'travelz-holidays' ), $tier->name ),
+			);
+		}
+
+		return $facts;
+	}
+
+	/**
+	 * URL of a sub-screen of this package.
+	 *
+	 * @param string $action Either book or pdf.
+	 */
+	public function action_url( string $action ): string {
+		$base = untrailingslashit( (string) get_permalink( $this->id() ) );
+
+		if ( 'pdf' === $action ) {
+			return $base . '/details.pdf';
+		}
+
+		return user_trailingslashit( $base . '/book' );
+	}
+
 	/**
 	 * First destination term, or null when none is assigned.
 	 */

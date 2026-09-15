@@ -58,6 +58,31 @@ class TZH_Assets {
 		return self::$needed;
 	}
 
+
+	/**
+	 * Cache-busting version for a bundled asset.
+	 *
+	 * In production this is the plugin version, which changes once per release
+	 * and keeps the file cacheable. On a local or development site the file's
+	 * own timestamp is appended, so an edit shows up on the next reload instead
+	 * of hiding behind a stale stylesheet.
+	 *
+	 * @param string $relative Path under the plugin folder.
+	 */
+	public static function version( string $relative ): string {
+		$environment = function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production';
+
+		if ( ! in_array( $environment, array( 'local', 'development' ), true ) && ! ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+			return TZH_VERSION;
+		}
+
+		$file = TZH_DIR . ltrim( $relative, '/' );
+
+		return is_readable( $file )
+			? TZH_VERSION . '.' . (string) filemtime( $file )
+			: TZH_VERSION;
+	}
+
 	/**
 	 * Register everything without enqueueing it.
 	 */
@@ -73,14 +98,14 @@ class TZH_Assets {
 			'tzh-front',
 			TZH_URL . 'assets/css/travelz.css',
 			array( 'tzh-fonts' ),
-			TZH_VERSION
+			self::version( 'assets/css/travelz.css' )
 		);
 
 		wp_register_script(
 			'tzh-front',
 			TZH_URL . 'assets/js/travelz.js',
 			array(),
-			TZH_VERSION,
+			self::version( 'assets/js/travelz.js' ),
 			true
 		);
 
