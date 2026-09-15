@@ -293,11 +293,28 @@ class TZH_Query {
 		}
 
 		if ( 'all' !== $filters['type'] ) {
-			$clauses[] = array(
+			$match = array(
 				'key'     => TZH_Package::META_TOUR_TYPE,
 				'value'   => $filters['type'],
 				'compare' => '=',
 			);
+
+			/*
+			 * A package with no tour type saved — imported, or created through
+			 * the REST API — reads as Private everywhere else in the plugin, so
+			 * the filter has to agree or those packages vanish from a list that
+			 * still calls them Private Tour.
+			 */
+			$clauses[] = 'private' === $filters['type']
+				? array(
+					'relation' => 'OR',
+					$match,
+					array(
+						'key'     => TZH_Package::META_TOUR_TYPE,
+						'compare' => 'NOT EXISTS',
+					),
+				)
+				: $match;
 		}
 
 		if ( $filters['days'] ) {

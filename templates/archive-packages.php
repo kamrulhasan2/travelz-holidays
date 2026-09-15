@@ -64,6 +64,7 @@ $tzh_blurb   = TZH_Term_Meta::blurb( $tzh_term->term_id );
 					array(
 						'filters' => $tzh_filters,
 						'action'  => $tzh_action,
+						'current' => $tzh_term->slug,
 					)
 				);
 				?>
