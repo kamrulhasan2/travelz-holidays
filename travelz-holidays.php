@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name:       TravelZ Holidays
- * Plugin URI:        https://tech.travelzbd.com/
+ * Plugin URI:        https://github.com/kamrulhasan2/travelz-holidays
  * Description:       Holiday package management for TravelZ — destinations, tour packages, itineraries, pricing tiers and bookings.
  * Version:           0.1.0
  * Requires at least: 6.4
  * Requires PHP:      8.0
- * Author:            E-GUIDER
- * Author URI:        https://tech.travelzbd.com/
+ * Author:            Kamrul Hasan
+ * Author URI:        https://github.com/kamrulhasan2/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       travelz-holidays

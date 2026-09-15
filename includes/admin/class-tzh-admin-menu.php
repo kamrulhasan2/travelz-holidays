@@ -30,6 +30,7 @@ class TZH_Admin_Menu {
 		add_action( 'admin_menu', array( $this, 'arrange_submenu' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_filter( 'plugin_action_links_' . TZH_BASENAME, array( $this, 'action_links' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'row_meta' ), 10, 3 );
 		add_filter( 'parent_file', array( $this, 'keep_menu_open' ) );
 		add_filter( 'submenu_file', array( $this, 'highlight_submenu' ) );
 	}
@@ -274,6 +275,58 @@ class TZH_Admin_Menu {
 		);
 
 		return $links;
+	}
+
+	/**
+	 * Say who developed the plugin, rather than WordPress's bare "By".
+	 *
+	 * The row is rebuilt rather than string-replaced: "By %s" is a translated
+	 * core string, so looking for the English word would quietly do nothing on
+	 * a site running in another language.
+	 *
+	 * @param string[]             $meta   Row meta links.
+	 * @param string               $file   Plugin file the row belongs to.
+	 * @param array<string, mixed> $data   Plugin header data.
+	 *
+	 * @return string[]
+	 */
+	public function row_meta( array $meta, string $file, array $data = array() ): array {
+		if ( TZH_BASENAME !== $file ) {
+			return $meta;
+		}
+
+		$author = (string) ( $data['Author'] ?? '' );
+
+		if ( '' === $author ) {
+			return $meta;
+		}
+
+		if ( ! empty( $data['AuthorURI'] ) ) {
+			$author = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( (string) $data['AuthorURI'] ),
+				esc_html( wp_strip_all_tags( $author ) )
+			);
+		}
+
+		// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Deliberately the core string, to find the row core built.
+		$core = sprintf( __( 'By %s' ), $author );
+
+		foreach ( $meta as $index => $entry ) {
+			if ( $entry !== $core ) {
+				continue;
+			}
+
+			$meta[ $index ] = sprintf(
+				/* translators: %s: plugin author, linked */
+				__( 'Developed by %s', 'travelz-holidays' ),
+				$author
+			);
+
+			break;
+		}
+
+		return $meta;
 	}
 
 	/**

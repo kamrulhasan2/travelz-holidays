@@ -1,10 +1,10 @@
-# Copyright (C) 2026 E-GUIDER
+# Copyright (C) 2026 Kamrul Hasan
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
 "Project-Id-Version: TravelZ Holidays 0.1.0\n"
-"POT-Creation-Date: 2026-09-15 13:16+0000\n"
-"Report-Msgid-Bugs-To: https://tech.travelzbd.com/\n"
+"POT-Creation-Date: 2026-09-15 19:18+0000\n"
+"Report-Msgid-Bugs-To: https://github.com/kamrulhasan2/travelz-holidays/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -13,94 +13,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: travelz-holidays\n"
 
-#: includes/admin/class-tzh-admin-menu.php:64
-#: includes/admin/class-tzh-admin-menu.php:65
+#: includes/admin/class-tzh-admin-menu.php:66
+#: includes/admin/class-tzh-admin-menu.php:67
 #: includes/frontend/class-tzh-seo.php:251
-#: includes/frontend/class-tzh-seo.php:269 templates/archive-packages.php:39
-#: templates/booking-package.php:43 templates/single-package.php:84
+#: includes/frontend/class-tzh-seo.php:269 templates/archive-packages.php:27
+#: templates/archive-packages.php:41 templates/booking-package.php:43
+#: templates/single-package.php:84
 msgid "Holiday Packages"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:75
-#: includes/admin/views/dashboard.php:14
+#: includes/admin/class-tzh-admin-menu.php:77
+#: includes/admin/views/dashboard.php:19
 msgid "TravelZ Holidays"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:76
+#: includes/admin/class-tzh-admin-menu.php:78
 msgid "Dashboard"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:86
-#: includes/admin/class-tzh-admin-menu.php:87
+#: includes/admin/class-tzh-admin-menu.php:88
+#: includes/admin/class-tzh-admin-menu.php:89
 #: includes/admin/views/bookings.php:17
 msgid "Bookings"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:96
+#: includes/admin/class-tzh-admin-menu.php:98
+#: includes/admin/class-tzh-admin-menu.php:99 includes/admin/views/setup.php:17
+msgid "Setup Guide"
+msgstr ""
+
+#: includes/admin/class-tzh-admin-menu.php:108
 msgid "TravelZ Holidays Settings"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:97
-#: includes/admin/class-tzh-admin-menu.php:242
+#: includes/admin/class-tzh-admin-menu.php:109
+#: includes/admin/class-tzh-admin-menu.php:273
 #: includes/admin/views/settings.php:33
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:324
-msgid "Published packages"
+#: includes/admin/class-tzh-admin-menu.php:253
+msgid "Copied"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:329
-msgid "Drafts"
+#: includes/admin/class-tzh-admin-menu.php:254
+#: includes/admin/views/setup.php:77
+msgid "Copy"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:334
-#: includes/class-tzh-taxonomies.php:46
-msgid "Destinations"
+#: includes/admin/class-tzh-admin-menu.php:313
+#, php-format
+msgid "By %s"
 msgstr ""
 
-#: includes/admin/class-tzh-admin-menu.php:344
-msgid "Tour groups"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:368
-msgid "Plugin version"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:373
-msgid "WordPress"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:378
-msgid "PHP"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:383
-msgid "Pretty permalinks"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:385
-msgid "Enabled"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:386
-msgid "Plain — package URLs need this"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:390
-msgid "WooCommerce"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:392
-msgid "Active"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:393
-msgid "Not active — needed from phase 13"
-msgstr ""
-
-#: includes/admin/class-tzh-admin-menu.php:397
-msgid "Active theme"
+#. translators: %s: plugin author, linked
+#: includes/admin/class-tzh-admin-menu.php:322
+#, php-format
+msgid "Developed by %s"
 msgstr ""
 
 #. translators: %s: link to the Permalinks settings screen
@@ -115,16 +84,124 @@ msgstr ""
 msgid "Settings → Permalinks"
 msgstr ""
 
+#: includes/admin/class-tzh-dashboard.php:74
+msgid "Published packages"
+msgstr ""
+
+#. translators: %s: number of drafts
+#: includes/admin/class-tzh-dashboard.php:79
+#, php-format
+msgid "%s draft waiting"
+msgid_plural "%s drafts waiting"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-tzh-dashboard.php:84
+#: includes/class-tzh-taxonomies.php:46
+msgid "Destinations"
+msgstr ""
+
+#. translators: %s: number of tour groups
+#: includes/admin/class-tzh-dashboard.php:96
+#, php-format
+msgid "%s tour group"
+msgid_plural "%s tour groups"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-tzh-dashboard.php:107
+msgid "Bookings (30 days)"
+msgstr ""
+
+#. translators: %s: number of travellers
+#: includes/admin/class-tzh-dashboard.php:112
+#: includes/admin/views/bookings.php:87 includes/admin/views/dashboard.php:81
+#, php-format
+msgid "%s traveler"
+msgid_plural "%s travelers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-tzh-dashboard.php:118
+msgid "Booked value (30 days)"
+msgstr ""
+
+#. translators: %s: number of departures
+#: includes/admin/class-tzh-dashboard.php:123
+#, php-format
+msgid "%s departure ahead"
+msgid_plural "%s departures ahead"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-tzh-dashboard.php:141
+msgid ""
+"Plain permalinks are switched on. Package and destination URLs will not work "
+"until pretty permalinks are enabled."
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:143
+#: includes/admin/class-tzh-setup-page.php:68
+msgid "Open Permalinks"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:149
+msgid ""
+"No WhatsApp number is set, so the enquiry button is hidden on every package."
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:151
+msgid "Add a number"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:157
+msgid ""
+"Bookings are set to go through WooCommerce checkout, but WooCommerce is not "
+"active. Travelers are being given a reference to follow up instead."
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:159
+msgid "Open Plugins"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:309
+msgid "no price"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:313
+msgid "no destination"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:317
+msgid "no category"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:321
+msgid "no package code"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:325
+msgid "no duration"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:329
+msgid "no itinerary"
+msgstr ""
+
+#: includes/admin/class-tzh-dashboard.php:333
+msgid "no banner image"
+msgstr ""
+
 #: includes/admin/class-tzh-field-renderer.php:301
-#: includes/admin/class-tzh-meta-box.php:416
+#: includes/admin/class-tzh-meta-box.php:516
 #: includes/admin/class-tzh-term-fields.php:220
 #: includes/admin/class-tzh-term-fields.php:279
 msgid "Choose image"
 msgstr ""
 
 #: includes/admin/class-tzh-field-renderer.php:303
-#: includes/admin/class-tzh-field-renderer.php:501
-#: includes/admin/class-tzh-field-renderer.php:502
+#: includes/admin/class-tzh-field-renderer.php:506
+#: includes/admin/class-tzh-field-renderer.php:507
 #: includes/admin/class-tzh-term-fields.php:281
 msgid "Remove"
 msgstr ""
@@ -164,18 +241,28 @@ msgstr ""
 msgid "Add row"
 msgstr ""
 
-#: includes/admin/class-tzh-field-renderer.php:494
-msgid "Collapse"
+#: includes/admin/class-tzh-field-renderer.php:496
+msgid "Drag to reorder"
 msgstr ""
 
 #: includes/admin/class-tzh-field-renderer.php:497
-#: includes/admin/class-tzh-field-renderer.php:498
+msgid "Collapse"
+msgstr ""
+
+#: includes/admin/class-tzh-field-renderer.php:500
+#: includes/admin/class-tzh-field-renderer.php:501
 msgid "Move up"
 msgstr ""
 
-#: includes/admin/class-tzh-field-renderer.php:499
-#: includes/admin/class-tzh-field-renderer.php:500
+#: includes/admin/class-tzh-field-renderer.php:502
+#: includes/admin/class-tzh-field-renderer.php:503
 msgid "Move down"
+msgstr ""
+
+#: includes/admin/class-tzh-field-renderer.php:504
+#: includes/admin/class-tzh-field-renderer.php:505
+#: includes/admin/class-tzh-meta-box.php:578
+msgid "Duplicate"
 msgstr ""
 
 #: includes/admin/class-tzh-fields.php:27
@@ -202,7 +289,7 @@ msgid ""
 "travellers can see where they sleep."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:44 includes/admin/views/settings.php:176
+#: includes/admin/class-tzh-fields.php:44 includes/admin/views/settings.php:239
 msgid "Highlights"
 msgstr ""
 
@@ -228,7 +315,7 @@ msgstr ""
 msgid "Booking conditions and any longer notes for this package."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:62 includes/admin/views/settings.php:197
+#: includes/admin/class-tzh-fields.php:62 includes/admin/views/settings.php:260
 msgid "Visa"
 msgstr ""
 
@@ -270,231 +357,247 @@ msgid ""
 msgstr ""
 
 #: includes/admin/class-tzh-fields.php:140
-#: includes/admin/class-tzh-fields.php:277
+#: includes/admin/class-tzh-fields.php:281
 msgid "Days"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:149
+#: includes/admin/class-tzh-fields.php:141
+msgid "days"
+msgstr ""
+
+#: includes/admin/class-tzh-fields.php:150
 msgid "Nights"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:158
+#: includes/admin/class-tzh-fields.php:151
+msgid "nights"
+msgstr ""
+
+#: includes/admin/class-tzh-fields.php:160
 msgid "Tour type"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:166
+#: includes/admin/class-tzh-fields.php:168
 msgid "Minimum travellers"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:176
-msgid "Short description"
-msgstr ""
-
-#: includes/admin/class-tzh-fields.php:178
-msgid "Two cities, one unforgettable Himalayan journey."
+#: includes/admin/class-tzh-fields.php:169
+msgid "people"
 msgstr ""
 
 #: includes/admin/class-tzh-fields.php:179
+msgid "Short description"
+msgstr ""
+
+#: includes/admin/class-tzh-fields.php:181
+msgid "Two cities, one unforgettable Himalayan journey."
+msgstr ""
+
+#: includes/admin/class-tzh-fields.php:182
 msgid "One line shown on the package card in search results and listings."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:184
+#: includes/admin/class-tzh-fields.php:187
 msgid "Hero banner"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:185
+#: includes/admin/class-tzh-fields.php:188
 msgid ""
 "Wide image behind the package title. Falls back to the package image when "
 "empty."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:190
+#: includes/admin/class-tzh-fields.php:193
 msgid "Show the Bestseller badge"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:195
+#: includes/admin/class-tzh-fields.php:198
 msgid "Rating"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:205
+#: includes/admin/class-tzh-fields.php:199
+msgid "out of 5"
+msgstr ""
+
+#: includes/admin/class-tzh-fields.php:209
 msgid "Travellers booked"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:208
+#: includes/admin/class-tzh-fields.php:212
 msgid "Leave both at zero to hide the rating line entirely."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:224
+#: includes/admin/class-tzh-fields.php:228
 msgid "Adult price"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:228 templates/parts/booking-box.php:28
+#: includes/admin/class-tzh-fields.php:232 templates/parts/booking-box.php:28
 msgid "per person"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:229
+#: includes/admin/class-tzh-fields.php:233
 msgid "Age 12 and above."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:235
-#: includes/admin/views/settings.php:143
+#: includes/admin/class-tzh-fields.php:239
+#: includes/admin/views/settings.php:206
 msgid "Child price"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:239
-#: includes/admin/views/settings.php:149
+#: includes/admin/class-tzh-fields.php:243
+#: includes/admin/views/settings.php:212
 #, php-format
 msgid "% of adult price"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:240
+#: includes/admin/class-tzh-fields.php:244
 msgid "Age 2 to 11."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:246
-#: includes/admin/views/settings.php:154
+#: includes/admin/class-tzh-fields.php:250
+#: includes/admin/views/settings.php:217
 msgid "Infant price"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:250
+#: includes/admin/class-tzh-fields.php:254
 msgid "Age 0 to 1. A flat amount, not a percentage."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:256
+#: includes/admin/class-tzh-fields.php:260
 msgid "Price includes air fare"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:257
+#: includes/admin/class-tzh-fields.php:261
 msgid "Adds the \"With air fare\" badge next to the price."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:262
+#: includes/admin/class-tzh-fields.php:266
 msgid "What travellers will see"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:278
+#: includes/admin/class-tzh-fields.php:282
 msgid "Day"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:279
+#: includes/admin/class-tzh-fields.php:283
 msgid "Add a day"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:284
+#: includes/admin/class-tzh-fields.php:288
 msgid "Day title"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:285
+#: includes/admin/class-tzh-fields.php:289
 msgid "Day 1 — Arrival in Kathmandu"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:292
+#: includes/admin/class-tzh-fields.php:296
 msgid "Meals"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:293
+#: includes/admin/class-tzh-fields.php:297
 msgid "Breakfast"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:294
+#: includes/admin/class-tzh-fields.php:298
 msgid "Shown as a badge on the day. Write \"No\" when none are included."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:300
+#: includes/admin/class-tzh-fields.php:304
 msgid "What happens that day"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:302
+#: includes/admin/class-tzh-fields.php:306
 msgid "Airport pickup, transfer to hotel, and evening walk through Thamel."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:307 templates/parts/tab-plan.php:48
+#: includes/admin/class-tzh-fields.php:311 templates/parts/tab-plan.php:48
 msgid "Accommodation"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:308
-#: includes/admin/class-tzh-fields.php:314
+#: includes/admin/class-tzh-fields.php:312
+#: includes/admin/class-tzh-fields.php:318
 msgid "Hotel"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:309
+#: includes/admin/class-tzh-fields.php:313
 msgid "Add a hotel"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:315
+#: includes/admin/class-tzh-fields.php:319
 msgid "Hotel Yak & Yeti"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:322
+#: includes/admin/class-tzh-fields.php:326
 msgid "City"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:323
+#: includes/admin/class-tzh-fields.php:327
 msgid "Kathmandu"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:329
+#: includes/admin/class-tzh-fields.php:333
 msgid "Class"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:330
+#: includes/admin/class-tzh-fields.php:334
 msgid "4 Star"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:336
+#: includes/admin/class-tzh-fields.php:340
 msgid "Length of stay"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:337
+#: includes/admin/class-tzh-fields.php:341
 msgid "1 Night"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:357
+#: includes/admin/class-tzh-fields.php:361
 msgid "Tour product highlights"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:374
-#: includes/admin/views/settings.php:177 templates/parts/tab-incl.php:14
+#: includes/admin/class-tzh-fields.php:378
+#: includes/admin/views/settings.php:240 templates/parts/tab-incl.php:14
 msgid "Inclusion"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:382
-#: includes/admin/views/settings.php:178 templates/parts/tab-incl.php:19
+#: includes/admin/class-tzh-fields.php:386
+#: includes/admin/views/settings.php:241 templates/parts/tab-incl.php:19
 msgid "Exclusion"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:400
-#: includes/admin/views/settings.php:179
+#: includes/admin/class-tzh-fields.php:404
+#: includes/admin/views/settings.php:242
 msgid "Terms & conditions"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:402
+#: includes/admin/class-tzh-fields.php:406
 msgid "Left empty, the package shows the terms set under Settings."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:407
+#: includes/admin/class-tzh-fields.php:411
 msgid "Other details"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:409
+#: includes/admin/class-tzh-fields.php:413
 msgid ""
 "Longer notes — what to pack, passport validity, special requests. Leave a "
 "blank line between paragraphs."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:424 templates/parts/tab-visa.php:38
+#: includes/admin/class-tzh-fields.php:428 templates/parts/tab-visa.php:38
 msgid "Visa requirements document"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:425
+#: includes/admin/class-tzh-fields.php:429
 msgid "An image or scan travellers can open full size and download."
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:430
+#: includes/admin/class-tzh-fields.php:434
 msgid "Note above the document"
 msgstr ""
 
-#: includes/admin/class-tzh-fields.php:432
+#: includes/admin/class-tzh-fields.php:436
 msgid "Left empty, the note set under Settings is used."
 msgstr ""
 
@@ -502,9 +605,82 @@ msgstr ""
 msgid "Package details"
 msgstr ""
 
-#: includes/admin/class-tzh-meta-box.php:417
+#: includes/admin/class-tzh-meta-box.php:180
+#: includes/admin/class-tzh-meta-box.php:567
+msgid "No code"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:185
+#: includes/admin/class-tzh-meta-box.php:568
+msgid "No destination"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:190
+#: includes/admin/class-tzh-meta-box.php:569
+msgid "No duration"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:195
+#: includes/admin/class-tzh-meta-box.php:570
+msgid "No price"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:216
+msgid "Checking…"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:517
 #: includes/admin/class-tzh-term-fields.php:221
 msgid "Use this image"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:542
+msgid "destination"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:547
+msgid "category"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:552
+msgid "package code"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:557
+msgid "duration"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:562
+msgid "price"
+msgstr ""
+
+#. translators: 1: zero-padded days, 2: zero-padded nights
+#. translators: 1: zero-padded day count, 2: zero-padded night count
+#: includes/admin/class-tzh-meta-box.php:573 includes/class-tzh-package.php:189
+#, php-format
+msgid "%1$s Days %2$s Nights"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:574
+msgid "Ready to publish"
+msgstr ""
+
+#. translators: %s: comma-separated list of missing fields
+#: includes/admin/class-tzh-meta-box.php:576
+#, php-format
+msgid "Still missing: %s"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:577
+msgid "This package has unsaved changes."
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:579
+msgid "Collapse all"
+msgstr ""
+
+#: includes/admin/class-tzh-meta-box.php:580
+msgid "Expand all"
 msgstr ""
 
 #: includes/admin/class-tzh-package-columns.php:45
@@ -537,6 +713,152 @@ msgstr ""
 #: includes/admin/class-tzh-package-columns.php:155
 #, php-format
 msgid "All %s"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:64
+msgid "Turn on pretty permalinks"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:65
+msgid ""
+"Every package and destination URL depends on this. Settings → Permalinks → "
+"anything except Plain, then Save."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:72
+msgid "Add your destinations"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:73
+msgid ""
+"A destination is a country or a city — Maldives, Dubai, Kashmir. Give each "
+"one a cover image, a one-line blurb and a display order; the order decides "
+"where it sits on the catalogue page."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:76
+msgid "Add destinations"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:80
+msgid "Fill in the company-wide defaults"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:81
+msgid ""
+"WhatsApp number, currency, and the inclusion, exclusion and terms lists that "
+"are the same on every tour. A package that leaves those blank falls back to "
+"what is set here, so you type them once."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:84
+msgid "Open Settings"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:88
+msgid "Publish your first package"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:89
+msgid ""
+"Give it a code such as TZ 001 — the number in the code sets the order of the "
+"whole list. Then destination, category, duration, price, itinerary and a "
+"banner. The bar at the top of the editor tells you what is still missing."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:92
+msgid "Add a package"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:96
+msgid "Offer the same tour at several comfort levels"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:97
+msgid ""
+"Optional. Give two packages the same Tour group and different Categories — "
+"Standard and Deluxe — and each one offers the other on its page as an "
+"alternative, with its own price."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:100
+msgid "Tour groups"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:104
+msgid "Connect checkout"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:106
+msgid ""
+"WooCommerce is running. Enable at least one payment method, and bookings "
+"become ordinary orders with emails, invoices and reporting."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:107
+msgid ""
+"Install and activate WooCommerce to take payment at checkout. Without it, "
+"bookings are still collected — the traveler gets a reference number and a "
+"consultant follows up."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:113
+msgid "Payment methods"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:114
+msgid "Get WooCommerce"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:118
+msgid "Put the catalogue in your menu"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:119
+msgid ""
+"The catalogue lives at its own address — no page needs to be created for it. "
+"Add that address to your navigation menu as a custom link."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:122
+msgid "Open Menus"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:126
+msgid "Check it on the site"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:127
+msgid ""
+"Open the catalogue, pick a destination, open a package, and press Book Now. "
+"Do it once on a phone too — every screen is built for one."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:130
+#: includes/admin/views/dashboard.php:26
+msgid "View catalogue"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:149
+msgid "Destination grid"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:150
+msgid ""
+"The cover images that open the catalogue. Use it on a home page built in any "
+"page builder. columns takes 1 to 6; limit=\"8\" caps how many appear; "
+"empty=\"show\" includes destinations that have no packages yet."
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:156
+msgid "A row of packages"
+msgstr ""
+
+#: includes/admin/class-tzh-setup-page.php:157
+msgid ""
+"The same cards the catalogue uses. Narrow it with destination=\"slug\" or "
+"category=\"deluxe\", show only your best with bestseller=\"yes\", and order "
+"by orderby=\"price\" instead of by package code."
 msgstr ""
 
 #: includes/admin/class-tzh-term-fields.php:150
@@ -639,86 +961,87 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/admin/views/bookings.php:66
+#: includes/admin/views/bookings.php:66 includes/admin/views/dashboard.php:85
 msgid "Guest"
 msgstr ""
 
-#. translators: %s: number of travellers
-#: includes/admin/views/bookings.php:87
-#, php-format
-msgid "%s traveler"
-msgid_plural "%s travelers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/admin/views/dashboard.php:16
-msgid "Destinations, tour packages, itineraries and pricing tiers for TravelZ."
-msgstr ""
-
-#: includes/admin/views/dashboard.php:30
-msgid "System status"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:47
-msgid "Build progress"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:49
-msgid ""
-"This plugin is being built in phases. Completed phases are listed below; the "
-"rest of the menu fills in as they land."
+#: includes/admin/views/dashboard.php:22
+msgid "Add Package"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:52
-msgid "Plugin skeleton and admin menu"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:53
-msgid "Packages, destinations and categories"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:54
-msgid "Package editor — overview and pricing"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:55
-msgid "Package editor — itinerary"
+msgid "Upcoming departures"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:56
-msgid "Package editor — inclusions, terms, visa"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:57
-msgid "Destination images and tier variants"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:58
-msgid "Front-end design system and templates"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:59
-msgid "Destination grid and package listing"
+msgid ""
+"Departures are read from paid orders. Activate WooCommerce to take bookings "
+"through checkout."
 msgstr ""
 
 #: includes/admin/views/dashboard.php:60
-msgid "Filters, sorting and search"
+msgid "Nothing departing in the next 60 days."
 msgstr ""
 
-#: includes/admin/views/dashboard.php:61
-msgid "Package detail page"
+#. translators: 1: number of travellers, 2: customer name
+#: includes/admin/views/dashboard.php:77
+#, php-format
+msgid "%1$s · %2$s"
 msgstr ""
 
-#: includes/admin/views/dashboard.php:62
-msgid "Printable tour details sheet"
+#: includes/admin/views/dashboard.php:101
+#: includes/admin/views/dashboard.php:208
+msgid "All bookings"
 msgstr ""
 
-#: includes/admin/views/dashboard.php:63
-msgid "Booking form"
+#: includes/admin/views/dashboard.php:108
+msgid "Needs attention"
 msgstr ""
 
-#: includes/admin/views/dashboard.php:64
-msgid "WooCommerce checkout and bookings"
+#: includes/admin/views/dashboard.php:112
+msgid ""
+"Every package has a price, a destination, a duration, an itinerary and a "
+"banner. Nothing to fix."
+msgstr ""
+
+#: includes/admin/views/dashboard.php:116
+msgid "These packages are missing something travelers will notice."
+msgstr ""
+
+#: includes/admin/views/dashboard.php:135
+msgid "Destinations at a glance"
+msgstr ""
+
+#: includes/admin/views/dashboard.php:139
+msgid "No published package has a destination yet."
+msgstr ""
+
+#. translators: %s: number of packages
+#: includes/admin/views/dashboard.php:153
+#, php-format
+msgid "%s package"
+msgid_plural "%s packages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: lowest price
+#: includes/admin/views/dashboard.php:162
+#, php-format
+msgid "from %s"
+msgstr ""
+
+#: includes/admin/views/dashboard.php:177
+msgid "Recent bookings"
+msgstr ""
+
+#: includes/admin/views/dashboard.php:181
+msgid ""
+"Booking requests are being collected with a reference number instead. "
+"Activate WooCommerce to take payment at checkout."
+msgstr ""
+
+#: includes/admin/views/dashboard.php:185
+msgid "No bookings in the last 30 days."
 msgstr ""
 
 #: includes/admin/views/settings.php:41
@@ -788,21 +1111,148 @@ msgid "Subheading"
 msgstr ""
 
 #: includes/admin/views/settings.php:137
+msgid "Price filter"
+msgstr ""
+
+#. translators: 1: lowest price on the slider, 2: highest price on the slider
+#: includes/admin/views/settings.php:144
+#, php-format
+msgid ""
+"The slider on the destination pages currently runs from %1$s to %2$s. Leave "
+"the highest price at 0 and it follows the dearest published package on its "
+"own."
+msgstr ""
+
+#: includes/admin/views/settings.php:155 templates/parts/filters.php:82
+msgid "Lowest price"
+msgstr ""
+
+#: includes/admin/views/settings.php:163
+msgid "Where the left handle starts. Usually 0."
+msgstr ""
+
+#: includes/admin/views/settings.php:169 templates/parts/filters.php:89
+msgid "Highest price"
+msgstr ""
+
+#: includes/admin/views/settings.php:177
+msgid ""
+"0 means automatic — the dearest published package, rounded up to the next "
+"step. Set a number to pin the slider there instead, which keeps it steady as "
+"packages come and go."
+msgstr ""
+
+#: includes/admin/views/settings.php:183
+msgid "Step"
+msgstr ""
+
+#: includes/admin/views/settings.php:191
+msgid "How much the handle moves at a time."
+msgstr ""
+
+#: includes/admin/views/settings.php:200
 msgid "Default pricing"
 msgstr ""
 
-#: includes/admin/views/settings.php:168
+#: includes/admin/views/settings.php:231
 msgid "Default lists"
 msgstr ""
 
-#: includes/admin/views/settings.php:170
+#: includes/admin/views/settings.php:233
 msgid ""
 "One item per line. These appear on any package that leaves the matching list "
 "empty."
 msgstr ""
 
-#: includes/admin/views/settings.php:201
+#: includes/admin/views/settings.php:264
 msgid "Default note above the visa document"
+msgstr ""
+
+#: includes/admin/views/setup.php:20
+msgid ""
+"Everything needed to get TravelZ Holidays live, in the order it should be "
+"done. Each step checks itself — a tick means the site already has it."
+msgstr ""
+
+#. translators: 1: steps done, 2: steps in total
+#: includes/admin/views/setup.php:31
+#, php-format
+msgid "%1$s of %2$s done"
+msgstr ""
+
+#: includes/admin/views/setup.php:66
+msgid "Shortcodes"
+msgstr ""
+
+#: includes/admin/views/setup.php:68
+msgid ""
+"Paste one of these into any page or widget. The catalogue itself needs no "
+"shortcode — it has its own address."
+msgstr ""
+
+#: includes/admin/views/setup.php:86
+msgid "Worth knowing"
+msgstr ""
+
+#: includes/admin/views/setup.php:90
+msgid "The package code sets the order."
+msgstr ""
+
+#: includes/admin/views/setup.php:91
+msgid ""
+"TZ 001 comes before TZ 010 because the number inside the code is what sorts "
+"the list — not the title, not the date."
+msgstr ""
+
+#: includes/admin/views/setup.php:94
+msgid "Settings are fallbacks, not overrides."
+msgstr ""
+
+#: includes/admin/views/setup.php:95
+msgid ""
+"A package that fills in its own inclusion list or terms ignores the site-"
+"wide ones completely."
+msgstr ""
+
+#: includes/admin/views/setup.php:98
+msgid "Child price is a percentage."
+msgstr ""
+
+#: includes/admin/views/setup.php:99
+#, php-format
+msgid ""
+"70 means 70% of the adult price, recalculated whenever the adult price "
+"changes. Infant price is a flat amount."
+msgstr ""
+
+#: includes/admin/views/setup.php:102
+msgid "Empty tabs disappear."
+msgstr ""
+
+#: includes/admin/views/setup.php:103
+msgid ""
+"A package with no visa document simply has no Visa tab. Leave a section "
+"blank rather than filling it with filler text."
+msgstr ""
+
+#: includes/admin/views/setup.php:106
+msgid "Templates can be overridden."
+msgstr ""
+
+#: includes/admin/views/setup.php:107
+msgid ""
+"Copy any file from the plugin's templates folder into a travelz-holidays "
+"folder inside your theme and edit it there; updates will not overwrite it."
+msgstr ""
+
+#: includes/admin/views/setup.php:110
+msgid "Exclude the booking page from caching."
+msgstr ""
+
+#: includes/admin/views/setup.php:111
+msgid ""
+"The plugin already tells LiteSpeed, WP Rocket and W3 Total Cache to skip it. "
+"If you use another cache plugin, exclude any URL ending in /book/ by hand."
 msgstr ""
 
 #: includes/class-tzh-package.php:93
@@ -823,12 +1273,6 @@ msgstr ""
 
 #: includes/class-tzh-package.php:107
 msgid "Premium"
-msgstr ""
-
-#. translators: 1: zero-padded day count, 2: zero-padded night count
-#: includes/class-tzh-package.php:189
-#, php-format
-msgid "%1$s Days %2$s Nights"
 msgstr ""
 
 #. translators: 1: destination name, 2: tour name
@@ -1005,47 +1449,47 @@ msgstr ""
 msgid " and "
 msgstr ""
 
-#: includes/class-tzh-settings.php:44 templates/archive-destinations.php:16
+#: includes/class-tzh-settings.php:47 templates/archive-destinations.php:16
 msgid "Curated for Bangladeshi travelers"
 msgstr ""
 
-#: includes/class-tzh-settings.php:45 includes/frontend/class-tzh-router.php:67
+#: includes/class-tzh-settings.php:48 includes/frontend/class-tzh-router.php:67
 #: includes/frontend/class-tzh-seo.php:227
 #: templates/archive-destinations.php:17
 msgid "Explore Holiday Packages"
 msgstr ""
 
-#: includes/class-tzh-settings.php:46 templates/archive-destinations.php:18
+#: includes/class-tzh-settings.php:49 templates/archive-destinations.php:18
 msgid "Handpicked destinations, unforgettable journeys."
 msgstr ""
 
-#: includes/class-tzh-settings.php:47
+#: includes/class-tzh-settings.php:50
 msgid ""
 "Please review the visa document below carefully. Requirements may change; "
 "contact your booking consultant for the latest updates."
 msgstr ""
 
-#: includes/class-tzh-settings.php:61
+#: includes/class-tzh-settings.php:64
 msgid "Minimum 2 adults required to confirm the package."
 msgstr ""
 
-#: includes/class-tzh-settings.php:62
+#: includes/class-tzh-settings.php:65
 msgid "Hotel standard check-in 14:00, check-out 12:00."
 msgstr ""
 
-#: includes/class-tzh-settings.php:63
+#: includes/class-tzh-settings.php:66
 msgid "Rates are subject to change without prior notice."
 msgstr ""
 
-#: includes/class-tzh-settings.php:64
+#: includes/class-tzh-settings.php:67
 msgid "Blackout dates apply during Durga Puja, Eid, New Year, and Christmas."
 msgstr ""
 
-#: includes/class-tzh-settings.php:65
+#: includes/class-tzh-settings.php:68
 msgid "Cancellation charges apply as per TravelZ policy."
 msgstr ""
 
-#: includes/class-tzh-settings.php:66
+#: includes/class-tzh-settings.php:69
 msgid "All disputes are subject to Dhaka jurisdiction."
 msgstr ""
 
@@ -1204,29 +1648,29 @@ msgid ""
 "Ties the Standard, Deluxe and Premium versions of one itinerary together."
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:158 templates/archive-packages.php:75
+#: includes/frontend/class-tzh-assets.php:190 templates/archive-packages.php:77
 #: templates/parts/filters.php:22
 msgid "Filters"
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:159
+#: includes/frontend/class-tzh-assets.php:191
 msgid "Close"
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:160
+#: includes/frontend/class-tzh-assets.php:192
 msgid "Loading packages…"
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:161
+#: includes/frontend/class-tzh-assets.php:193
 #: includes/frontend/class-tzh-booking.php:319
 msgid "Please pick a travel date."
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:162
+#: includes/frontend/class-tzh-assets.php:194
 msgid "Please add more travelers for this package."
 msgstr ""
 
-#: includes/frontend/class-tzh-assets.php:163
+#: includes/frontend/class-tzh-assets.php:195
 msgid "Sending you to secure checkout…"
 msgstr ""
 
@@ -1300,6 +1744,22 @@ msgid ""
 "Holiday packages to %s — itineraries, prices and inclusions for every budget."
 msgstr ""
 
+#: includes/functions-helpers.php:174
+msgid "today"
+msgstr ""
+
+#: includes/functions-helpers.php:178
+msgid "tomorrow"
+msgstr ""
+
+#. translators: %s: number of days
+#: includes/functions-helpers.php:183
+#, php-format
+msgid "in %s day"
+msgid_plural "in %s days"
+msgstr[0] ""
+msgstr[1] ""
+
 #: includes/integrations/class-tzh-woo.php:403
 #: templates/parts/booking-travelers.php:50
 msgid "Travelers"
@@ -1309,7 +1769,7 @@ msgstr ""
 msgid "No destinations have packages yet."
 msgstr ""
 
-#: templates/archive-packages.php:35 templates/booking-package.php:39
+#: templates/archive-packages.php:37 templates/booking-package.php:39
 #: templates/single-package.php:80
 msgid "Home"
 msgstr ""
@@ -1522,14 +1982,6 @@ msgstr ""
 #: templates/parts/filters.php:68
 #, php-format
 msgid "Price Range (%s)"
-msgstr ""
-
-#: templates/parts/filters.php:82
-msgid "Lowest price"
-msgstr ""
-
-#: templates/parts/filters.php:89
-msgid "Highest price"
 msgstr ""
 
 #: templates/parts/filters.php:99 templates/print-package.php:44
