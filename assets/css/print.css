@@ -1,0 +1,524 @@
+/**
+ * TravelZ Holidays — tour details sheet.
+ *
+ * Loaded inline by templates/print-package.php, which renders a standalone
+ * document without the theme, so nothing here has to fight another stylesheet
+ * and nothing is scoped defensively. Sizes are in millimetres where they have
+ * to survive the trip to paper and in rem everywhere else.
+ */
+
+:root {
+	--tz-primary: #2ca89e;
+	--tz-primary-ink: #1d6f68;
+	--tz-primary-soft: #e3f5f2;
+	--tz-sunset: #f97316;
+	--tz-ink: #1e293b;
+	--tz-muted-fg: #64748b;
+	--tz-border: #e2e8f0;
+	--tz-surface: #f8f9fa;
+	--tz-font: "Poppins", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans Bengali", sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0 0 3rem;
+	background: #eef1f4;
+	color: var(--tz-ink);
+	font-family: var(--tz-font);
+	font-size: 10.5pt;
+	line-height: 1.55;
+}
+
+.tz-icon {
+	width: 1em;
+	height: 1em;
+	flex: none;
+	vertical-align: -0.125em;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.tz-icon--fill {
+	fill: currentColor;
+	stroke: none;
+}
+
+/* ---------------------------------------------------------------- toolbar */
+
+.tz-toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 1rem;
+	background: #ffffff;
+	border-bottom: 1px solid var(--tz-border);
+	box-shadow: 0 2px 12px -6px rgba(30, 41, 59, .35);
+}
+
+.tz-toolbar__hint {
+	margin: 0;
+	color: var(--tz-muted-fg);
+	font-size: 0.85rem;
+}
+
+.tz-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	padding: 0.55rem 1.1rem;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	font: inherit;
+	font-weight: 600;
+	font-size: 0.9rem;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.tz-btn--primary {
+	background: var(--tz-sunset);
+	color: #ffffff;
+}
+
+.tz-btn--ghost {
+	background: #ffffff;
+	border-color: var(--tz-border);
+	color: var(--tz-primary-ink);
+}
+
+/* ------------------------------------------------------------------ sheet */
+
+.tz-sheet {
+	width: 210mm;
+	max-width: 100%;
+	margin: 1.5rem auto 0;
+	padding: 14mm 14mm 10mm;
+	background: #ffffff;
+	box-shadow: 0 10px 40px -12px rgba(30, 41, 59, .35);
+}
+
+.tz-head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding-bottom: 0.9rem;
+	border-bottom: 3px solid var(--tz-primary);
+}
+
+.tz-head__logo {
+	max-height: 18mm;
+	max-width: 60mm;
+	width: auto;
+	height: auto;
+}
+
+.tz-head__name {
+	margin: 0;
+	color: var(--tz-primary-ink);
+	font-size: 1.35rem;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+
+.tz-head__tag,
+.tz-head__meta {
+	margin: 0.15rem 0 0;
+	color: var(--tz-muted-fg);
+	font-size: 0.8rem;
+}
+
+.tz-head__right {
+	text-align: right;
+}
+
+.tz-head__kind {
+	margin: 0;
+	color: var(--tz-primary-ink);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: .12em;
+	text-transform: uppercase;
+}
+
+.tz-title {
+	margin: 1.1rem 0 0;
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.25;
+	letter-spacing: -0.015em;
+}
+
+.tz-tagline {
+	margin: 0.35rem 0 0;
+	color: var(--tz-muted-fg);
+}
+
+.tz-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin-top: 0.6rem;
+	padding: 0;
+	list-style: none;
+}
+
+.tz-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.2rem 0.65rem;
+	border-radius: 999px;
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+.tz-badge--sunset {
+	background: #fff1e5;
+	color: #b4460b;
+}
+
+/* -------------------------------------------------------------- structure */
+
+.tz-section {
+	margin-top: 1.4rem;
+	break-inside: auto;
+}
+
+.tz-section__title {
+	margin: 0 0 0.6rem;
+	padding-bottom: 0.3rem;
+	border-bottom: 1px solid var(--tz-border);
+	color: var(--tz-primary-ink);
+	font-size: 1rem;
+	font-weight: 700;
+	break-after: avoid;
+}
+
+.tz-facts {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tz-facts li {
+	padding: 0.5rem 0.7rem;
+	border: 1px solid var(--tz-border);
+	border-radius: 0.5rem;
+	background: var(--tz-surface);
+	min-width: 0;
+}
+
+.tz-facts span {
+	display: block;
+	color: var(--tz-muted-fg);
+	font-size: 0.7rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.tz-facts b {
+	font-size: 0.95rem;
+	overflow-wrap: anywhere;
+}
+
+.tz-price {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.9rem 1.1rem;
+	border: 1px solid var(--tz-border);
+	border-left: 4px solid var(--tz-sunset);
+	border-radius: 0.6rem;
+	background: var(--tz-surface);
+}
+
+.tz-price__label {
+	display: block;
+	color: var(--tz-muted-fg);
+	font-size: 0.75rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.tz-price__amount {
+	color: var(--tz-sunset);
+	font-size: 1.6rem;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.tz-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.tz-table th,
+.tz-table td {
+	padding: 0.45rem 0.6rem;
+	border: 1px solid var(--tz-border);
+	text-align: left;
+}
+
+.tz-table th {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+	font-weight: 700;
+}
+
+.tz-table td:last-child {
+	text-align: right;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.tz-note {
+	margin: 0.5rem 0 0;
+	color: var(--tz-muted-fg);
+	font-size: 0.8rem;
+}
+
+/* ------------------------------------------------------------- itinerary */
+
+.tz-day {
+	margin-top: 0.7rem;
+	padding: 0.7rem 0.9rem;
+	border: 1px solid var(--tz-border);
+	border-radius: 0.6rem;
+	break-inside: avoid;
+}
+
+.tz-day__head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.tz-day__no {
+	display: inline-block;
+	min-width: 4.6rem;
+	margin-bottom: 0.25rem;
+	padding: 0.1rem 0.5rem;
+	border-radius: 999px;
+	background: var(--tz-primary);
+	color: #ffffff;
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-align: center;
+}
+
+.tz-day__title {
+	margin: 0;
+	font-size: 0.98rem;
+	font-weight: 700;
+}
+
+.tz-day__meals {
+	color: var(--tz-muted-fg);
+	font-size: 0.78rem;
+}
+
+.tz-day__body {
+	margin: 0.35rem 0 0;
+	white-space: pre-line;
+	overflow-wrap: anywhere;
+}
+
+.tz-hotels {
+	margin: 0.5rem 0 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	gap: 0.35rem;
+}
+
+.tz-hotels li {
+	display: flex;
+	gap: 0.45rem;
+	align-items: baseline;
+	padding: 0.35rem 0.55rem;
+	border-radius: 0.4rem;
+	background: var(--tz-surface);
+	font-size: 0.85rem;
+	min-width: 0;
+}
+
+.tz-hotels b {
+	overflow-wrap: anywhere;
+}
+
+.tz-hotels span {
+	color: var(--tz-muted-fg);
+}
+
+/* ------------------------------------------------------------------ lists */
+
+.tz-cols {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.tz-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	gap: 0.3rem;
+}
+
+.tz-list li {
+	display: flex;
+	gap: 0.45rem;
+	align-items: flex-start;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.tz-list .tz-icon {
+	margin-top: 0.28em;
+}
+
+.tz-list--yes .tz-icon {
+	color: #16a34a;
+}
+
+.tz-list--no .tz-icon {
+	color: #ef4444;
+}
+
+.tz-list--dot li::before {
+	content: "•";
+	color: var(--tz-primary);
+	font-weight: 700;
+}
+
+.tz-prose p {
+	margin: 0 0 0.5rem;
+	overflow-wrap: anywhere;
+}
+
+.tz-terms {
+	margin: 0;
+	padding-left: 1.1rem;
+	display: grid;
+	gap: 0.25rem;
+	font-size: 0.88rem;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.tz-foot {
+	margin-top: 1.6rem;
+	padding-top: 0.7rem;
+	border-top: 2px solid var(--tz-primary);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	align-items: flex-start;
+	justify-content: space-between;
+	color: var(--tz-muted-fg);
+	font-size: 0.78rem;
+}
+
+.tz-foot b {
+	color: var(--tz-ink);
+}
+
+.tz-foot__right {
+	text-align: right;
+}
+
+/* ------------------------------------------------------------------ small */
+
+@media screen and (max-width: 820px) {
+	.tz-sheet {
+		width: auto;
+		margin: 0.75rem;
+		padding: 1.1rem;
+	}
+
+	.tz-facts,
+	.tz-cols {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* ------------------------------------------------------------------ paper */
+
+@page {
+	size: A4;
+	margin: 12mm;
+}
+
+@media print {
+	body {
+		background: #ffffff;
+		padding: 0;
+		font-size: 9.5pt;
+	}
+
+	.tz-no-print {
+		display: none !important;
+	}
+
+	.tz-sheet {
+		width: auto;
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
+	}
+
+	.tz-head,
+	.tz-badge,
+	.tz-facts li,
+	.tz-price,
+	.tz-table th,
+	.tz-hotels li,
+	.tz-day__no {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
+	.tz-section {
+		break-inside: auto;
+	}
+
+	.tz-day,
+	.tz-price,
+	.tz-table {
+		break-inside: avoid;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+}

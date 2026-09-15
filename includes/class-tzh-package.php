@@ -520,11 +520,9 @@ class TZH_Package {
 	public function action_url( string $action ): string {
 		$base = untrailingslashit( (string) get_permalink( $this->id() ) );
 
-		if ( 'pdf' === $action ) {
-			return $base . '/details.pdf';
-		}
+		$action = 'pdf' === $action ? 'details' : 'book';
 
-		return user_trailingslashit( $base . '/book' );
+		return user_trailingslashit( $base . '/' . $action );
 	}
 
 	/**

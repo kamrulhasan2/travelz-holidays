@@ -43,7 +43,12 @@ class TZH_Router {
 			return $template;
 		}
 
-		TZH_Assets::need();
+		// The print sheet is a standalone document: it inlines its own styles
+		// and its own copy of the sprite, so the site's bundle would only be
+		// dead weight in the page it produces.
+		if ( 'print-package' !== $name ) {
+			TZH_Assets::need();
+		}
 
 		return $file;
 	}
@@ -103,10 +108,20 @@ class TZH_Router {
 			return 'archive-packages';
 		}
 
-		// The book and PDF screens hang off the same URL as the package; they
-		// arrive in later phases and take over from here.
-		if ( is_singular( TZH_Package::POST_TYPE ) && '' === TZH_Rewrites::current_action() ) {
-			return 'single-package';
+		if ( ! is_singular( TZH_Package::POST_TYPE ) ) {
+			return '';
+		}
+
+		switch ( TZH_Rewrites::current_action() ) {
+			case 'pdf':
+				return 'print-package';
+
+			// The booking screen gets its own template in the next phase.
+			// Until then /book/ shows the package rather than whatever the
+			// theme would make of a singular query it knows nothing about.
+			case 'book':
+			case '':
+				return 'single-package';
 		}
 
 		return '';

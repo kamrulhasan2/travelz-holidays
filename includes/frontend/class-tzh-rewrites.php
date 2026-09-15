@@ -42,6 +42,41 @@ class TZH_Rewrites {
 		add_filter( 'post_type_link', array( $this, 'package_link' ), 10, 3 );
 		add_filter( 'term_link', array( $this, 'destination_link' ), 10, 3 );
 		add_filter( 'post_type_archive_link', array( $this, 'archive_link' ), 10, 2 );
+		add_filter( 'redirect_canonical', array( $this, 'keep_sub_screens' ) );
+		add_filter( 'wp_robots', array( $this, 'robots' ) );
+	}
+
+	/**
+	 * Stop WordPress redirecting a sub-screen back to the package.
+	 *
+	 * /…/tz-001/details/ is a singular package query with a different URL, and
+	 * redirect_canonical() exists to bounce exactly that back to the permalink.
+	 * Without this the print sheet could never be reached.
+	 *
+	 * @param string|false $redirect URL WordPress wants to send the visitor to.
+	 *
+	 * @return string|false
+	 */
+	public function keep_sub_screens( $redirect ) {
+		return '' === self::current_action() ? $redirect : false;
+	}
+
+	/**
+	 * Keep the sub-screens out of search results.
+	 *
+	 * The print sheet repeats the package page word for word, so indexing it
+	 * would put two of the same page in front of Google.
+	 *
+	 * @param array<string, mixed> $robots Robots directives.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function robots( array $robots ): array {
+		if ( '' === self::current_action() ) {
+			return $robots;
+		}
+
+		return wp_robots_no_robots( $robots );
 	}
 
 	/**
@@ -71,18 +106,18 @@ class TZH_Rewrites {
 
 		$rules = array(
 			// Package sub-screens.
-			"^{$base}/([^/]+)/([^/]+)/details\\.pdf/?$" => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]&' . self::ACTION_VAR . '=pdf',
-			"^{$base}/([^/]+)/([^/]+)/book/?$"          => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]&' . self::ACTION_VAR . '=book',
+			"^{$base}/([^/]+)/([^/]+)/details/?$"  => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]&' . self::ACTION_VAR . '=pdf',
+			"^{$base}/([^/]+)/([^/]+)/book/?$"     => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]&' . self::ACTION_VAR . '=book',
 
 			// A package itself.
-			"^{$base}/([^/]+)/([^/]+)/?$"               => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]',
+			"^{$base}/([^/]+)/([^/]+)/?$"          => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]',
 
 			// A destination, paged and not.
-			"^{$base}/([^/]+)/page/([0-9]{1,})/?$"      => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]&paged=$matches[2]',
-			"^{$base}/([^/]+)/?$"                       => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]',
+			"^{$base}/([^/]+)/page/([0-9]{1,})/?$" => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]&paged=$matches[2]',
+			"^{$base}/([^/]+)/?$"                  => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]',
 
 			// The grid.
-			"^{$base}/?$"                               => 'index.php?post_type=' . TZH_Package::POST_TYPE,
+			"^{$base}/?$"                          => 'index.php?post_type=' . TZH_Package::POST_TYPE,
 		);
 
 		foreach ( $rules as $regex => $query ) {

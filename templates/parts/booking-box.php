@@ -42,7 +42,9 @@ $tzh_whatsapp = (string) TZH_Settings::get( 'whatsapp', '' );
 		</a>
 	</div>
 
-	<a class="tz-btn tz-btn--teal-outline tz-btn--block tz-booking__pdf" href="<?php echo esc_url( $package->action_url( 'pdf' ) ); ?>">
+	<a class="tz-btn tz-btn--teal-outline tz-btn--block tz-booking__pdf"
+		href="<?php echo esc_url( add_query_arg( 'print', '1', $package->action_url( 'pdf' ) ) ); ?>"
+		target="_blank" rel="noopener">
 		<?php echo tzh_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed sprite id. ?>
 		<?php esc_html_e( 'Download Tour Product Details PDF', 'travelz-holidays' ); ?>
 	</a>

@@ -84,6 +84,40 @@ class TZH_Assets {
 	}
 
 	/**
+	 * Print a file shipped with the plugin straight into the page.
+	 *
+	 * Used for the icon sprite and for the print sheet's stylesheet, both of
+	 * which have to survive a CDN that rewrites asset URLs to another host.
+	 *
+	 * @param string $relative Path under the plugin folder.
+	 */
+	public static function inline( string $relative ): void {
+		$file = TZH_DIR . ltrim( $relative, '/' );
+
+		if ( ! is_readable( $file ) ) {
+			return;
+		}
+
+		// Plugin-owned files, never user input. wp_kses would lowercase the
+		// SVG's viewBox attribute and drop the symbols the icons depend on, so
+		// they are printed as authored.
+		readfile( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile, WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-owned asset.
+	}
+
+	/**
+	 * Print the icon sprite, at most once per request.
+	 */
+	public static function sprite(): void {
+		if ( self::$sprite_printed ) {
+			return;
+		}
+
+		self::$sprite_printed = true;
+
+		self::inline( 'assets/icons/tz-icons.svg' );
+	}
+
+	/**
 	 * Register everything without enqueueing it.
 	 */
 	public function register(): void {
@@ -149,22 +183,11 @@ class TZH_Assets {
 	 * kilobytes and cannot break.
 	 */
 	public function print_sprite(): void {
-		if ( ! self::$needed || self::$sprite_printed ) {
+		if ( ! self::$needed ) {
 			return;
 		}
 
-		$file = TZH_DIR . 'assets/icons/tz-icons.svg';
-
-		if ( ! is_readable( $file ) ) {
-			return;
-		}
-
-		self::$sprite_printed = true;
-
-		// A static file shipped with the plugin, never user input. Running it
-		// through wp_kses would lowercase viewBox and drop the symbol elements
-		// the icons depend on, so it is printed as authored.
-		readfile( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile, WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-owned SVG sprite.
+		self::sprite();
 	}
 
 	/**
