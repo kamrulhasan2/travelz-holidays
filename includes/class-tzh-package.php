@@ -240,6 +240,49 @@ class TZH_Package {
 	}
 
 	/**
+	 * Itinerary days in travel order.
+	 *
+	 * Each day is [ title, meals, body, hotels[] ], with every key present even
+	 * when empty, so templates can read them without isset() checks.
+	 *
+	 * @return array<int, array{title: string, meals: string, body: string, hotels: array<int, array{name: string, city: string, class: string, stay: string}>}>
+	 */
+	public function itinerary(): array {
+		$saved = get_post_meta( $this->id(), self::META_ITINERARY, true );
+		$days  = array();
+
+		foreach ( (array) $saved as $day ) {
+			if ( ! is_array( $day ) ) {
+				continue;
+			}
+
+			$hotels = array();
+
+			foreach ( (array) ( $day['hotels'] ?? array() ) as $hotel ) {
+				if ( ! is_array( $hotel ) ) {
+					continue;
+				}
+
+				$hotels[] = array(
+					'name'  => (string) ( $hotel['name'] ?? '' ),
+					'city'  => (string) ( $hotel['city'] ?? '' ),
+					'class' => (string) ( $hotel['class'] ?? '' ),
+					'stay'  => (string) ( $hotel['stay'] ?? '' ),
+				);
+			}
+
+			$days[] = array(
+				'title'  => (string) ( $day['title'] ?? '' ),
+				'meals'  => (string) ( $day['meals'] ?? '' ),
+				'body'   => (string) ( $day['body'] ?? '' ),
+				'hotels' => $hotels,
+			);
+		}
+
+		return $days;
+	}
+
+	/**
 	 * Hero banner attachment ID, falling back to the featured image.
 	 */
 	public function hero_id(): int {

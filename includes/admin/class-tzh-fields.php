@@ -34,6 +34,12 @@ class TZH_Fields {
 				'description' => __( 'Adult price drives everything else. Child and infant prices are worked out from it at checkout.', 'travelz-holidays' ),
 				'fields'      => self::pricing_fields(),
 			),
+			'itinerary' => array(
+				'label'       => __( 'Itinerary', 'travelz-holidays' ),
+				'icon'        => 'dashicons-calendar-alt',
+				'description' => __( 'One entry per day, in travel order. Add the hotels a day ends at, so travellers can see where they sleep.', 'travelz-holidays' ),
+				'fields'      => self::itinerary_fields(),
+			),
 		);
 
 		/**
@@ -230,6 +236,86 @@ class TZH_Fields {
 				'key'   => 'tzh_price_preview',
 				'type'  => 'preview',
 				'label' => __( 'What travellers will see', 'travelz-holidays' ),
+			),
+		);
+	}
+
+	/**
+	 * Itinerary tab: a repeating day, each with its own hotels.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function itinerary_fields(): array {
+		return array(
+			array(
+				'key'       => TZH_Package::META_ITINERARY,
+				'type'      => 'repeater',
+				'label'     => __( 'Days', 'travelz-holidays' ),
+				'row_label' => __( 'Day', 'travelz-holidays' ),
+				'add_label' => __( 'Add a day', 'travelz-holidays' ),
+				'fields'    => array(
+					array(
+						'key'         => 'title',
+						'type'        => 'text',
+						'label'       => __( 'Day title', 'travelz-holidays' ),
+						'placeholder' => __( 'Day 1 — Arrival in Kathmandu', 'travelz-holidays' ),
+						'summary'     => true,
+						'class'       => 'tzh-field--half',
+					),
+					array(
+						'key'         => 'meals',
+						'type'        => 'text',
+						'label'       => __( 'Meals', 'travelz-holidays' ),
+						'placeholder' => __( 'Breakfast', 'travelz-holidays' ),
+						'description' => __( 'Shown as a badge on the day. Write "No" when none are included.', 'travelz-holidays' ),
+						'class'       => 'tzh-field--half',
+					),
+					array(
+						'key'         => 'body',
+						'type'        => 'textarea',
+						'label'       => __( 'What happens that day', 'travelz-holidays' ),
+						'rows'        => 3,
+						'placeholder' => __( 'Airport pickup, transfer to hotel, and evening walk through Thamel.', 'travelz-holidays' ),
+					),
+					array(
+						'key'       => 'hotels',
+						'type'      => 'repeater',
+						'label'     => __( 'Accommodation', 'travelz-holidays' ),
+						'row_label' => __( 'Hotel', 'travelz-holidays' ),
+						'add_label' => __( 'Add a hotel', 'travelz-holidays' ),
+						'fields'    => array(
+							array(
+								'key'         => 'name',
+								'type'        => 'text',
+								'label'       => __( 'Hotel', 'travelz-holidays' ),
+								'placeholder' => __( 'Hotel Yak & Yeti', 'travelz-holidays' ),
+								'summary'     => true,
+								'class'       => 'tzh-field--half',
+							),
+							array(
+								'key'         => 'city',
+								'type'        => 'text',
+								'label'       => __( 'City', 'travelz-holidays' ),
+								'placeholder' => __( 'Kathmandu', 'travelz-holidays' ),
+								'class'       => 'tzh-field--half',
+							),
+							array(
+								'key'         => 'class',
+								'type'        => 'text',
+								'label'       => __( 'Class', 'travelz-holidays' ),
+								'placeholder' => __( '4 Star', 'travelz-holidays' ),
+								'class'       => 'tzh-field--half',
+							),
+							array(
+								'key'         => 'stay',
+								'type'        => 'text',
+								'label'       => __( 'Length of stay', 'travelz-holidays' ),
+								'placeholder' => __( '1 Night', 'travelz-holidays' ),
+								'class'       => 'tzh-field--half',
+							),
+						),
+					),
+				),
 			),
 		);
 	}

@@ -8,10 +8,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Turns a field definition plus a saved value into markup.
+ * Turns a field definition plus a value into markup.
  *
- * Every input is named tzh[<key>] so the whole editor posts back as one array
- * and saving stays a single loop over the schema.
+ * Every input is named tzh[<key>] so the whole editor posts back as one array.
+ * Repeater rows reuse the same code path with an explicit name and value handed
+ * in, which is what lets a row template and a saved row render identically.
  */
 class TZH_Field_Renderer {
 
@@ -31,11 +32,15 @@ class TZH_Field_Renderer {
 	 * Render one field, wrapper included.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param array<string, mixed> $ctx   Optional overrides: value, name, id, leaf.
 	 */
-	public function render( array $field ): void {
+	public function render( array $field, array $ctx = array() ): void {
 		$type  = (string) ( $field['type'] ?? 'text' );
 		$key   = (string) $field['key'];
-		$id    = 'tzh-field-' . sanitize_html_class( $key );
+		$value = array_key_exists( 'value', $ctx ) ? $ctx['value'] : $this->stored_value( $field );
+		$name  = $ctx['name'] ?? $this->name( $key );
+		$id    = $ctx['id'] ?? 'tzh-field-' . sanitize_html_class( $key );
+		$leaf  = $ctx['leaf'] ?? null;
 		$class = (string) ( $field['class'] ?? '' );
 
 		printf(
@@ -45,18 +50,30 @@ class TZH_Field_Renderer {
 		);
 
 		if ( 'checkbox' !== $type ) {
-			printf(
-				'<label class="tzh-field__label" for="%s">%s%s</label>',
-				esc_attr( $id ),
-				esc_html( (string) ( $field['label'] ?? '' ) ),
-				! empty( $field['required'] ) ? ' <span class="tzh-req" aria-hidden="true">*</span>' : ''
-			);
+			$required = ! empty( $field['required'] ) ? ' <span class="tzh-req" aria-hidden="true">*</span>' : '';
+
+			// Repeater rows are cloned, so their inputs get no id — a label
+			// pointing at a duplicated id would focus the wrong field.
+			if ( '' === $id ) {
+				printf(
+					'<span class="tzh-field__label">%s%s</span>',
+					esc_html( (string) ( $field['label'] ?? '' ) ),
+					$required
+				);
+			} else {
+				printf(
+					'<label class="tzh-field__label" for="%s">%s%s</label>',
+					esc_attr( $id ),
+					esc_html( (string) ( $field['label'] ?? '' ) ),
+					$required
+				);
+			}
 		}
 
 		$method = 'render_' . $type;
 
 		if ( method_exists( $this, $method ) ) {
-			$this->$method( $field, $id );
+			$this->$method( $field, $name, $value, $id, $leaf );
 		}
 
 		if ( ! empty( $field['description'] ) ) {
@@ -70,13 +87,13 @@ class TZH_Field_Renderer {
 	}
 
 	/**
-	 * Current value for a field.
+	 * Saved value for a top-level field.
 	 *
 	 * @param array<string, mixed> $field Field definition.
 	 *
 	 * @return mixed
 	 */
-	private function value( array $field ) {
+	private function stored_value( array $field ) {
 		$store = (string) ( $field['store'] ?? 'meta' );
 		$key   = (string) $field['key'];
 
@@ -100,7 +117,7 @@ class TZH_Field_Renderer {
 	}
 
 	/**
-	 * Shared name attribute.
+	 * Top-level name attribute.
 	 *
 	 * @param string $key Field key.
 	 */
@@ -109,18 +126,43 @@ class TZH_Field_Renderer {
 	}
 
 	/**
+	 * Shared attributes for inputs that live inside repeater rows.
+	 *
+	 * @param string|null $leaf Relative key within a row, when applicable.
+	 */
+	private function leaf_attr( ?string $leaf ): string {
+		return null === $leaf ? '' : ' data-tzh-leaf="' . esc_attr( $leaf ) . '"';
+	}
+
+	/**
+	 * Optional id attribute.
+	 *
+	 * Repeater sub-fields pass an empty id because their markup is cloned.
+	 *
+	 * @param string $id Element id, possibly empty.
+	 */
+	private function attr_id( string $id ): string {
+		return '' === $id ? '' : ' id="' . esc_attr( $id ) . '"';
+	}
+
+	/**
 	 * Single-line text input.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_text( array $field, string $id ): void {
+	private function render_text( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		printf(
-			'<input type="text" id="%s" name="%s" value="%s" placeholder="%s" class="tzh-input" />',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) ),
-			esc_attr( (string) $this->value( $field ) ),
-			esc_attr( (string) ( $field['placeholder'] ?? '' ) )
+			'<input type="text"%s name="%s" value="%s" placeholder="%s" class="tzh-input"%s%s />',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			esc_attr( (string) $value ),
+			esc_attr( (string) ( $field['placeholder'] ?? '' ) ),
+			$this->leaf_attr( $leaf ),
+			! empty( $field['summary'] ) ? ' data-tzh-summary-source' : ''
 		);
 	}
 
@@ -128,9 +170,12 @@ class TZH_Field_Renderer {
 	 * Number input, optionally wrapped in a prefix and suffix.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_number( array $field, string $id ): void {
+	private function render_number( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		echo '<span class="tzh-number">';
 
 		if ( ! empty( $field['prefix'] ) ) {
@@ -138,13 +183,14 @@ class TZH_Field_Renderer {
 		}
 
 		printf(
-			'<input type="number" id="%s" name="%s" value="%s" class="tzh-input tzh-input--number"%s%s%s />',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) ),
-			esc_attr( (string) $this->value( $field ) ),
+			'<input type="number"%s name="%s" value="%s" class="tzh-input tzh-input--number"%s%s%s%s />',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			esc_attr( (string) $value ),
 			isset( $field['min'] ) ? ' min="' . esc_attr( (string) $field['min'] ) . '"' : '',
 			isset( $field['max'] ) ? ' max="' . esc_attr( (string) $field['max'] ) . '"' : '',
-			isset( $field['step'] ) ? ' step="' . esc_attr( (string) $field['step'] ) . '"' : ''
+			isset( $field['step'] ) ? ' step="' . esc_attr( (string) $field['step'] ) . '"' : '',
+			$this->leaf_attr( $leaf )
 		);
 
 		if ( ! empty( $field['suffix'] ) ) {
@@ -158,16 +204,20 @@ class TZH_Field_Renderer {
 	 * Multi-line text.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_textarea( array $field, string $id ): void {
+	private function render_textarea( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		printf(
-			'<textarea id="%s" name="%s" rows="%d" placeholder="%s" class="tzh-input tzh-textarea">%s</textarea>',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) ),
+			'<textarea%s name="%s" rows="%d" placeholder="%s" class="tzh-input tzh-textarea"%s>%s</textarea>',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
 			(int) ( $field['rows'] ?? 3 ),
 			esc_attr( (string) ( $field['placeholder'] ?? '' ) ),
-			esc_textarea( (string) $this->value( $field ) )
+			$this->leaf_attr( $leaf ),
+			esc_textarea( (string) $value )
 		);
 	}
 
@@ -175,22 +225,24 @@ class TZH_Field_Renderer {
 	 * Dropdown from a fixed option list.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_select( array $field, string $id ): void {
-		$current = (string) $this->value( $field );
-
+	private function render_select( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		printf(
-			'<select id="%s" name="%s" class="tzh-input">',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) )
+			'<select%s name="%s" class="tzh-input"%s>',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			$this->leaf_attr( $leaf )
 		);
 
 		foreach ( (array) ( $field['options'] ?? array() ) as $option_value => $label ) {
 			printf(
 				'<option value="%s"%s>%s</option>',
 				esc_attr( (string) $option_value ),
-				selected( $current, (string) $option_value, false ),
+				selected( (string) $value, (string) $option_value, false ),
 				esc_html( (string) $label )
 			);
 		}
@@ -202,15 +254,18 @@ class TZH_Field_Renderer {
 	 * Single checkbox with its own label.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_checkbox( array $field, string $id ): void {
+	private function render_checkbox( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		printf(
-			'<label class="tzh-check" for="%s"><input type="checkbox" id="%s" name="%s" value="1"%s /> <span>%s</span></label>',
-			esc_attr( $id ),
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) ),
-			checked( (string) $this->value( $field ), '1', false ),
+			'<label class="tzh-check"><input type="checkbox"%s name="%s" value="1"%s%s /> <span>%s</span></label>',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			checked( (string) $value, '1', false ),
+			$this->leaf_attr( $leaf ),
 			esc_html( (string) ( $field['label'] ?? '' ) )
 		);
 	}
@@ -219,17 +274,21 @@ class TZH_Field_Renderer {
 	 * Media library picker storing an attachment ID.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_media( array $field, string $id ): void {
-		$attachment_id = (int) $this->value( $field );
+	private function render_media( array $field, string $name, $value, string $id, ?string $leaf ): void {
+		$attachment_id = (int) $value;
 		$thumb         = $attachment_id ? wp_get_attachment_image_url( $attachment_id, 'medium' ) : '';
 
 		printf(
-			'<div class="tzh-media" data-tzh-media><input type="hidden" id="%s" name="%s" value="%d" data-tzh-media-input />',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) ),
-			$attachment_id
+			'<div class="tzh-media" data-tzh-media><input type="hidden"%s name="%s" value="%d" data-tzh-media-input%s />',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			$attachment_id,
+			$this->leaf_attr( $leaf )
 		);
 
 		printf(
@@ -251,11 +310,14 @@ class TZH_Field_Renderer {
 	 * Taxonomy dropdown, optionally with a box to name a new term.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_term( array $field, string $id ): void {
+	private function render_term( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		$taxonomy = (string) $field['taxonomy'];
-		$current  = (int) $this->value( $field );
+		$current  = (int) $value;
 		$terms    = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
@@ -265,15 +327,12 @@ class TZH_Field_Renderer {
 		);
 
 		printf(
-			'<select id="%s" name="%s" class="tzh-input">',
-			esc_attr( $id ),
-			esc_attr( $this->name( (string) $field['key'] ) )
+			'<select%s name="%s" class="tzh-input">',
+			$this->attr_id( $id ),
+			esc_attr( $name )
 		);
 
-		printf(
-			'<option value="0">%s</option>',
-			esc_html__( '— Select —', 'travelz-holidays' )
-		);
+		printf( '<option value="0">%s</option>', esc_html__( '— Select —', 'travelz-holidays' ) );
 
 		if ( ! is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
@@ -303,9 +362,12 @@ class TZH_Field_Renderer {
 	 * Read-only price preview, filled in by JavaScript as prices change.
 	 *
 	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Current value.
 	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
 	 */
-	private function render_preview( array $field, string $id ): void {
+	private function render_preview( array $field, string $name, $value, string $id, ?string $leaf ): void {
 		$rows = array(
 			'adult'  => __( 'Adult (12+)', 'travelz-holidays' ),
 			'child'  => __( 'Child (2–11)', 'travelz-holidays' ),
@@ -323,5 +385,107 @@ class TZH_Field_Renderer {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Repeating group of sub-fields, nestable.
+	 *
+	 * Row inputs carry only their relative key; JavaScript rewrites the full
+	 * name attributes after every add, remove or move, which keeps indexes
+	 * contiguous no matter how the list is edited.
+	 *
+	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Base name for the whole repeater.
+	 * @param mixed                $value Saved rows.
+	 * @param string               $id    Element id.
+	 * @param string|null          $leaf  Relative key inside a parent row.
+	 */
+	private function render_repeater( array $field, string $name, $value, string $id, ?string $leaf ): void {
+		$rows      = is_array( $value ) ? $value : array();
+		$sub       = (array) ( $field['fields'] ?? array() );
+		$row_label = (string) ( $field['row_label'] ?? __( 'Item', 'travelz-holidays' ) );
+
+		printf(
+			'<div class="tzh-rep" id="%s" data-tzh-repeater data-tzh-key="%s" data-tzh-label="%s"%s%s>',
+			esc_attr( $id ),
+			esc_attr( null === $leaf ? (string) $field['key'] : $leaf ),
+			esc_attr( $row_label ),
+			null === $leaf ? ' data-tzh-base="' . esc_attr( $name ) . '"' : '',
+			$this->leaf_attr( $leaf )
+		);
+
+		echo '<div class="tzh-rep__rows" data-tzh-rows>';
+
+		foreach ( array_values( $rows ) as $index => $row ) {
+			$this->render_repeater_row( $sub, (array) $row, $name . '[' . $index . ']', $index, $row_label );
+		}
+
+		echo '</div>';
+
+		// The template's names are placeholders; JavaScript rewrites them on add.
+		echo '<template data-tzh-row-template>';
+		$this->render_repeater_row( $sub, array(), $name . '[0]', 0, $row_label );
+		echo '</template>';
+
+		printf(
+			'<p class="tzh-rep__add"><button type="button" class="button" data-tzh-add><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span> %s</button></p>',
+			esc_html( (string) ( $field['add_label'] ?? __( 'Add row', 'travelz-holidays' ) ) )
+		);
+
+		echo '</div>';
+	}
+
+	/**
+	 * One repeater row: header bar plus its sub-fields.
+	 *
+	 * @param array<int, array<string, mixed>> $sub       Sub-field definitions.
+	 * @param array<string, mixed>             $row       Saved values for this row.
+	 * @param string                           $base      Name prefix for this row.
+	 * @param int                              $index     Zero-based row index.
+	 * @param string                           $row_label Singular label for a row.
+	 */
+	private function render_repeater_row( array $sub, array $row, string $base, int $index, string $row_label ): void {
+		echo '<div class="tzh-rep__row" data-tzh-row>';
+
+		printf(
+			'<div class="tzh-rep__head">
+				<button type="button" class="tzh-rep__toggle" data-tzh-toggle aria-expanded="true"><span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
+				<span class="tzh-rep__num" data-tzh-num>%s %d</span>
+				<span class="tzh-rep__summary" data-tzh-summary></span>
+				<span class="tzh-rep__actions">
+					<button type="button" class="button-link tzh-rep__move" data-tzh-up title="%s"><span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
+					<button type="button" class="button-link tzh-rep__move" data-tzh-down title="%s"><span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
+					<button type="button" class="button-link tzh-rep__remove" data-tzh-remove title="%s"><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
+				</span>
+			</div>',
+			esc_html__( 'Collapse', 'travelz-holidays' ),
+			esc_html( $row_label ),
+			$index + 1,
+			esc_attr__( 'Move up', 'travelz-holidays' ),
+			esc_html__( 'Move up', 'travelz-holidays' ),
+			esc_attr__( 'Move down', 'travelz-holidays' ),
+			esc_html__( 'Move down', 'travelz-holidays' ),
+			esc_attr__( 'Remove', 'travelz-holidays' ),
+			esc_html__( 'Remove', 'travelz-holidays' )
+		);
+
+		echo '<div class="tzh-rep__body"><div class="tzh-fields">';
+
+		foreach ( $sub as $sub_field ) {
+			$leaf    = (string) $sub_field['key'];
+			$default = $sub_field['default'] ?? ( 'repeater' === ( $sub_field['type'] ?? '' ) ? array() : '' );
+
+			$this->render(
+				$sub_field,
+				array(
+					'value' => $row[ $leaf ] ?? $default,
+					'name'  => $base . '[' . $leaf . ']',
+					'id'    => '',
+					'leaf'  => $leaf,
+				)
+			);
+		}
+
+		echo '</div></div></div>';
 	}
 }

@@ -436,3 +436,153 @@
 	font-size: 15px;
 	font-variant-numeric: tabular-nums;
 }
+
+/* Repeater */
+
+.tzh-field--type-repeater {
+	grid-column: 1 / -1;
+}
+
+.tzh-rep__rows {
+	display: grid;
+	gap: 10px;
+}
+
+.tzh-rep__rows.is-empty {
+	display: none;
+}
+
+.tzh-rep__row {
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+	overflow: hidden;
+}
+
+.tzh-rep__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 10px;
+	background: #f6f7f7;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.tzh-rep__row.is-collapsed .tzh-rep__head {
+	border-bottom: 0;
+}
+
+.tzh-rep__row.is-collapsed .tzh-rep__body {
+	display: none;
+}
+
+.tzh-rep__toggle {
+	display: grid;
+	place-items: center;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: 0;
+	border-radius: 3px;
+	background: none;
+	color: #646970;
+	cursor: pointer;
+}
+
+.tzh-rep__toggle:hover {
+	background: #e0e0e1;
+	color: #1d2327;
+}
+
+.tzh-rep__row.is-collapsed .tzh-rep__toggle .dashicons {
+	transform: rotate(180deg);
+}
+
+.tzh-rep__toggle .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+.tzh-rep__num {
+	flex: none;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .03em;
+	color: #50575e;
+}
+
+.tzh-rep__summary {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 13px;
+	color: #646970;
+}
+
+.tzh-rep__actions {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+
+.tzh-rep__move,
+.tzh-rep__remove {
+	display: grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 3px;
+	color: #646970;
+	text-decoration: none;
+}
+
+.tzh-rep__move:hover {
+	background: #e0e0e1;
+	color: #1d2327;
+}
+
+.tzh-rep__remove:hover {
+	background: #f7dcdc;
+	color: #b32d2e;
+}
+
+.tzh-rep__move .dashicons,
+.tzh-rep__remove .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+.tzh-rep__body {
+	padding: 14px 14px 16px;
+}
+
+.tzh-rep__add {
+	margin: 10px 0 0;
+}
+
+.tzh-rep__add .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	vertical-align: text-bottom;
+}
+
+/* A nested repeater sits quieter than the one holding it. */
+
+.tzh-rep .tzh-rep__row {
+	background: #fbfbfc;
+}
+
+.tzh-rep .tzh-rep .tzh-rep__head {
+	background: #fff;
+}
+
+.tzh-rep .tzh-rep .tzh-rep__body {
+	padding: 12px 12px 14px;
+}

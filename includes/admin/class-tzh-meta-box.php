@@ -162,7 +162,11 @@ class TZH_Meta_Box {
 				continue;
 			}
 
-			$raw = $submitted[ $key ] ?? ( 'checkbox' === $type ? '' : null );
+			// A checkbox that was unticked and a repeater whose last row was
+			// removed both post nothing at all — they need an explicit empty
+			// value or the previous contents would survive the save.
+			$missing = 'checkbox' === $type ? '' : ( 'repeater' === $type ? array() : null );
+			$raw     = $submitted[ $key ] ?? $missing;
 
 			if ( null === $raw ) {
 				continue;
@@ -284,9 +288,59 @@ class TZH_Meta_Box {
 			case 'textarea':
 				return sanitize_textarea_field( (string) $raw );
 
+			case 'repeater':
+				return $this->sanitize_rows(
+					is_array( $raw ) ? $raw : array(),
+					(array) ( $field['fields'] ?? array() )
+				);
+
 			default:
 				return sanitize_text_field( (string) $raw );
 		}
+	}
+
+	/**
+	 * Clean a repeater's rows, dropping the ones nobody filled in.
+	 *
+	 * Row keys are discarded and rebuilt from zero so a gap left by a removed
+	 * row never reaches the database, whatever the browser posted.
+	 *
+	 * @param array<int|string, mixed>         $rows       Submitted rows.
+	 * @param array<int, array<string, mixed>> $sub_fields Sub-field definitions.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function sanitize_rows( array $rows, array $sub_fields ): array {
+		$clean = array();
+
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			$entry = array();
+			$empty = true;
+
+			foreach ( $sub_fields as $sub_field ) {
+				$leaf = (string) $sub_field['key'];
+				$type = (string) ( $sub_field['type'] ?? 'text' );
+				$raw  = $row[ $leaf ] ?? ( 'repeater' === $type ? array() : '' );
+
+				$value = $this->sanitize( $raw, $sub_field );
+
+				$entry[ $leaf ] = $value;
+
+				if ( is_array( $value ) ? array() !== $value : '' !== (string) $value ) {
+					$empty = false;
+				}
+			}
+
+			if ( ! $empty ) {
+				$clean[] = $entry;
+			}
+		}
+
+		return $clean;
 	}
 
 	/**

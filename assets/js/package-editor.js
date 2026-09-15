@@ -206,6 +206,176 @@
 		update();
 	}
 
+
+	/* ---------- Repeaters ---------- */
+
+	/**
+	 * Rewrite every name attribute under a repeater so row indexes stay
+	 * contiguous after an add, remove or move — at any nesting depth.
+	 */
+	function reindex( repeater, base ) {
+		var rowsBox = repeater.querySelector( ':scope > [data-tzh-rows]' );
+
+		if ( ! rowsBox ) {
+			return;
+		}
+
+		var label = repeater.getAttribute( 'data-tzh-label' ) || '';
+		var rows = rowsBox.querySelectorAll( ':scope > [data-tzh-row]' );
+
+		rows.forEach( function ( row, index ) {
+			var rowBase = base + '[' + index + ']';
+
+			row.querySelectorAll( '[data-tzh-leaf]' ).forEach( function ( input ) {
+				if ( input.closest( '[data-tzh-repeater]' ) !== repeater ) {
+					return;
+				}
+
+				input.name = rowBase + '[' + input.getAttribute( 'data-tzh-leaf' ) + ']';
+			} );
+
+			row.querySelectorAll( '[data-tzh-repeater]' ).forEach( function ( nested ) {
+				if ( nested.parentElement.closest( '[data-tzh-repeater]' ) !== repeater ) {
+					return;
+				}
+
+				reindex( nested, rowBase + '[' + nested.getAttribute( 'data-tzh-key' ) + ']' );
+			} );
+
+			var num = row.querySelector( ':scope > .tzh-rep__head [data-tzh-num]' );
+
+			if ( num ) {
+				num.textContent = label + ' ' + ( index + 1 );
+			}
+
+			updateSummary( row );
+		} );
+
+		rowsBox.classList.toggle( 'is-empty', 0 === rows.length );
+	}
+
+	function updateSummary( row ) {
+		var target = row.querySelector( ':scope > .tzh-rep__head [data-tzh-summary]' );
+
+		if ( ! target ) {
+			return;
+		}
+
+		var source = row.querySelector( '[data-tzh-summary-source]' );
+		var owner = source ? source.closest( '[data-tzh-row]' ) : null;
+
+		target.textContent = ( source && owner === row ) ? source.value : '';
+	}
+
+	function rootOf( element ) {
+		var repeater = element.closest( '[data-tzh-repeater]' );
+
+		while ( repeater && ! repeater.hasAttribute( 'data-tzh-base' ) ) {
+			repeater = repeater.parentElement
+				? repeater.parentElement.closest( '[data-tzh-repeater]' )
+				: null;
+		}
+
+		return repeater;
+	}
+
+	function refresh( element ) {
+		var root = rootOf( element );
+
+		if ( root ) {
+			reindex( root, root.getAttribute( 'data-tzh-base' ) );
+		}
+	}
+
+	function initRepeaters( editor ) {
+		editor.querySelectorAll( '[data-tzh-repeater][data-tzh-base]' ).forEach( function ( root ) {
+			reindex( root, root.getAttribute( 'data-tzh-base' ) );
+		} );
+
+		editor.addEventListener( 'click', function ( event ) {
+			var button = event.target.closest( 'button' );
+
+			if ( ! button || ! editor.contains( button ) ) {
+				return;
+			}
+
+			if ( button.hasAttribute( 'data-tzh-add' ) ) {
+				event.preventDefault();
+
+				var repeater = button.closest( '[data-tzh-repeater]' );
+				var template = repeater.querySelector( ':scope > template[data-tzh-row-template]' );
+				var rowsBox = repeater.querySelector( ':scope > [data-tzh-rows]' );
+				var clone = template.content.firstElementChild.cloneNode( true );
+
+				rowsBox.appendChild( clone );
+				refresh( repeater );
+
+				var firstInput = clone.querySelector( 'input, textarea, select' );
+
+				if ( firstInput ) {
+					firstInput.focus();
+				}
+
+				return;
+			}
+
+			var row = button.closest( '[data-tzh-row]' );
+
+			if ( ! row ) {
+				return;
+			}
+
+			if ( button.hasAttribute( 'data-tzh-remove' ) ) {
+				event.preventDefault();
+
+				var parent = row.parentElement;
+				row.remove();
+				refresh( parent );
+
+				return;
+			}
+
+			if ( button.hasAttribute( 'data-tzh-up' ) ) {
+				event.preventDefault();
+
+				if ( row.previousElementSibling ) {
+					row.parentElement.insertBefore( row, row.previousElementSibling );
+					refresh( row );
+				}
+
+				return;
+			}
+
+			if ( button.hasAttribute( 'data-tzh-down' ) ) {
+				event.preventDefault();
+
+				if ( row.nextElementSibling ) {
+					row.parentElement.insertBefore( row.nextElementSibling, row );
+					refresh( row );
+				}
+
+				return;
+			}
+
+			if ( button.hasAttribute( 'data-tzh-toggle' ) ) {
+				event.preventDefault();
+
+				var collapsed = row.classList.toggle( 'is-collapsed' );
+				button.setAttribute( 'aria-expanded', collapsed ? 'false' : 'true' );
+			}
+		} );
+
+		editor.addEventListener( 'input', function ( event ) {
+			if ( event.target.hasAttribute && event.target.hasAttribute( 'data-tzh-summary-source' ) ) {
+				var row = event.target.closest( '[data-tzh-row]' );
+
+				if ( row ) {
+					updateSummary( row );
+				}
+			}
+		} );
+	}
+
 	function init() {
 		var editor = document.querySelector( '[data-tzh-editor]' );
 
@@ -214,6 +384,7 @@
 		}
 
 		initTabs( editor );
+		initRepeaters( editor );
 		editor.querySelectorAll( '[data-tzh-media]' ).forEach( initMedia );
 		initPricePreview();
 	}
