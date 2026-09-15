@@ -65,6 +65,16 @@ class TZH_Settings_Page {
 
 		$clean['woo_checkout'] = ! empty( $input['woo_checkout'] );
 
+		$clean['price_min']  = max( 0, (int) ( $input['price_min'] ?? 0 ) );
+		$clean['price_max']  = max( 0, (int) ( $input['price_max'] ?? 0 ) );
+		$clean['price_step'] = max( 100, (int) ( $input['price_step'] ?? 1000 ) );
+
+		// A ceiling below the floor would give a slider with no width, so the
+		// pair is swapped rather than saved in an order nobody can use.
+		if ( $clean['price_max'] > 0 && $clean['price_max'] <= $clean['price_min'] ) {
+			list( $clean['price_min'], $clean['price_max'] ) = array( $clean['price_max'], $clean['price_min'] );
+		}
+
 		$clean['child_rate']   = min( 100, max( 0, (int) ( $input['child_rate'] ?? 70 ) ) );
 		$clean['infant_price'] = max( 0, (int) ( $input['infant_price'] ?? 0 ) );
 

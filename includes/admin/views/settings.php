@@ -134,6 +134,69 @@ $tzh_lines = static function ( $value ): string {
 		</div>
 
 		<div class="tzh-panel">
+			<h2><?php esc_html_e( 'Price filter', 'travelz-holidays' ); ?></h2>
+			<p class="tzh-note">
+				<?php
+				$tzh_live = TZH_Query::price_bounds();
+
+				printf(
+					/* translators: 1: lowest price on the slider, 2: highest price on the slider */
+					esc_html__( 'The slider on the destination pages currently runs from %1$s to %2$s. Leave the highest price at 0 and it follows the dearest published package on its own.', 'travelz-holidays' ),
+					'<strong>' . esc_html( tzh_price( $tzh_live['min'] ) ) . '</strong>',
+					'<strong>' . esc_html( tzh_price( $tzh_live['max'] ) ) . '</strong>'
+				);
+				?>
+			</p>
+
+			<table class="form-table" role="presentation">
+				<tbody>
+				<tr>
+					<th scope="row">
+						<label for="tzh-price-min"><?php esc_html_e( 'Lowest price', 'travelz-holidays' ); ?></label>
+					</th>
+					<td>
+						<span class="tzh-number__affix"><?php echo esc_html( (string) $values['currency_symbol'] ); ?></span>
+						<input type="number" id="tzh-price-min" class="small-text" min="0" step="100"
+							name="<?php echo esc_attr( $tzh_name( 'price_min' ) ); ?>"
+							value="<?php echo esc_attr( (string) $values['price_min'] ); ?>" />
+						<p class="description">
+							<?php esc_html_e( 'Where the left handle starts. Usually 0.', 'travelz-holidays' ); ?>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
+						<label for="tzh-price-max"><?php esc_html_e( 'Highest price', 'travelz-holidays' ); ?></label>
+					</th>
+					<td>
+						<span class="tzh-number__affix"><?php echo esc_html( (string) $values['currency_symbol'] ); ?></span>
+						<input type="number" id="tzh-price-max" class="small-text" min="0" step="100"
+							name="<?php echo esc_attr( $tzh_name( 'price_max' ) ); ?>"
+							value="<?php echo esc_attr( (string) $values['price_max'] ); ?>" />
+						<p class="description">
+							<?php esc_html_e( '0 means automatic — the dearest published package, rounded up to the next step. Set a number to pin the slider there instead, which keeps it steady as packages come and go.', 'travelz-holidays' ); ?>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
+						<label for="tzh-price-step"><?php esc_html_e( 'Step', 'travelz-holidays' ); ?></label>
+					</th>
+					<td>
+						<span class="tzh-number__affix"><?php echo esc_html( (string) $values['currency_symbol'] ); ?></span>
+						<input type="number" id="tzh-price-step" class="small-text" min="100" step="100"
+							name="<?php echo esc_attr( $tzh_name( 'price_step' ) ); ?>"
+							value="<?php echo esc_attr( (string) $values['price_step'] ); ?>" />
+						<p class="description">
+							<?php esc_html_e( 'How much the handle moves at a time.', 'travelz-holidays' ); ?>
+						</p>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="tzh-panel">
 			<h2><?php esc_html_e( 'Default pricing', 'travelz-holidays' ); ?></h2>
 
 			<table class="form-table" role="presentation">

@@ -125,47 +125,58 @@ class TZH_Query {
 	 * @return array{min: int, max: int, step: int}
 	 */
 	public static function price_bounds(): array {
-		$cached = wp_cache_get( 'tzh_price_bounds', 'tzh' );
+		$key    = 'tzh_price_bounds_' . TZH_Cache::version();
+		$cached = wp_cache_get( $key, 'tzh' );
 
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
 
+		$settings = TZH_Settings::all();
+		$step     = max( 100, (int) ( $settings['price_step'] ?? 1000 ) );
+		$floor    = max( 0, (int) ( $settings['price_min'] ?? 0 ) );
+		$ceiling  = max( 0, (int) ( $settings['price_max'] ?? 0 ) );
+
+		// Zero means "work it out from the catalogue", which is what a site
+		// wants until someone decides otherwise.
+		$high = $ceiling > 0 ? $ceiling : self::dearest();
+
+		$bounds = array(
+			'min'  => $floor,
+			'max'  => $ceiling > 0 ? $ceiling : ( $high > 0 ? (int) ( ceil( $high / $step ) * $step ) : 100000 ),
+			'step' => $step,
+		);
+
+		// A single-package catalogue, or a ceiling typed below the floor, would
+		// otherwise give a slider with no width at all.
+		if ( $bounds['max'] <= $bounds['min'] ) {
+			$bounds['max'] = $bounds['min'] + ( $step * 10 );
+		}
+
+		wp_cache_set( $key, $bounds, 'tzh', HOUR_IN_SECONDS );
+
+		return $bounds;
+	}
+
+	/**
+	 * Price of the dearest published package, or 0 when there is none.
+	 */
+	private static function dearest(): int {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Result is cached below.
-		$row = $wpdb->get_row(
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- The caller caches the result.
+		$value = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT MIN(CAST(meta_value AS UNSIGNED)) AS lo, MAX(CAST(meta_value AS UNSIGNED)) AS hi
+				"SELECT MAX(CAST(meta_value AS UNSIGNED))
 				 FROM {$wpdb->postmeta} m
 				 INNER JOIN {$wpdb->posts} p ON p.ID = m.post_id
 				 WHERE m.meta_key = %s AND p.post_type = %s AND p.post_status = 'publish'",
 				TZH_Package::META_PRICE,
 				TZH_Package::POST_TYPE
-			),
-			ARRAY_A
+			)
 		);
 
-		$step   = 1000;
-		$lowest = isset( $row['lo'] ) ? (int) $row['lo'] : 0;
-		$high   = isset( $row['hi'] ) ? (int) $row['hi'] : 0;
-
-		$bounds = array(
-			'min'  => 0,
-			'max'  => $high > 0 ? (int) ( ceil( $high / $step ) * $step ) : 100000,
-			'step' => $step,
-		);
-
-		// A single-package catalogue would otherwise give a zero-width slider.
-		if ( $bounds['max'] <= $bounds['min'] ) {
-			$bounds['max'] = $bounds['min'] + ( $step * 10 );
-		}
-
-		unset( $lowest );
-
-		wp_cache_set( 'tzh_price_bounds', $bounds, 'tzh', HOUR_IN_SECONDS );
-
-		return $bounds;
+		return (int) $value;
 	}
 
 	/**
