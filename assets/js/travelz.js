@@ -33,7 +33,10 @@
 			host.className = 'tz-toasts';
 			host.setAttribute( 'role', 'status' );
 			host.setAttribute( 'aria-live', 'polite' );
-			document.body.appendChild( host );
+
+			// Every rule in the stylesheet is scoped under #tz-app, so a toast
+			// parked on <body> would arrive with no styling at all.
+			( document.getElementById( 'tz-app' ) || document.body ).appendChild( host );
 		}
 
 		var box = document.createElement( 'div' );
@@ -323,10 +326,150 @@
 		} );
 	}
 
+	/* ---------- Booking form ---------- */
+
+	function initBooking( form ) {
+		var breakdown = document.querySelector( '[data-tz-breakdown]' );
+		var counts = Array.prototype.slice.call( form.querySelectorAll( '[data-tz-count]' ) );
+		var date = form.querySelector( 'input[type="date"]' );
+		var minPax = parseInt( form.getAttribute( 'data-tz-min-pax' ), 10 ) || 1;
+
+		if ( ! breakdown || ! counts.length ) {
+			return;
+		}
+
+		/* The browser's own bubble would fire before the designed toast, and it
+		   cannot express "at least N travellers" anyway. The server still
+		   checks both, so nothing is lost by taking the attribute off. */
+		if ( date ) {
+			date.removeAttribute( 'required' );
+		}
+
+		function value( input ) {
+			var min = parseInt( input.getAttribute( 'min' ), 10 ) || 0;
+			var max = parseInt( input.getAttribute( 'max' ), 10 ) || 99;
+			var raw = parseInt( input.value, 10 );
+
+			if ( ! isFinite( raw ) ) {
+				raw = min;
+			}
+
+			return Math.min( max, Math.max( min, raw ) );
+		}
+
+		function render() {
+			var subtotal = 0;
+
+			counts.forEach( function ( input ) {
+				var key = input.getAttribute( 'data-tz-count' );
+				var unit = parseInt( input.getAttribute( 'data-tz-unit' ), 10 ) || 0;
+				var count = value( input );
+				var row = breakdown.querySelector( '[data-tz-line="' + key + '"]' );
+
+				subtotal += count * unit;
+
+				if ( ! row ) {
+					return;
+				}
+
+				row.classList.toggle( 'is-zero', 0 === count );
+
+				var label = row.querySelector( '[data-tz-line-label]' );
+				var total = row.querySelector( '[data-tz-line-total]' );
+
+				if ( label ) {
+					// The traveller type is carried on the element so the label
+					// never has to be parsed back out of its own text.
+					label.textContent = label.getAttribute( 'data-tz-line-label' ) + ' × ' + count;
+				}
+
+				if ( total ) {
+					total.textContent = money( count * unit );
+				}
+			} );
+
+			var out = breakdown.querySelector( '[data-tz-subtotal]' );
+			var grand = breakdown.querySelector( '[data-tz-total]' );
+
+			if ( out ) {
+				out.textContent = money( subtotal );
+			}
+
+			if ( grand ) {
+				grand.textContent = money( subtotal );
+			}
+		}
+
+		form.addEventListener( 'click', function ( event ) {
+			var button = event.target.closest( '[data-tz-step]' );
+
+			if ( ! button ) {
+				return;
+			}
+
+			var input = document.getElementById( button.getAttribute( 'data-tz-target' ) );
+
+			if ( ! input ) {
+				return;
+			}
+
+			input.value = value( input ) + parseInt( button.getAttribute( 'data-tz-step' ), 10 );
+			input.value = value( input );
+
+			render();
+		} );
+
+		form.addEventListener( 'input', function ( event ) {
+			if ( event.target.hasAttribute( 'data-tz-count' ) ) {
+				render();
+			}
+		} );
+
+		form.addEventListener( 'change', function ( event ) {
+			if ( event.target.hasAttribute( 'data-tz-count' ) ) {
+				event.target.value = value( event.target );
+				render();
+			}
+		} );
+
+		form.addEventListener( 'submit', function ( event ) {
+			var messages = config.i18n || {};
+			var counted = 0;
+
+			counts.forEach( function ( input ) {
+				if ( 'infants' !== input.getAttribute( 'data-tz-count' ) ) {
+					counted += value( input );
+				}
+			} );
+
+			if ( date && ! date.value ) {
+				event.preventDefault();
+				toast( messages.pickDate || 'Please pick a travel date.', { type: 'error' } );
+				date.focus();
+
+				return;
+			}
+
+			if ( counted < minPax ) {
+				event.preventDefault();
+				toast( messages.minPax || 'Please add more travelers.', { type: 'error' } );
+
+				return;
+			}
+
+			if ( messages.redirecting ) {
+				toast( messages.redirecting, { type: 'success' } );
+			}
+		} );
+
+		render();
+	}
+
 	function init() {
 		document.querySelectorAll( '[data-tz-tabs]' ).forEach( initTabs );
 		document.querySelectorAll( '[data-tz-range]' ).forEach( initRange );
 		document.querySelectorAll( '[data-tz-filters]' ).forEach( initFilters );
+		document.querySelectorAll( '[data-tz-book]' ).forEach( initBooking );
 		initDrawer();
 	}
 

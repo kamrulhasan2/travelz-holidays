@@ -116,10 +116,9 @@ class TZH_Router {
 			case 'pdf':
 				return 'print-package';
 
-			// The booking screen gets its own template in the next phase.
-			// Until then /book/ shows the package rather than whatever the
-			// theme would make of a singular query it knows nothing about.
 			case 'book':
+				return 'booking-package';
+
 			case '':
 				return 'single-package';
 		}

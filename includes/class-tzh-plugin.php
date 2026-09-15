@@ -105,6 +105,7 @@ final class TZH_Plugin {
 			'shortcodes' => 'TZH_Shortcodes',
 			'theme_compat' => 'TZH_Theme_Compat',
 			'rest'       => 'TZH_Rest',
+			'booking'    => 'TZH_Booking',
 		);
 
 		if ( is_admin() ) {

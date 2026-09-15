@@ -150,9 +150,12 @@ class TZH_Assets {
 				'currency' => (string) TZH_Settings::get( 'currency_symbol', '৳' ),
 				'rest'     => esc_url_raw( rest_url( 'tzh/v1/packages' ) ),
 				'i18n'     => array(
-					'filters'  => __( 'Filters', 'travelz-holidays' ),
-					'close'    => __( 'Close', 'travelz-holidays' ),
-					'loading'  => __( 'Loading packages…', 'travelz-holidays' ),
+					'filters'     => __( 'Filters', 'travelz-holidays' ),
+					'close'       => __( 'Close', 'travelz-holidays' ),
+					'loading'     => __( 'Loading packages…', 'travelz-holidays' ),
+					'pickDate'    => __( 'Please pick a travel date.', 'travelz-holidays' ),
+					'minPax'      => __( 'Please add more travelers for this package.', 'travelz-holidays' ),
+					'redirecting' => __( 'Sending you to secure checkout…', 'travelz-holidays' ),
 				),
 			)
 		);
