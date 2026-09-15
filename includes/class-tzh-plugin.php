@@ -105,6 +105,7 @@ final class TZH_Plugin {
 			$modules['admin_menu']      = 'TZH_Admin_Menu';
 			$modules['admin_notices']   = 'TZH_Admin_Notices';
 			$modules['package_columns'] = 'TZH_Package_Columns';
+			$modules['meta_box']        = 'TZH_Meta_Box';
 		}
 
 		/**

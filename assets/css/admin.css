@@ -201,3 +201,238 @@
 .tzh-muted {
 	color: #a7aaad;
 }
+
+/* Package editor — tabbed panel */
+
+.tzh-editor {
+	display: grid;
+	grid-template-columns: 200px minmax(0, 1fr);
+	gap: 0;
+	margin: -6px -12px -12px;
+}
+
+@media screen and (max-width: 782px) {
+	.tzh-editor {
+		grid-template-columns: 1fr;
+	}
+}
+
+.tzh-editor__tabs {
+	margin: 0;
+	padding: 12px 0;
+	list-style: none;
+	background: #f6f7f7;
+	border-right: 1px solid #dcdcde;
+}
+
+@media screen and (max-width: 782px) {
+	.tzh-editor__tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		padding: 10px;
+		border-right: 0;
+		border-bottom: 1px solid #dcdcde;
+	}
+}
+
+.tzh-editor__tabs li {
+	margin: 0;
+}
+
+.tzh-editor__tab {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 10px 14px;
+	border: 0;
+	border-left: 3px solid transparent;
+	background: none;
+	text-align: left;
+	font-size: 13px;
+	font-weight: 500;
+	color: #50575e;
+	cursor: pointer;
+}
+
+.tzh-editor__tab:hover {
+	color: #135e96;
+}
+
+.tzh-editor__tab.is-active {
+	background: #fff;
+	border-left-color: #2271b1;
+	color: #1d2327;
+}
+
+@media screen and (max-width: 782px) {
+	.tzh-editor__tab {
+		width: auto;
+		border-left: 0;
+		border-radius: 4px;
+		padding: 6px 10px;
+	}
+
+	.tzh-editor__tab.is-active {
+		background: #fff;
+		box-shadow: inset 0 0 0 1px #2271b1;
+	}
+}
+
+.tzh-editor__tab .dashicons {
+	font-size: 17px;
+	width: 17px;
+	height: 17px;
+}
+
+.tzh-editor__panel {
+	padding: 20px 22px 24px;
+}
+
+.tzh-panel-intro {
+	margin: 0 0 18px;
+	color: #50575e;
+	max-width: 62ch;
+}
+
+/* Field grid */
+
+.tzh-fields {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 18px 20px;
+	align-items: start;
+}
+
+.tzh-field {
+	grid-column: 1 / -1;
+	min-width: 0;
+}
+
+.tzh-field--half {
+	grid-column: span 2;
+}
+
+.tzh-field--quarter {
+	grid-column: span 1;
+}
+
+@media screen and (max-width: 782px) {
+	.tzh-fields {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.tzh-field--half {
+		grid-column: 1 / -1;
+	}
+}
+
+.tzh-field__label {
+	display: block;
+	margin-bottom: 5px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .03em;
+	color: #50575e;
+}
+
+.tzh-req {
+	color: #d63638;
+}
+
+.tzh-field__help {
+	margin: 5px 0 0;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #646970;
+	max-width: 58ch;
+}
+
+.tzh-input {
+	width: 100%;
+	max-width: 100%;
+}
+
+.tzh-textarea {
+	resize: vertical;
+}
+
+.tzh-input--new-term {
+	margin-top: 6px;
+}
+
+.tzh-number {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tzh-number__affix {
+	flex: none;
+	font-size: 13px;
+	color: #646970;
+	white-space: nowrap;
+}
+
+.tzh-input--number {
+	font-variant-numeric: tabular-nums;
+}
+
+.tzh-check {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+}
+
+/* Media picker */
+
+.tzh-media__preview {
+	margin-bottom: 8px;
+}
+
+.tzh-media__preview img {
+	display: block;
+	max-width: 280px;
+	height: auto;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+
+.tzh-media__actions {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.tzh-media__remove {
+	color: #b32d2e;
+}
+
+/* Price preview */
+
+.tzh-preview {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: 10px;
+}
+
+.tzh-preview__row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 5px;
+	background: #f6f7f7;
+	font-size: 13px;
+}
+
+.tzh-preview__row b {
+	font-size: 15px;
+	font-variant-numeric: tabular-nums;
+}

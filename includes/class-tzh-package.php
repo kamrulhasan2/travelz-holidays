@@ -185,6 +185,77 @@ class TZH_Package {
 	}
 
 	/**
+	 * Child price in taka, worked out from the adult price.
+	 *
+	 * The rate is stored as a percentage (70 means 70% of the adult price)
+	 * because that is how a travel desk quotes it.
+	 */
+	public function child_price(): int {
+		$rate = get_post_meta( $this->id(), self::META_CHILD_RATE, true );
+		$rate = '' === $rate ? 70 : (float) $rate;
+
+		return (int) round( $this->price() * $rate / 100 );
+	}
+
+	/**
+	 * Flat infant price in taka.
+	 */
+	public function infant_price(): int {
+		return (int) get_post_meta( $this->id(), self::META_INFANT_PRICE, true );
+	}
+
+	/**
+	 * Smallest party the package can be booked for.
+	 */
+	public function min_pax(): int {
+		return max( 1, (int) get_post_meta( $this->id(), self::META_MIN_PAX, true ) );
+	}
+
+	/**
+	 * Whether the quoted price covers flights.
+	 */
+	public function with_airfare(): bool {
+		return '1' === (string) get_post_meta( $this->id(), self::META_WITH_AIRFARE, true );
+	}
+
+	/**
+	 * Whether to show the Bestseller badge.
+	 */
+	public function is_bestseller(): bool {
+		return '1' === (string) get_post_meta( $this->id(), self::META_BESTSELLER, true );
+	}
+
+	/**
+	 * Star rating out of five. Zero means "do not show".
+	 */
+	public function rating(): float {
+		return (float) get_post_meta( $this->id(), self::META_RATING, true );
+	}
+
+	/**
+	 * How many travellers have booked. Zero means "do not show".
+	 */
+	public function booked_count(): int {
+		return (int) get_post_meta( $this->id(), self::META_BOOKED, true );
+	}
+
+	/**
+	 * Hero banner attachment ID, falling back to the featured image.
+	 */
+	public function hero_id(): int {
+		$hero = (int) get_post_meta( $this->id(), self::META_HERO, true );
+
+		return $hero > 0 ? $hero : (int) get_post_thumbnail_id( $this->id() );
+	}
+
+	/**
+	 * One-line summary shown on cards.
+	 */
+	public function short_description(): string {
+		return (string) $this->post->post_excerpt;
+	}
+
+	/**
 	 * First destination term, or null when none is assigned.
 	 */
 	public function destination(): ?WP_Term {
