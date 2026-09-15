@@ -9,29 +9,11 @@
  *
  * @var array<string, mixed> $filters Sanitized filters.
  * @var string               $action  Form action URL.
- * @var string               $current Slug of the destination whose page this is, if any.
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$tzh_current      = isset( $current ) ? (string) $current : '';
 $tzh_destinations = TZH_Term_Meta::ordered( TZH_Package::TAX_DESTINATION, true );
-
-/*
- * Every other filter narrows the list in place; a country is a different page,
- * because one destination is one URL in this plugin. So the country list
- * carries the filters across rather than pretending to be a checkbox that
- * could hold two countries at once on a page that only has room for one.
- */
-$tzh_carry = array_filter(
-	array(
-		'tier' => $filters['tier'],
-		'days' => $filters['days'],
-		'type' => 'all' === $filters['type'] ? '' : $filters['type'],
-		'min'  => $filters['min'] > $filters['bounds']['min'] ? (string) $filters['min'] : '',
-		'max'  => $filters['max'] < $filters['bounds']['max'] ? (string) $filters['max'] : '',
-	)
-);
 $tzh_tiers        = TZH_Term_Meta::ordered( TZH_Package::TAX_TIER, true );
 $tzh_buckets      = TZH_Query::duration_buckets();
 $tzh_bounds       = $filters['bounds'];
@@ -40,20 +22,18 @@ $tzh_bounds       = $filters['bounds'];
 	<h2 class="tz-heading tz-filters__title"><?php esc_html_e( 'Filters', 'travelz-holidays' ); ?></h2>
 
 	<?php if ( count( $tzh_destinations ) > 1 ) : ?>
-		<div class="tz-filters__group">
-			<h3 class="tz-filters__legend"><?php esc_html_e( 'Country', 'travelz-holidays' ); ?></h3>
+		<fieldset class="tz-filters__group">
+			<legend class="tz-filters__legend"><?php esc_html_e( 'Country', 'travelz-holidays' ); ?></legend>
 			<div class="tz-filters__scroll">
 				<?php foreach ( $tzh_destinations as $tzh_term ) : ?>
-					<?php $tzh_is_here = $tzh_term->slug === $tzh_current; ?>
-					<a class="tz-opt tz-opt--link<?php echo $tzh_is_here ? ' is-current' : ''; ?>"
-						href="<?php echo esc_url( add_query_arg( $tzh_carry, (string) get_term_link( $tzh_term ) ) ); ?>"
-						<?php echo $tzh_is_here ? 'aria-current="page"' : ''; ?>>
-						<span class="tz-opt__dot" aria-hidden="true"></span>
+					<label class="tz-opt">
+						<input type="checkbox" name="dest[]" value="<?php echo esc_attr( $tzh_term->slug ); ?>"
+							<?php checked( in_array( $tzh_term->slug, $filters['dest'], true ) ); ?> />
 						<span><?php echo esc_html( $tzh_term->name ); ?></span>
-					</a>
+					</label>
 				<?php endforeach; ?>
 			</div>
-		</div>
+		</fieldset>
 	<?php endif; ?>
 
 	<?php if ( $tzh_tiers ) : ?>

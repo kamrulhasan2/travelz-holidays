@@ -84,16 +84,20 @@ class TZH_Router {
 			return;
 		}
 
-		if ( ! $query->is_tax( TZH_Package::TAX_DESTINATION ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters from the URL.
+		$source = wp_unslash( $_GET );
+
+		if ( $query->is_tax( TZH_Package::TAX_DESTINATION ) ) {
+			$term = (string) $query->get( TZH_Package::TAX_DESTINATION );
+		} elseif ( $query->is_post_type_archive( TZH_Package::POST_TYPE ) && TZH_Query::requested( $source ) ) {
+			// The catalogue is not tied to one country, which is the only place
+			// a visitor can pick several at once.
+			$term = '';
+		} else {
 			return;
 		}
 
-		$term = $query->get( TZH_Package::TAX_DESTINATION );
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters from the URL.
-		$filters = TZH_Query::filters( wp_unslash( $_GET ), (string) $term );
-
-		TZH_Query::apply( $query, $filters );
+		TZH_Query::apply( $query, TZH_Query::filters( $source, $term ) );
 	}
 
 	/**
@@ -101,7 +105,8 @@ class TZH_Router {
 	 */
 	private function template_name(): string {
 		if ( is_post_type_archive( TZH_Package::POST_TYPE ) ) {
-			return 'archive-destinations';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters from the URL.
+			return TZH_Query::requested( wp_unslash( $_GET ) ) ? 'archive-packages' : 'archive-destinations';
 		}
 
 		if ( is_tax( TZH_Package::TAX_DESTINATION ) ) {

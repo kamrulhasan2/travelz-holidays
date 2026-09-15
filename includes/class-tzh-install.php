@@ -19,7 +19,7 @@ class TZH_Install {
 	/**
 	 * Bump when a new step is added below.
 	 */
-	private const DB_VERSION = 5;
+	private const DB_VERSION = 6;
 
 	/**
 	 * Option holding the schema version already applied.

@@ -102,6 +102,25 @@ class TZH_Query {
 	}
 
 	/**
+	 * Whether a request carries any filter at all.
+	 *
+	 * The catalogue shows destination cards until somebody filters, at which
+	 * point the same URL turns into a list of packages — one page, two jobs,
+	 * rather than a second URL that would compete with it in search results.
+	 *
+	 * @param array<string, mixed> $source Raw query parameters.
+	 */
+	public static function requested( array $source ): bool {
+		foreach ( array( 'dest', 'tier', 'days', 'type', 'min', 'max' ) as $key ) {
+			if ( isset( $source[ $key ] ) && '' !== $source[ $key ] ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Whether any filter differs from the default view.
 	 *
 	 * @param array<string, mixed> $filters     Sanitized filters.
@@ -116,7 +135,11 @@ class TZH_Query {
 			return true;
 		}
 
-		return array( $destination ) !== $filters['dest'] && '' !== $destination;
+		if ( '' === $destination ) {
+			return (bool) $filters['dest'];
+		}
+
+		return array( $destination ) !== $filters['dest'];
 	}
 
 	/**

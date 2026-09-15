@@ -112,6 +112,9 @@ class TZH_Rewrites {
 			// A package itself.
 			"^{$base}/([^/]+)/([^/]+)/?$"          => 'index.php?' . TZH_Package::POST_TYPE . '=$matches[2]',
 
+			// The catalogue's own pages, before a destination can swallow "page".
+			"^{$base}/page/([0-9]{1,})/?$"         => 'index.php?post_type=' . TZH_Package::POST_TYPE . '&paged=$matches[1]',
+
 			// A destination, paged and not.
 			"^{$base}/([^/]+)/page/([0-9]{1,})/?$" => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]&paged=$matches[2]',
 			"^{$base}/([^/]+)/?$"                  => 'index.php?' . TZH_Package::TAX_DESTINATION . '=$matches[1]',

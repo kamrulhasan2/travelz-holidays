@@ -11,18 +11,20 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-$tzh_term = get_queried_object();
-
-if ( ! $tzh_term instanceof WP_Term ) {
-	get_footer();
-
-	return;
-}
+$tzh_object = get_queried_object();
+$tzh_term   = $tzh_object instanceof WP_Term ? $tzh_object : null;
 
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters from the URL.
-$tzh_filters = TZH_Query::filters( wp_unslash( $_GET ), $tzh_term->slug );
-$tzh_action  = get_term_link( $tzh_term );
-$tzh_blurb   = TZH_Term_Meta::blurb( $tzh_term->term_id );
+$tzh_filters = TZH_Query::filters( wp_unslash( $_GET ), $tzh_term ? $tzh_term->slug : '' );
+
+/*
+ * The form always posts to the catalogue, never to a country's own page: a
+ * visitor who ticks two countries needs a page that belongs to neither, and
+ * this is it. The country they started on travels with them as a ticked box.
+ */
+$tzh_action = TZH_Rewrites::grid_url();
+$tzh_blurb  = $tzh_term ? TZH_Term_Meta::blurb( $tzh_term->term_id ) : (string) TZH_Settings::get( 'archive_subtitle', '' );
+$tzh_title  = $tzh_term ? $tzh_term->name : (string) TZH_Settings::get( 'archive_title', __( 'Holiday Packages', 'travelz-holidays' ) );
 
 ?>
 <div id="tz-app">
@@ -30,27 +32,27 @@ $tzh_blurb   = TZH_Term_Meta::blurb( $tzh_term->term_id );
 	tzh_template(
 		'parts/breadcrumb',
 		array(
-			'crumbs' => array(
+			'crumbs' => array_values( array_filter( array(
 				array(
 					'label' => __( 'Home', 'travelz-holidays' ),
 					'url'   => home_url( '/' ),
 				),
 				array(
 					'label' => (string) TZH_Settings::get( 'archive_title', __( 'Holiday Packages', 'travelz-holidays' ) ),
-					'url'   => TZH_Rewrites::grid_url(),
+					'url'   => $tzh_term ? TZH_Rewrites::grid_url() : '',
 				),
-				array(
+				$tzh_term ? array(
 					'label' => $tzh_term->name,
 					'url'   => '',
-				),
-			),
+				) : null,
+			) ) ),
 		)
 	);
 	?>
 
 	<section class="tz-wrap tz-section tz-fade-in">
 		<header class="tz-list-head">
-			<h1 class="tz-title--sm"><?php echo esc_html( $tzh_term->name ); ?></h1>
+			<h1 class="tz-title--sm"><?php echo esc_html( $tzh_title ); ?></h1>
 			<?php if ( '' !== $tzh_blurb ) : ?>
 				<p class="tz-lede"><?php echo esc_html( $tzh_blurb ); ?></p>
 			<?php endif; ?>
@@ -64,7 +66,6 @@ $tzh_blurb   = TZH_Term_Meta::blurb( $tzh_term->term_id );
 					array(
 						'filters' => $tzh_filters,
 						'action'  => $tzh_action,
-						'current' => $tzh_term->slug,
 					)
 				);
 				?>
