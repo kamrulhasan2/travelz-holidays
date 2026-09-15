@@ -89,6 +89,12 @@ class TZH_Assets {
 			'tzhFront',
 			array(
 				'currency' => (string) TZH_Settings::get( 'currency_symbol', '৳' ),
+				'rest'     => esc_url_raw( rest_url( 'tzh/v1/packages' ) ),
+				'i18n'     => array(
+					'filters'  => __( 'Filters', 'travelz-holidays' ),
+					'close'    => __( 'Close', 'travelz-holidays' ),
+					'loading'  => __( 'Loading packages…', 'travelz-holidays' ),
+				),
 			)
 		);
 	}

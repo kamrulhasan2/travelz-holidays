@@ -104,6 +104,7 @@ final class TZH_Plugin {
 			'router'     => 'TZH_Router',
 			'shortcodes' => 'TZH_Shortcodes',
 			'theme_compat' => 'TZH_Theme_Compat',
+			'rest'       => 'TZH_Rest',
 		);
 
 		if ( is_admin() ) {

@@ -21,6 +21,7 @@ class TZH_Router {
 	 */
 	public function hooks(): void {
 		add_filter( 'template_include', array( $this, 'route' ), 20 );
+		add_action( 'pre_get_posts', array( $this, 'filter_destination_archive' ) );
 		add_filter( 'document_title_parts', array( $this, 'title' ) );
 	}
 
@@ -66,11 +67,40 @@ class TZH_Router {
 	}
 
 	/**
+	 * Apply the URL's filters to the destination archive.
+	 *
+	 * Done on the main query rather than in a second one, so pagination,
+	 * canonical URLs and the found-posts count all stay WordPress's own.
+	 *
+	 * @param WP_Query $query Query about to run.
+	 */
+	public function filter_destination_archive( WP_Query $query ): void {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+
+		if ( ! $query->is_tax( TZH_Package::TAX_DESTINATION ) ) {
+			return;
+		}
+
+		$term = $query->get( TZH_Package::TAX_DESTINATION );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters from the URL.
+		$filters = TZH_Query::filters( wp_unslash( $_GET ), (string) $term );
+
+		TZH_Query::apply( $query, $filters );
+	}
+
+	/**
 	 * Which template this request needs, or '' for none of ours.
 	 */
 	private function template_name(): string {
 		if ( is_post_type_archive( TZH_Package::POST_TYPE ) ) {
 			return 'archive-destinations';
+		}
+
+		if ( is_tax( TZH_Package::TAX_DESTINATION ) ) {
+			return 'archive-packages';
 		}
 
 		return '';

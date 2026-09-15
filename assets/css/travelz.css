@@ -1514,3 +1514,251 @@
 		grid-template-columns: repeat(var(--tz-dest-columns, 4), minmax(0, 1fr));
 	}
 }
+
+/* ---------- Package list screen ---------- */
+
+#tz-app .tz-list-head {
+	display: grid;
+	gap: 8px;
+	margin-bottom: 32px;
+	max-width: 42rem;
+}
+
+#tz-app .tz-list-main {
+	min-width: 0;
+}
+
+#tz-app .tz-filters__title {
+	margin-bottom: 16px;
+	font-size: 1rem;
+}
+
+#tz-app .tz-filters fieldset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+#tz-app .tz-filters__actions {
+	display: grid;
+	justify-items: start;
+	gap: 14px;
+	margin-top: 24px;
+}
+
+#tz-app .tz-filters-toggle {
+	margin-bottom: 16px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-filters-toggle {
+		display: none;
+	}
+}
+
+#tz-app .tz-results {
+	display: grid;
+	gap: 20px;
+	transition: opacity .15s ease;
+}
+
+#tz-app .tz-results.is-loading {
+	opacity: .45;
+}
+
+#tz-app .tz-results__count {
+	margin: 0;
+}
+
+#tz-app .tz-pkg__where {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+#tz-app .tz-pkg__chips {
+	margin-top: 16px;
+}
+
+#tz-app .tz-pagination {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding-top: 8px;
+}
+
+#tz-app .tz-pagination .page-numbers {
+	display: grid;
+	place-items: center;
+	min-width: 38px;
+	height: 38px;
+	padding-inline: 12px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-background);
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+#tz-app .tz-pagination .page-numbers:hover {
+	border-color: var(--tz-primary);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-pagination .page-numbers.current {
+	border-color: transparent;
+	background: var(--tz-primary);
+	color: var(--tz-primary-fg);
+}
+
+/* Dual-handle price range */
+
+#tz-app .tz-range {
+	position: relative;
+	height: 28px;
+	margin-top: 10px;
+}
+
+#tz-app .tz-range__track {
+	position: absolute;
+	inset-inline: 0;
+	top: 12px;
+	height: 4px;
+	border-radius: 999px;
+	background: var(--tz-muted);
+}
+
+#tz-app .tz-range__fill {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	border-radius: 999px;
+	background: var(--tz-primary);
+}
+
+#tz-app .tz-range input[type="range"] {
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	width: 100%;
+	height: 28px;
+	margin: 0;
+	background: none;
+	appearance: none;
+	-webkit-appearance: none;
+	/* Only the handles take pointer events, so the lower slider stays usable. */
+	pointer-events: none;
+}
+
+#tz-app .tz-range input[type="range"]::-webkit-slider-thumb {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 18px;
+	height: 18px;
+	border: 2px solid var(--tz-primary);
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(30, 41, 59, .25);
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+#tz-app .tz-range input[type="range"]::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	border: 2px solid var(--tz-primary);
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(30, 41, 59, .25);
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+#tz-app .tz-range input[type="range"]::-moz-range-track {
+	background: none;
+}
+
+#tz-app .tz-range__values {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: 10px;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Filter drawer on small screens */
+
+@media (max-width: 1023px) {
+	#tz-app .tz-list-aside {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: none;
+		background: rgba(15, 23, 42, .45);
+	}
+
+	#tz-app .tz-list-aside.is-open {
+		display: block;
+	}
+
+	#tz-app .tz-list-aside .tz-filters {
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: 0;
+		width: min(20rem, 88vw);
+		overflow-y: auto;
+		border-radius: 0;
+		animation: tz-slide-in .25s ease;
+	}
+}
+
+@keyframes tz-slide-in {
+	from {
+		transform: translateX(-100%);
+	}
+
+	to {
+		transform: translateX(0);
+	}
+}
+
+body.tz-locked {
+	overflow: hidden;
+}
+
+/* ---------- Narrow-screen safety ---------- */
+
+/*
+ * A grid item's automatic minimum size is its content, so a long word or a
+ * wide child can push a column past the viewport instead of wrapping. Every
+ * layout track here is allowed to shrink.
+ */
+
+#tz-app .tz-list-layout > *,
+#tz-app .tz-detail > *,
+#tz-app .tz-book-layout > *,
+#tz-app .tz-panel > *,
+#tz-app .tz-stack > *,
+#tz-app .tz-booking,
+#tz-app .tz-summary__body {
+	min-width: 0;
+}
+
+#tz-app .tz-booking,
+#tz-app .tz-filters,
+#tz-app .tz-card,
+#tz-app .tz-pkg {
+	max-width: 100%;
+}
+
+/* Long words in traveller-supplied copy must never widen the page. */
+
+#tz-app .tz-pkg__short,
+#tz-app .tz-prose,
+#tz-app .tz-acc__body,
+#tz-app .tz-dest__blurb,
+#tz-app .tz-hotel__name {
+	overflow-wrap: anywhere;
+}
