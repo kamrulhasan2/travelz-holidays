@@ -52,6 +52,42 @@ class TZH_Meta_Box {
 		remove_meta_box( 'tzh_tierdiv', TZH_Package::POST_TYPE, 'side' );
 		remove_meta_box( 'tagsdiv-' . TZH_Package::TAX_FAMILY, TZH_Package::POST_TYPE, 'side' );
 		remove_meta_box( 'postexcerpt', TZH_Package::POST_TYPE, 'normal' );
+
+		add_action( 'add_meta_boxes', array( $this, 'hide_theme_boxes' ), 100 );
+	}
+
+	/**
+	 * Take the theme's per-page layout box off the package editor.
+	 *
+	 * A package does not get its layout from the theme — the plugin's own
+	 * templates set it — so a box offering to change the container width and
+	 * the sidebar here only invites somebody to break the page.
+	 */
+	public function hide_theme_boxes(): void {
+		/**
+		 * Filter whether theme layout boxes are hidden on the package editor.
+		 *
+		 * @param bool $hide Whether to hide them.
+		 */
+		if ( ! apply_filters( 'tzh_hide_theme_meta_boxes', true ) ) {
+			return;
+		}
+
+		global $wp_meta_boxes;
+
+		$screen = $wp_meta_boxes[ TZH_Package::POST_TYPE ] ?? array();
+
+		foreach ( $screen as $context => $priorities ) {
+			foreach ( (array) $priorities as $boxes ) {
+				foreach ( array_keys( (array) $boxes ) as $id ) {
+					// Matched by prefix because themes rename these between
+					// versions; the plugin's own boxes never start this way.
+					if ( str_starts_with( (string) $id, 'astra_' ) || str_starts_with( (string) $id, 'ast-' ) ) {
+						remove_meta_box( $id, TZH_Package::POST_TYPE, $context );
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -74,18 +110,21 @@ class TZH_Meta_Box {
 
 		echo '<div class="tzh-editor" data-tzh-editor>';
 
+		$this->render_bar( $package );
+
 		echo '<ul class="tzh-editor__tabs" role="tablist">';
 
 		foreach ( $tabs as $slug => $tab ) {
 			printf(
-				'<li role="presentation"><button type="button" class="tzh-editor__tab%s" role="tab" data-tzh-tab="%s" aria-selected="%s" aria-controls="tzh-panel-%s" id="tzh-tab-%s"><span class="dashicons %s" aria-hidden="true"></span> %s</button></li>',
+				'<li role="presentation"><button type="button" class="tzh-editor__tab%s" role="tab" data-tzh-tab="%s" aria-selected="%s" aria-controls="tzh-panel-%s" id="tzh-tab-%s"><span class="dashicons %s" aria-hidden="true"></span><span class="tzh-editor__tab-label">%s</span><span class="tzh-editor__badge" data-tzh-badge="%s" hidden></span></button></li>',
 				$slug === $first ? ' is-active' : '',
 				esc_attr( $slug ),
 				$slug === $first ? 'true' : 'false',
 				esc_attr( $slug ),
 				esc_attr( $slug ),
 				esc_attr( (string) ( $tab['icon'] ?? 'dashicons-admin-generic' ) ),
-				esc_html( (string) $tab['label'] )
+				esc_html( (string) $tab['label'] ),
+				esc_attr( $slug )
 			);
 		}
 
@@ -103,9 +142,13 @@ class TZH_Meta_Box {
 				$slug === $first ? '' : ' hidden'
 			);
 
-			if ( ! empty( $tab['description'] ) ) {
-				printf( '<p class="tzh-panel-intro">%s</p>', esc_html( (string) $tab['description'] ) );
-			}
+			printf(
+				'<header class="tzh-editor__head"><h2 class="tzh-editor__title">%s</h2>%s</header>',
+				esc_html( (string) $tab['label'] ),
+				empty( $tab['description'] )
+					? ''
+					: '<p class="tzh-panel-intro">' . esc_html( (string) $tab['description'] ) . '</p>'
+			);
 
 			echo '<div class="tzh-fields">';
 
@@ -117,6 +160,63 @@ class TZH_Meta_Box {
 		}
 
 		echo '</div></div>';
+	}
+
+	/**
+	 * The strip along the top of the editor.
+	 *
+	 * Seven tabs mean six of them are out of sight at any moment, so the facts
+	 * that decide whether a package is sellable — code, destination, duration,
+	 * price — are repeated here where they are always visible, and kept in step
+	 * with the fields as they are typed.
+	 *
+	 * @param TZH_Package $package Package being edited.
+	 */
+	private function render_bar( TZH_Package $package ): void {
+		$facts = array(
+			'code'     => array(
+				'icon'  => 'dashicons-tickets-alt',
+				'value' => $package->code(),
+				'empty' => __( 'No code', 'travelz-holidays' ),
+			),
+			'dest'     => array(
+				'icon'  => 'dashicons-location',
+				'value' => $package->destination() ? $package->destination()->name : '',
+				'empty' => __( 'No destination', 'travelz-holidays' ),
+			),
+			'duration' => array(
+				'icon'  => 'dashicons-clock',
+				'value' => $package->days() > 0 ? $package->duration_label() : '',
+				'empty' => __( 'No duration', 'travelz-holidays' ),
+			),
+			'price'    => array(
+				'icon'  => 'dashicons-tag',
+				'value' => $package->price() > 0 ? tzh_price( $package->price() ) : '',
+				'empty' => __( 'No price', 'travelz-holidays' ),
+			),
+		);
+
+		echo '<div class="tzh-editor__bar">';
+		echo '<div class="tzh-editor__facts">';
+
+		foreach ( $facts as $key => $fact ) {
+			printf(
+				'<span class="tzh-fact%s" data-tzh-fact="%s"><span class="dashicons %s" aria-hidden="true"></span><span data-tzh-fact-value>%s</span></span>',
+				'' === $fact['value'] ? ' is-empty' : '',
+				esc_attr( $key ),
+				esc_attr( $fact['icon'] ),
+				esc_html( '' === $fact['value'] ? $fact['empty'] : $fact['value'] )
+			);
+		}
+
+		echo '</div>';
+
+		printf(
+			'<p class="tzh-editor__ready" data-tzh-ready role="status">%s</p>',
+			esc_html__( 'Checking…', 'travelz-holidays' )
+		);
+
+		echo '</div>';
 	}
 
 	/**
@@ -422,11 +522,62 @@ class TZH_Meta_Box {
 			'tzh-package-editor',
 			'tzhEditor',
 			array(
-				'currency'   => (string) apply_filters( 'tzh_currency_symbol', '৳' ),
-				'priceKeys'  => array(
+				'currency'  => (string) apply_filters( 'tzh_currency_symbol', '৳' ),
+				'priceKeys' => array(
 					'adult'  => TZH_Package::META_PRICE,
 					'rate'   => TZH_Package::META_CHILD_RATE,
 					'infant' => TZH_Package::META_INFANT_PRICE,
+				),
+				'factKeys'  => array(
+					'code'     => TZH_Package::META_CODE,
+					'dest'     => TZH_Package::TAX_DESTINATION,
+					'days'     => TZH_Package::META_DAYS,
+					'nights'   => TZH_Package::META_NIGHTS,
+					'price'    => TZH_Package::META_PRICE,
+				),
+				'required'  => array(
+					array(
+						'tab'   => 'overview',
+						'name'  => TZH_Package::TAX_DESTINATION,
+						'label' => __( 'destination', 'travelz-holidays' ),
+					),
+					array(
+						'tab'   => 'overview',
+						'name'  => TZH_Package::TAX_TIER,
+						'label' => __( 'category', 'travelz-holidays' ),
+					),
+					array(
+						'tab'   => 'overview',
+						'name'  => TZH_Package::META_CODE,
+						'label' => __( 'package code', 'travelz-holidays' ),
+					),
+					array(
+						'tab'   => 'overview',
+						'name'  => TZH_Package::META_DAYS,
+						'label' => __( 'duration', 'travelz-holidays' ),
+					),
+					array(
+						'tab'   => 'pricing',
+						'name'  => TZH_Package::META_PRICE,
+						'label' => __( 'price', 'travelz-holidays' ),
+					),
+				),
+				'i18n'      => array(
+					'empty'     => array(
+						'code'     => __( 'No code', 'travelz-holidays' ),
+						'dest'     => __( 'No destination', 'travelz-holidays' ),
+						'duration' => __( 'No duration', 'travelz-holidays' ),
+						'price'    => __( 'No price', 'travelz-holidays' ),
+					),
+					/* translators: 1: zero-padded days, 2: zero-padded nights */
+					'duration'  => __( '%1$s Days %2$s Nights', 'travelz-holidays' ),
+					'ready'     => __( 'Ready to publish', 'travelz-holidays' ),
+					/* translators: %s: comma-separated list of missing fields */
+					'missing'   => __( 'Still missing: %s', 'travelz-holidays' ),
+					'leaving'   => __( 'This package has unsaved changes.', 'travelz-holidays' ),
+					'duplicate' => __( 'Duplicate', 'travelz-holidays' ),
+					'collapse'  => __( 'Collapse all', 'travelz-holidays' ),
+					'expand'    => __( 'Expand all', 'travelz-holidays' ),
 				),
 			)
 		);

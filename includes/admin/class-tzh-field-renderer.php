@@ -405,7 +405,7 @@ class TZH_Field_Renderer {
 		$items = array_map( 'strval', (array) $value );
 
 		printf(
-			'<textarea%s name="%s" rows="%d" placeholder="%s" class="tzh-input tzh-textarea tzh-lines"%s>%s</textarea>',
+			'<textarea%s name="%s" rows="%d" placeholder="%s" class="tzh-input tzh-textarea tzh-lines" data-tzh-lines%s>%s</textarea>',
 			$this->attr_id( $id ),
 			esc_attr( $name ),
 			(int) ( $field['rows'] ?? 6 ),
@@ -482,15 +482,18 @@ class TZH_Field_Renderer {
 
 		printf(
 			'<div class="tzh-rep__head">
+				<span class="tzh-rep__grip" data-tzh-grip draggable="true" title="%s" aria-hidden="true"><span class="dashicons dashicons-menu" aria-hidden="true"></span></span>
 				<button type="button" class="tzh-rep__toggle" data-tzh-toggle aria-expanded="true"><span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
 				<span class="tzh-rep__num" data-tzh-num>%s %d</span>
 				<span class="tzh-rep__summary" data-tzh-summary></span>
 				<span class="tzh-rep__actions">
 					<button type="button" class="button-link tzh-rep__move" data-tzh-up title="%s"><span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
 					<button type="button" class="button-link tzh-rep__move" data-tzh-down title="%s"><span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
+					<button type="button" class="button-link tzh-rep__copy" data-tzh-copy title="%s"><span class="dashicons dashicons-admin-page" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
 					<button type="button" class="button-link tzh-rep__remove" data-tzh-remove title="%s"><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><span class="screen-reader-text">%s</span></button>
 				</span>
 			</div>',
+			esc_attr__( 'Drag to reorder', 'travelz-holidays' ),
 			esc_html__( 'Collapse', 'travelz-holidays' ),
 			esc_html( $row_label ),
 			$index + 1,
@@ -498,6 +501,8 @@ class TZH_Field_Renderer {
 			esc_html__( 'Move up', 'travelz-holidays' ),
 			esc_attr__( 'Move down', 'travelz-holidays' ),
 			esc_html__( 'Move down', 'travelz-holidays' ),
+			esc_attr__( 'Duplicate', 'travelz-holidays' ),
+			esc_html__( 'Duplicate', 'travelz-holidays' ),
 			esc_attr__( 'Remove', 'travelz-holidays' ),
 			esc_html__( 'Remove', 'travelz-holidays' )
 		);

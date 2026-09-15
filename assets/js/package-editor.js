@@ -273,6 +273,40 @@
 				return;
 			}
 
+			if ( button.hasAttribute( 'data-tzh-copy' ) ) {
+				event.preventDefault();
+
+				// A cloned node carries the typed values with it, which is the
+				// whole point: day four is usually day three with one change.
+				var copy = row.cloneNode( true );
+
+				copy.classList.remove( 'is-collapsed' );
+				row.parentElement.insertBefore( copy, row.nextElementSibling );
+				refresh( copy );
+
+				copy.querySelectorAll( 'input, textarea, select' ).forEach( function ( input, index ) {
+					var source = row.querySelectorAll( 'input, textarea, select' )[ index ];
+
+					if ( ! source ) {
+						return;
+					}
+
+					if ( 'checkbox' === input.type || 'radio' === input.type ) {
+						input.checked = source.checked;
+					} else {
+						input.value = source.value;
+					}
+				} );
+
+				refresh( copy );
+
+				if ( window.tzhScanMedia ) {
+					window.tzhScanMedia();
+				}
+
+				return;
+			}
+
 			if ( button.hasAttribute( 'data-tzh-remove' ) ) {
 				event.preventDefault();
 
@@ -324,6 +358,226 @@
 		} );
 	}
 
+	/* ---------- Summary bar and tab badges ---------- */
+
+	function initSummary( editor ) {
+		var keys = config.factKeys || {};
+		var words = config.i18n || {};
+		var empties = words.empty || {};
+		var required = config.required || [];
+		var ready = editor.querySelector( '[data-tzh-ready]' );
+
+		function pad( value ) {
+			var n = parseInt( value, 10 );
+
+			return isFinite( n ) && n > 0 ? ( n < 10 ? '0' + n : String( n ) ) : '';
+		}
+
+		function textOf( input ) {
+			if ( ! input ) {
+				return '';
+			}
+
+			// A select carries its label, not its id — nobody recognises "12".
+			if ( 'SELECT' === input.tagName ) {
+				var option = input.options[ input.selectedIndex ];
+
+				return option && option.value ? option.textContent.trim() : '';
+			}
+
+			return input.value.trim();
+		}
+
+		function setFact( name, value ) {
+			var host = editor.querySelector( '[data-tzh-fact="' + name + '"]' );
+
+			if ( ! host ) {
+				return;
+			}
+
+			var slot = host.querySelector( '[data-tzh-fact-value]' );
+			var filled = '' !== value;
+
+			host.classList.toggle( 'is-empty', ! filled );
+			slot.textContent = filled ? value : ( empties[ name ] || '' );
+		}
+
+		function duration() {
+			var days = pad( textOf( field( keys.days ) ) );
+			var nights = pad( textOf( field( keys.nights ) ) );
+
+			if ( ! days ) {
+				return '';
+			}
+
+			return ( words.duration || '%1$s Days %2$s Nights' )
+				.replace( '%1$s', days )
+				.replace( '%2$s', nights || '00' );
+		}
+
+		function badges() {
+			editor.querySelectorAll( '[data-tzh-panel]' ).forEach( function ( panel ) {
+				var slug = panel.getAttribute( 'data-tzh-panel' );
+				var badge = editor.querySelector( '[data-tzh-badge="' + slug + '"]' );
+
+				if ( ! badge ) {
+					return;
+				}
+
+				var rows = panel.querySelectorAll( '[data-tzh-repeater][data-tzh-base] > [data-tzh-rows] > [data-tzh-row]' ).length;
+				var lines = 0;
+
+				panel.querySelectorAll( 'textarea[data-tzh-lines]' ).forEach( function ( box ) {
+					lines += box.value.split( '\n' ).filter( function ( line ) {
+						return '' !== line.trim();
+					} ).length;
+				} );
+
+				var count = rows + lines;
+
+				badge.textContent = count ? String( count ) : '';
+				badge.hidden = 0 === count;
+				badge.classList.remove( 'is-alert' );
+			} );
+
+			// A missing essential outranks a count: the tab shows the problem.
+			required.forEach( function ( rule ) {
+				var input = field( rule.name );
+
+				if ( ! input || '' !== textOf( input ) && '0' !== textOf( input ) ) {
+					return;
+				}
+
+				var badge = editor.querySelector( '[data-tzh-badge="' + rule.tab + '"]' );
+
+				if ( badge ) {
+					badge.textContent = '!';
+					badge.hidden = false;
+					badge.classList.add( 'is-alert' );
+				}
+			} );
+		}
+
+		function update() {
+			setFact( 'code', textOf( field( keys.code ) ) );
+			setFact( 'dest', textOf( field( keys.dest ) ) );
+			setFact( 'duration', duration() );
+
+			var price = parseInt( textOf( field( keys.price ) ), 10 );
+			setFact( 'price', isFinite( price ) && price > 0 ? money( price ) : '' );
+
+			var missing = required.filter( function ( rule ) {
+				var input = field( rule.name );
+				var value = textOf( input );
+
+				return input && ( '' === value || '0' === value );
+			} ).map( function ( rule ) {
+				return rule.label;
+			} );
+
+			if ( ready ) {
+				ready.textContent = missing.length
+					? ( words.missing || 'Still missing: %s' ).replace( '%s', missing.join( ', ' ) )
+					: ( words.ready || 'Ready to publish' );
+				ready.classList.toggle( 'is-warn', missing.length > 0 );
+			}
+
+			badges();
+		}
+
+		editor.addEventListener( 'input', update );
+		editor.addEventListener( 'change', update );
+
+		update();
+	}
+
+	/* ---------- Drag to reorder ---------- */
+
+	function initDragging( editor ) {
+		var dragged = null;
+
+		editor.addEventListener( 'dragstart', function ( event ) {
+			var grip = event.target.closest( '[data-tzh-grip]' );
+
+			if ( ! grip ) {
+				return;
+			}
+
+			dragged = grip.closest( '[data-tzh-row]' );
+			dragged.classList.add( 'is-dragging' );
+
+			// Firefox refuses to start a drag without payload.
+			event.dataTransfer.setData( 'text/plain', '' );
+			event.dataTransfer.effectAllowed = 'move';
+		} );
+
+		editor.addEventListener( 'dragover', function ( event ) {
+			if ( ! dragged ) {
+				return;
+			}
+
+			var over = event.target.closest( '[data-tzh-row]' );
+
+			// Only rows in the same list may swap; a hotel cannot become a day.
+			if ( ! over || over === dragged || over.parentElement !== dragged.parentElement ) {
+				return;
+			}
+
+			event.preventDefault();
+
+			var box = over.getBoundingClientRect();
+			var after = event.clientY > box.top + box.height / 2;
+
+			over.parentElement.insertBefore( dragged, after ? over.nextElementSibling : over );
+		} );
+
+		editor.addEventListener( 'drop', function ( event ) {
+			if ( dragged ) {
+				event.preventDefault();
+			}
+		} );
+
+		editor.addEventListener( 'dragend', function () {
+			if ( ! dragged ) {
+				return;
+			}
+
+			dragged.classList.remove( 'is-dragging' );
+			refresh( dragged );
+			dragged = null;
+		} );
+	}
+
+	/* ---------- Unsaved changes ---------- */
+
+	function initGuard( editor ) {
+		var dirty = false;
+		var form = editor.closest( 'form' );
+
+		editor.addEventListener( 'input', function () {
+			dirty = true;
+		} );
+
+		editor.addEventListener( 'change', function () {
+			dirty = true;
+		} );
+
+		if ( form ) {
+			form.addEventListener( 'submit', function () {
+				dirty = false;
+			} );
+		}
+
+		window.addEventListener( 'beforeunload', function ( event ) {
+			if ( ! dirty ) {
+				return;
+			}
+
+			event.preventDefault();
+			event.returnValue = '';
+		} );
+	}
+
 	function init() {
 		var editor = document.querySelector( '[data-tzh-editor]' );
 
@@ -333,6 +587,9 @@
 
 		initTabs( editor );
 		initRepeaters( editor );
+		initDragging( editor );
+		initSummary( editor );
+		initGuard( editor );
 
 		// Repeater rows can bring new media fields with them.
 		if ( window.tzhScanMedia ) {
