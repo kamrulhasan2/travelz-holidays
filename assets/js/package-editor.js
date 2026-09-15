@@ -97,58 +97,6 @@
 		}
 	}
 
-	/* ---------- Media picker ---------- */
-
-	function initMedia( wrapper ) {
-		var input = wrapper.querySelector( '[data-tzh-media-input]' );
-		var preview = wrapper.querySelector( '[data-tzh-media-preview]' );
-		var pick = wrapper.querySelector( '[data-tzh-media-pick]' );
-		var clear = wrapper.querySelector( '[data-tzh-media-clear]' );
-		var frame = null;
-
-		if ( ! input || ! pick || ! window.wp || ! window.wp.media ) {
-			return;
-		}
-
-		pick.addEventListener( 'click', function () {
-			if ( ! frame ) {
-				frame = window.wp.media( {
-					title: config.mediaTitle || 'Choose image',
-					button: { text: config.mediaButton || 'Use this image' },
-					library: { type: 'image' },
-					multiple: false
-				} );
-
-				frame.on( 'select', function () {
-					var attachment = frame.state().get( 'selection' ).first().toJSON();
-					var url = attachment.sizes && attachment.sizes.medium
-						? attachment.sizes.medium.url
-						: attachment.url;
-
-					input.value = attachment.id;
-					preview.innerHTML = '';
-
-					var img = document.createElement( 'img' );
-					img.src = url;
-					img.alt = '';
-					preview.appendChild( img );
-
-					clear.hidden = false;
-				} );
-			}
-
-			frame.open();
-		} );
-
-		if ( clear ) {
-			clear.addEventListener( 'click', function () {
-				input.value = '0';
-				preview.innerHTML = '';
-				clear.hidden = true;
-			} );
-		}
-	}
-
 	/* ---------- Price preview ---------- */
 
 	function initPricePreview() {
@@ -385,7 +333,11 @@
 
 		initTabs( editor );
 		initRepeaters( editor );
-		editor.querySelectorAll( '[data-tzh-media]' ).forEach( initMedia );
+
+		// Repeater rows can bring new media fields with them.
+		if ( window.tzhScanMedia ) {
+			window.tzhScanMedia();
+		}
 		initPricePreview();
 	}
 

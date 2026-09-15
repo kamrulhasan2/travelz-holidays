@@ -394,11 +394,28 @@ class TZH_Meta_Box {
 		wp_enqueue_media();
 
 		wp_enqueue_script(
-			'tzh-package-editor',
-			TZH_URL . 'assets/js/package-editor.js',
+			'tzh-media-picker',
+			TZH_URL . 'assets/js/media-picker.js',
 			array(),
 			TZH_VERSION,
 			true
+		);
+
+		wp_enqueue_script(
+			'tzh-package-editor',
+			TZH_URL . 'assets/js/package-editor.js',
+			array( 'tzh-media-picker' ),
+			TZH_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'tzh-media-picker',
+			'tzhMedia',
+			array(
+				'title'  => __( 'Choose image', 'travelz-holidays' ),
+				'button' => __( 'Use this image', 'travelz-holidays' ),
+			)
 		);
 
 		wp_localize_script(
@@ -406,8 +423,6 @@ class TZH_Meta_Box {
 			'tzhEditor',
 			array(
 				'currency'   => (string) apply_filters( 'tzh_currency_symbol', '৳' ),
-				'mediaTitle' => __( 'Choose hero banner', 'travelz-holidays' ),
-				'mediaButton' => __( 'Use this image', 'travelz-holidays' ),
 				'priceKeys'  => array(
 					'adult'  => TZH_Package::META_PRICE,
 					'rate'   => TZH_Package::META_CHILD_RATE,

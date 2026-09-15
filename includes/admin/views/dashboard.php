@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
 				<li class="is-done"><?php esc_html_e( 'Package editor — overview and pricing', 'travelz-holidays' ); ?></li>
 				<li class="is-done"><?php esc_html_e( 'Package editor — itinerary', 'travelz-holidays' ); ?></li>
 				<li class="is-done"><?php esc_html_e( 'Package editor — inclusions, terms, visa', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Destination images and tier variants', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Destination images and tier variants', 'travelz-holidays' ); ?></li>
 			</ol>
 		</section>
 	</div>

@@ -107,6 +107,8 @@ final class TZH_Plugin {
 			$modules['package_columns'] = 'TZH_Package_Columns';
 			$modules['meta_box']        = 'TZH_Meta_Box';
 			$modules['settings_page']   = 'TZH_Settings_Page';
+			$modules['term_fields']     = 'TZH_Term_Fields';
+			$modules['variant']         = 'TZH_Variant';
 		}
 
 		/**

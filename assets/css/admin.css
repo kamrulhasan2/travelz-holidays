@@ -616,3 +616,21 @@
 .tzh-wrap .form-table th {
 	width: 200px;
 }
+
+/* Term screens */
+
+.tzh-term-field .tzh-media__preview img {
+	max-width: 200px;
+}
+
+.tzh-term-field .tzh-input {
+	max-width: 95%;
+}
+
+.column-tzh_image {
+	width: 74px;
+}
+
+.column-tzh_order {
+	width: 70px;
+}
