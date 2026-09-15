@@ -1,0 +1,222 @@
+<?php
+/**
+ * Package model.
+ *
+ * @package TravelZ_Holidays
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * A single holiday package.
+ *
+ * Holds the object names and meta keys the whole plugin agrees on, plus typed
+ * readers so no other file has to remember whether a price is stored as a
+ * string or an int.
+ */
+class TZH_Package {
+
+	public const POST_TYPE = 'tzh_package';
+
+	public const TAX_DESTINATION = 'tzh_destination';
+	public const TAX_TIER        = 'tzh_tier';
+	public const TAX_FAMILY      = 'tzh_family';
+
+	/* Scalar meta — indexed individually because the front-end filters on them. */
+	public const META_CODE          = '_tzh_code';
+	public const META_SERIAL        = '_tzh_serial';
+	public const META_DAYS          = '_tzh_days';
+	public const META_NIGHTS        = '_tzh_nights';
+	public const META_PRICE         = '_tzh_price';
+	public const META_TOUR_TYPE     = '_tzh_tour_type';
+	public const META_MIN_PAX       = '_tzh_min_pax';
+	public const META_CHILD_RATE    = '_tzh_child_rate';
+	public const META_INFANT_PRICE  = '_tzh_infant_price';
+	public const META_WITH_AIRFARE  = '_tzh_with_airfare';
+	public const META_BESTSELLER    = '_tzh_bestseller';
+	public const META_RATING        = '_tzh_rating';
+	public const META_BOOKED        = '_tzh_booked';
+	public const META_HERO          = '_tzh_hero';
+	public const META_VISA_DOC      = '_tzh_visa_doc';
+	public const META_WC_PRODUCT    = '_tzh_wc_product';
+
+	/* Grouped meta — stored as one array each, never queried directly. */
+	public const META_ITINERARY  = '_tzh_itinerary';
+	public const META_HIGHLIGHTS = '_tzh_highlights';
+	public const META_INCLUSION  = '_tzh_inclusion';
+	public const META_EXCLUSION  = '_tzh_exclusion';
+	public const META_TERMS      = '_tzh_terms';
+	public const META_OTHER      = '_tzh_other';
+
+	/**
+	 * Underlying post.
+	 */
+	private WP_Post $post;
+
+	/**
+	 * @param WP_Post $post Package post.
+	 */
+	private function __construct( WP_Post $post ) {
+		$this->post = $post;
+	}
+
+	/**
+	 * Build from a post, ID, or the current global post.
+	 *
+	 * @param WP_Post|int|null $post Package post or ID.
+	 */
+	public static function from( $post = null ): ?self {
+		$post = get_post( $post );
+
+		if ( ! $post instanceof WP_Post || self::POST_TYPE !== $post->post_type ) {
+			return null;
+		}
+
+		return new self( $post );
+	}
+
+	/**
+	 * Allowed tour types, keyed by stored value.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function tour_types(): array {
+		return array(
+			'private' => __( 'Private', 'travelz-holidays' ),
+			'group'   => __( 'Group', 'travelz-holidays' ),
+		);
+	}
+
+	/**
+	 * Tier slugs seeded on install, in display order.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function default_tiers(): array {
+		return array(
+			'standard' => __( 'Standard', 'travelz-holidays' ),
+			'deluxe'   => __( 'Deluxe', 'travelz-holidays' ),
+			'premium'  => __( 'Premium', 'travelz-holidays' ),
+		);
+	}
+
+	/**
+	 * Derive the sortable serial from a package code.
+	 *
+	 * "TZ 001" becomes 1, so the list orders the way packages were uploaded
+	 * rather than alphabetically. Matches the sort in the React source.
+	 *
+	 * @param string $code Package code.
+	 */
+	public static function serial_from_code( string $code ): int {
+		$digits = preg_replace( '/\D/', '', $code );
+
+		return '' === (string) $digits ? 0 : (int) $digits;
+	}
+
+	/**
+	 * Post ID.
+	 */
+	public function id(): int {
+		return $this->post->ID;
+	}
+
+	/**
+	 * Underlying post object.
+	 */
+	public function post(): WP_Post {
+		return $this->post;
+	}
+
+	/**
+	 * Package code, e.g. "TZ 001".
+	 */
+	public function code(): string {
+		return (string) get_post_meta( $this->id(), self::META_CODE, true );
+	}
+
+	/**
+	 * Duration in days.
+	 */
+	public function days(): int {
+		return (int) get_post_meta( $this->id(), self::META_DAYS, true );
+	}
+
+	/**
+	 * Duration in nights.
+	 */
+	public function nights(): int {
+		return (int) get_post_meta( $this->id(), self::META_NIGHTS, true );
+	}
+
+	/**
+	 * Adult price in taka.
+	 */
+	public function price(): int {
+		return (int) get_post_meta( $this->id(), self::META_PRICE, true );
+	}
+
+	/**
+	 * Tour type value: private or group.
+	 */
+	public function tour_type(): string {
+		$value = (string) get_post_meta( $this->id(), self::META_TOUR_TYPE, true );
+
+		return array_key_exists( $value, self::tour_types() ) ? $value : 'private';
+	}
+
+	/**
+	 * Translated tour type label.
+	 */
+	public function tour_type_label(): string {
+		return self::tour_types()[ $this->tour_type() ];
+	}
+
+	/**
+	 * "05 Days 04 Nights", zero-padded exactly as the React source rendered it.
+	 */
+	public function duration_label(): string {
+		return sprintf(
+			/* translators: 1: zero-padded day count, 2: zero-padded night count */
+			__( '%1$s Days %2$s Nights', 'travelz-holidays' ),
+			str_pad( (string) $this->days(), 2, '0', STR_PAD_LEFT ),
+			str_pad( (string) $this->nights(), 2, '0', STR_PAD_LEFT )
+		);
+	}
+
+	/**
+	 * First destination term, or null when none is assigned.
+	 */
+	public function destination(): ?WP_Term {
+		return $this->first_term( self::TAX_DESTINATION );
+	}
+
+	/**
+	 * Tier term, or null when none is assigned.
+	 */
+	public function tier(): ?WP_Term {
+		return $this->first_term( self::TAX_TIER );
+	}
+
+	/**
+	 * Tour group term that ties this package to its other tiers.
+	 */
+	public function family(): ?WP_Term {
+		return $this->first_term( self::TAX_FAMILY );
+	}
+
+	/**
+	 * First assigned term of a taxonomy.
+	 *
+	 * @param string $taxonomy Taxonomy name.
+	 */
+	private function first_term( string $taxonomy ): ?WP_Term {
+		$terms = get_the_terms( $this->post, $taxonomy );
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return null;
+		}
+
+		return $terms[0];
+	}
+}

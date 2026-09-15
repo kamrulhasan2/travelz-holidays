@@ -96,9 +96,16 @@ final class TZH_Plugin {
 	 */
 	private function module_classes(): array {
 		$modules = array(
-			'admin_menu' => 'TZH_Admin_Menu',
-			'admin_notices' => 'TZH_Admin_Notices',
+			'taxonomies' => 'TZH_Taxonomies',
+			'post_types' => 'TZH_Post_Types',
+			'install'    => 'TZH_Install',
 		);
+
+		if ( is_admin() ) {
+			$modules['admin_menu']      = 'TZH_Admin_Menu';
+			$modules['admin_notices']   = 'TZH_Admin_Notices';
+			$modules['package_columns'] = 'TZH_Package_Columns';
+		}
 
 		/**
 		 * Filter the modules the plugin boots.

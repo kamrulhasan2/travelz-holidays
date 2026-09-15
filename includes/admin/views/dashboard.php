@@ -5,6 +5,7 @@
  * @package TravelZ_Holidays
  *
  * @var array<int, array{label: string, value: string, status: string}> $checks
+ * @var array<int, array{label: string, count: int, url: string}>       $catalogue
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +15,15 @@ defined( 'ABSPATH' ) || exit;
 	<p class="tzh-lede">
 		<?php esc_html_e( 'Destinations, tour packages, itineraries and pricing tiers for TravelZ.', 'travelz-holidays' ); ?>
 	</p>
+
+	<div class="tzh-tiles">
+		<?php foreach ( $catalogue as $tile ) : ?>
+			<a class="tzh-tile" href="<?php echo esc_url( $tile['url'] ); ?>">
+				<span class="tzh-tile__count"><?php echo esc_html( number_format_i18n( $tile['count'] ) ); ?></span>
+				<span class="tzh-tile__label"><?php echo esc_html( $tile['label'] ); ?></span>
+			</a>
+		<?php endforeach; ?>
+	</div>
 
 	<div class="tzh-panels">
 		<section class="tzh-panel">
@@ -40,7 +50,7 @@ defined( 'ABSPATH' ) || exit;
 			</p>
 			<ol class="tzh-phases">
 				<li class="is-done"><?php esc_html_e( 'Plugin skeleton and admin menu', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Packages, destinations and categories', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Packages, destinations and categories', 'travelz-holidays' ); ?></li>
 				<li><?php esc_html_e( 'Package editor — overview and pricing', 'travelz-holidays' ); ?></li>
 				<li><?php esc_html_e( 'Package editor — itinerary', 'travelz-holidays' ); ?></li>
 				<li><?php esc_html_e( 'Package editor — inclusions, terms, visa', 'travelz-holidays' ); ?></li>
