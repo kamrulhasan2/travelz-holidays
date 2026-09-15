@@ -1,0 +1,110 @@
+/**
+ * TravelZ Holidays — admin styles.
+ *
+ * Scoped to .tzh-wrap so nothing here can reach the rest of wp-admin.
+ */
+
+.tzh-wrap .tzh-lede {
+	font-size: 14px;
+	color: #50575e;
+	margin: 4px 0 20px;
+	max-width: 60ch;
+}
+
+.tzh-panels {
+	display: grid;
+	gap: 20px;
+	align-items: start;
+}
+
+@media screen and (min-width: 960px) {
+	.tzh-panels {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+.tzh-wrap .tzh-panel {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	padding: 18px 20px 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+}
+
+.tzh-wrap .tzh-panel h2 {
+	margin: 0 0 12px;
+	padding: 0;
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+.tzh-wrap .tzh-note {
+	color: #50575e;
+	margin: 0 0 12px;
+	max-width: 60ch;
+}
+
+.tzh-status {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.tzh-status th,
+.tzh-status td {
+	text-align: left;
+	padding: 8px 0;
+	border-bottom: 1px solid #f0f0f1;
+	font-weight: 400;
+	vertical-align: baseline;
+}
+
+.tzh-status tr:last-child th,
+.tzh-status tr:last-child td {
+	border-bottom: 0;
+}
+
+.tzh-status th {
+	color: #50575e;
+	width: 45%;
+}
+
+.tzh-dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	margin-right: 8px;
+	vertical-align: middle;
+	background: #8c8f94;
+}
+
+.tzh-dot--ok {
+	background: #00a32a;
+}
+
+.tzh-dot--warn {
+	background: #dba617;
+}
+
+.tzh-dot--fail {
+	background: #d63638;
+}
+
+.tzh-phases {
+	margin: 0;
+	padding-left: 1.4em;
+	color: #646970;
+}
+
+.tzh-phases li {
+	margin-bottom: 6px;
+}
+
+.tzh-phases li.is-done {
+	color: #1d2327;
+	font-weight: 600;
+}
+
+.tzh-phases li.is-done::marker {
+	color: #00a32a;
+}
