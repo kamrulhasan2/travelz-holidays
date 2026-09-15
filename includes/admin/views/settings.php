@@ -73,6 +73,25 @@ $tzh_lines = static function ( $value ): string {
 							value="<?php echo esc_attr( (string) $values['currency_symbol'] ); ?>" />
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Checkout', 'travelz-holidays' ); ?></th>
+					<td>
+						<label for="tzh-woo-checkout">
+							<input type="checkbox" id="tzh-woo-checkout" value="1"
+								name="<?php echo esc_attr( $tzh_name( 'woo_checkout' ) ); ?>"
+								<?php checked( ! empty( $values['woo_checkout'] ) ); ?>
+								<?php disabled( ! TZH_Woo::active() ); ?> />
+							<?php esc_html_e( 'Send bookings to WooCommerce checkout', 'travelz-holidays' ); ?>
+						</label>
+						<p class="description">
+							<?php
+							echo TZH_Woo::active()
+								? esc_html__( 'Turn this off to collect booking requests without taking payment — travelers get a reference and a consultant follows up.', 'travelz-holidays' )
+								: esc_html__( 'WooCommerce is not active. Bookings are collected as requests with a reference number.', 'travelz-holidays' );
+							?>
+						</p>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>

@@ -49,6 +49,7 @@ class TZH_Admin_Menu {
 			'edit-tags.php?taxonomy=' . TZH_Package::TAX_DESTINATION . '&post_type=' . $type,
 			'edit-tags.php?taxonomy=' . TZH_Package::TAX_TIER . '&post_type=' . $type,
 			'edit-tags.php?taxonomy=' . TZH_Package::TAX_FAMILY . '&post_type=' . $type,
+			TZH_Bookings_Page::SLUG,
 			'travelz-holidays-settings',
 		);
 	}
@@ -79,6 +80,16 @@ class TZH_Admin_Menu {
 		);
 
 		$this->register_taxonomy_pages();
+
+		$this->screens['bookings'] = (string) add_submenu_page(
+			tzh_menu_slug(),
+			__( 'Bookings', 'travelz-holidays' ),
+			__( 'Bookings', 'travelz-holidays' ),
+			$capability,
+			TZH_Bookings_Page::SLUG,
+			array( $this, 'render_bookings' ),
+			80
+		);
 
 		$this->screens['settings'] = (string) add_submenu_page(
 			tzh_menu_slug(),
@@ -246,6 +257,17 @@ class TZH_Admin_Menu {
 				'catalogue' => $this->catalogue_counts(),
 			)
 		);
+	}
+
+	/**
+	 * Bookings screen.
+	 */
+	public function render_bookings(): void {
+		$page = TZH_Plugin::instance()->module( 'bookings_page' );
+
+		if ( $page instanceof TZH_Bookings_Page ) {
+			$page->render();
+		}
 	}
 
 	/**

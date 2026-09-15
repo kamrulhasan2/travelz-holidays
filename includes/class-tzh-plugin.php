@@ -106,6 +106,7 @@ final class TZH_Plugin {
 			'theme_compat' => 'TZH_Theme_Compat',
 			'rest'       => 'TZH_Rest',
 			'booking'    => 'TZH_Booking',
+			'woo'        => 'TZH_Woo',
 		);
 
 		if ( is_admin() ) {
@@ -116,6 +117,7 @@ final class TZH_Plugin {
 			$modules['settings_page']   = 'TZH_Settings_Page';
 			$modules['term_fields']     = 'TZH_Term_Fields';
 			$modules['variant']         = 'TZH_Variant';
+			$modules['bookings_page']   = 'TZH_Bookings_Page';
 		}
 
 		/**

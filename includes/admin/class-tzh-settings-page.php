@@ -63,6 +63,8 @@ class TZH_Settings_Page {
 		$symbol                   = trim( (string) ( $input['currency_symbol'] ?? '' ) );
 		$clean['currency_symbol'] = '' === $symbol ? '৳' : sanitize_text_field( $symbol );
 
+		$clean['woo_checkout'] = ! empty( $input['woo_checkout'] );
+
 		$clean['child_rate']   = min( 100, max( 0, (int) ( $input['child_rate'] ?? 70 ) ) );
 		$clean['infant_price'] = max( 0, (int) ( $input['infant_price'] ?? 0 ) );
 

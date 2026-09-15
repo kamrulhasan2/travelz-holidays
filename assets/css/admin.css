@@ -634,3 +634,18 @@
 .column-tzh_order {
 	width: 70px;
 }
+
+/* ---------- Bookings screen ---------- */
+
+.tzh-wrap .tzh-bookings {
+	margin-top: 12px;
+}
+
+.tzh-wrap .tzh-bookings td {
+	vertical-align: top;
+}
+
+.tzh-wrap .tzh-bookings .tzh-muted {
+	margin-top: 2px;
+	font-size: 12px;
+}

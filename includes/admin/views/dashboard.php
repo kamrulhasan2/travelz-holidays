@@ -55,6 +55,13 @@ defined( 'ABSPATH' ) || exit;
 				<li class="is-done"><?php esc_html_e( 'Package editor — itinerary', 'travelz-holidays' ); ?></li>
 				<li class="is-done"><?php esc_html_e( 'Package editor — inclusions, terms, visa', 'travelz-holidays' ); ?></li>
 				<li class="is-done"><?php esc_html_e( 'Destination images and tier variants', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Front-end design system and templates', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Destination grid and package listing', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Filters, sorting and search', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Package detail page', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Printable tour details sheet', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'Booking form', 'travelz-holidays' ); ?></li>
+				<li class="is-done"><?php esc_html_e( 'WooCommerce checkout and bookings', 'travelz-holidays' ); ?></li>
 			</ol>
 		</section>
 	</div>

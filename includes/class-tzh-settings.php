@@ -34,6 +34,7 @@ class TZH_Settings {
 		return array(
 			'whatsapp'          => '',
 			'currency_symbol'   => '৳',
+			'woo_checkout'      => true,
 			'child_rate'        => 70,
 			'infant_price'      => 1500,
 			'default_highlights' => array(),
