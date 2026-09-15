@@ -165,7 +165,9 @@ class TZH_Meta_Box {
 			// A checkbox that was unticked and a repeater whose last row was
 			// removed both post nothing at all — they need an explicit empty
 			// value or the previous contents would survive the save.
-			$missing = 'checkbox' === $type ? '' : ( 'repeater' === $type ? array() : null );
+			$missing = in_array( $type, array( 'checkbox', 'lines', 'textarea' ), true )
+				? ( 'lines' === $type ? array() : '' )
+				: ( 'repeater' === $type ? array() : null );
 			$raw     = $submitted[ $key ] ?? $missing;
 
 			if ( null === $raw ) {
@@ -288,6 +290,9 @@ class TZH_Meta_Box {
 			case 'textarea':
 				return sanitize_textarea_field( (string) $raw );
 
+			case 'lines':
+				return $this->sanitize_lines( $raw );
+
 			case 'repeater':
 				return $this->sanitize_rows(
 					is_array( $raw ) ? $raw : array(),
@@ -297,6 +302,33 @@ class TZH_Meta_Box {
 			default:
 				return sanitize_text_field( (string) $raw );
 		}
+	}
+
+	/**
+	 * Split a textarea into a clean list, one item per line.
+	 *
+	 * @param mixed $raw Submitted value.
+	 *
+	 * @return string[]
+	 */
+	private function sanitize_lines( $raw ): array {
+		if ( is_array( $raw ) ) {
+			$lines = $raw;
+		} else {
+			$lines = preg_split( '/\r\n|\r|\n/', (string) $raw );
+		}
+
+		$clean = array();
+
+		foreach ( (array) $lines as $line ) {
+			$line = sanitize_text_field( trim( (string) $line ) );
+
+			if ( '' !== $line ) {
+				$clean[] = $line;
+			}
+		}
+
+		return $clean;
 	}
 
 	/**

@@ -249,10 +249,14 @@ class TZH_Admin_Menu {
 	}
 
 	/**
-	 * Settings screen placeholder until phase 5.
+	 * Settings screen.
 	 */
 	public function render_settings(): void {
-		tzh_admin_view( 'settings-placeholder' );
+		$page = TZH_Plugin::instance()->module( 'settings_page' );
+
+		if ( $page instanceof TZH_Settings_Page ) {
+			$page->render();
+		}
 	}
 
 	/**

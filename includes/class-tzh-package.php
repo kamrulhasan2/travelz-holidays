@@ -38,6 +38,7 @@ class TZH_Package {
 	public const META_BOOKED        = '_tzh_booked';
 	public const META_HERO          = '_tzh_hero';
 	public const META_VISA_DOC      = '_tzh_visa_doc';
+	public const META_VISA_NOTE     = '_tzh_visa_note';
 	public const META_WC_PRODUCT    = '_tzh_wc_product';
 
 	/* Grouped meta — stored as one array each, never queried directly. */
@@ -280,6 +281,95 @@ class TZH_Package {
 		}
 
 		return $days;
+	}
+
+
+	/**
+	 * Tour product highlights.
+	 *
+	 * @return string[]
+	 */
+	public function highlights(): array {
+		return $this->list( self::META_HIGHLIGHTS, 'default_highlights' );
+	}
+
+	/**
+	 * What the price includes.
+	 *
+	 * @return string[]
+	 */
+	public function inclusion(): array {
+		return $this->list( self::META_INCLUSION, 'default_inclusion' );
+	}
+
+	/**
+	 * What the price does not cover.
+	 *
+	 * @return string[]
+	 */
+	public function exclusion(): array {
+		return $this->list( self::META_EXCLUSION, 'default_exclusion' );
+	}
+
+	/**
+	 * Booking terms.
+	 *
+	 * @return string[]
+	 */
+	public function terms(): array {
+		return $this->list( self::META_TERMS, 'default_terms' );
+	}
+
+	/**
+	 * Free-form notes, as paragraphs.
+	 *
+	 * @return string[]
+	 */
+	public function other_details(): array {
+		$raw = (string) get_post_meta( $this->id(), self::META_OTHER, true );
+
+		if ( '' === trim( $raw ) ) {
+			return array();
+		}
+
+		$paragraphs = preg_split( "/\n\s*\n/", str_replace( "\r\n", "\n", $raw ) );
+
+		return array_values( array_filter( array_map( 'trim', (array) $paragraphs ), 'strlen' ) );
+	}
+
+	/**
+	 * Visa document attachment ID.
+	 */
+	public function visa_doc_id(): int {
+		return (int) get_post_meta( $this->id(), self::META_VISA_DOC, true );
+	}
+
+	/**
+	 * Note shown above the visa document.
+	 */
+	public function visa_note(): string {
+		$note = (string) get_post_meta( $this->id(), self::META_VISA_NOTE, true );
+
+		return '' !== trim( $note ) ? $note : (string) TZH_Settings::get( 'visa_note', '' );
+	}
+
+	/**
+	 * A stored list, falling back to the site-wide default when empty.
+	 *
+	 * @param string $meta_key    Meta key holding the list.
+	 * @param string $setting_key Settings key holding the fallback list.
+	 *
+	 * @return string[]
+	 */
+	private function list( string $meta_key, string $setting_key ): array {
+		$saved = get_post_meta( $this->id(), $meta_key, true );
+		$items = array_values( array_filter( array_map( 'strval', (array) $saved ), 'strlen' ) );
+
+		if ( $items ) {
+			return $items;
+		}
+
+		return array_values( (array) TZH_Settings::get( $setting_key, array() ) );
 	}
 
 	/**

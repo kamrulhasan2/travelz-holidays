@@ -387,6 +387,39 @@ class TZH_Field_Renderer {
 		echo '</div>';
 	}
 
+
+	/**
+	 * One item per line.
+	 *
+	 * Inclusions, terms and highlights arrive as pasted lists far more often
+	 * than they are typed one box at a time, so a plain textarea beats a
+	 * repeater here: paste, done.
+	 *
+	 * @param array<string, mixed> $field Field definition.
+	 * @param string               $name  Input name.
+	 * @param mixed                $value Saved items.
+	 * @param string               $id    Input id.
+	 * @param string|null          $leaf  Relative key inside a repeater row.
+	 */
+	private function render_lines( array $field, string $name, $value, string $id, ?string $leaf ): void {
+		$items = array_map( 'strval', (array) $value );
+
+		printf(
+			'<textarea%s name="%s" rows="%d" placeholder="%s" class="tzh-input tzh-textarea tzh-lines"%s>%s</textarea>',
+			$this->attr_id( $id ),
+			esc_attr( $name ),
+			(int) ( $field['rows'] ?? 6 ),
+			esc_attr( (string) ( $field['placeholder'] ?? '' ) ),
+			$this->leaf_attr( $leaf ),
+			esc_textarea( implode( "\n", $items ) )
+		);
+
+		printf(
+			'<p class="tzh-field__hint">%s</p>',
+			esc_html__( 'One per line.', 'travelz-holidays' )
+		);
+	}
+
 	/**
 	 * Repeating group of sub-fields, nestable.
 	 *

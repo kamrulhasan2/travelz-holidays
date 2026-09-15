@@ -40,6 +40,30 @@ class TZH_Fields {
 				'description' => __( 'One entry per day, in travel order. Add the hotels a day ends at, so travellers can see where they sleep.', 'travelz-holidays' ),
 				'fields'      => self::itinerary_fields(),
 			),
+			'highlights' => array(
+				'label'       => __( 'Highlights', 'travelz-holidays' ),
+				'icon'        => 'dashicons-star-filled',
+				'description' => __( 'The handful of things that sell this tour. Shown beside the itinerary.', 'travelz-holidays' ),
+				'fields'      => self::highlight_fields(),
+			),
+			'included' => array(
+				'label'       => __( 'Inclusion & Exclusion', 'travelz-holidays' ),
+				'icon'        => 'dashicons-yes-alt',
+				'description' => __( 'Leave either list empty to fall back to the site-wide defaults under Settings.', 'travelz-holidays' ),
+				'fields'      => self::inclusion_fields(),
+			),
+			'terms' => array(
+				'label'       => __( 'Terms & Details', 'travelz-holidays' ),
+				'icon'        => 'dashicons-media-text',
+				'description' => __( 'Booking conditions and any longer notes for this package.', 'travelz-holidays' ),
+				'fields'      => self::terms_fields(),
+			),
+			'visa' => array(
+				'label'       => __( 'Visa', 'travelz-holidays' ),
+				'icon'        => 'dashicons-id',
+				'description' => __( 'Upload the visa requirements document travellers can view and download.', 'travelz-holidays' ),
+				'fields'      => self::visa_fields(),
+			),
 		);
 
 		/**
@@ -316,6 +340,96 @@ class TZH_Fields {
 						),
 					),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Highlights tab.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function highlight_fields(): array {
+		return array(
+			array(
+				'key'         => TZH_Package::META_HIGHLIGHTS,
+				'type'        => 'lines',
+				'label'       => __( 'Tour product highlights', 'travelz-holidays' ),
+				'rows'        => 7,
+				'placeholder' => "Return airport transfers on private vehicle\nHandpicked centrally located hotels\nDaily breakfast throughout the tour",
+			),
+		);
+	}
+
+	/**
+	 * Inclusion and exclusion tab.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function inclusion_fields(): array {
+		return array(
+			array(
+				'key'         => TZH_Package::META_INCLUSION,
+				'type'        => 'lines',
+				'label'       => __( 'Inclusion', 'travelz-holidays' ),
+				'rows'        => 8,
+				'placeholder' => "Dhaka–Kathmandu–Dhaka flight\nAirport pick up & drop\nDaily breakfast",
+				'class'       => 'tzh-field--half',
+			),
+			array(
+				'key'         => TZH_Package::META_EXCLUSION,
+				'type'        => 'lines',
+				'label'       => __( 'Exclusion', 'travelz-holidays' ),
+				'rows'        => 8,
+				'placeholder' => "Lunch & Dinner\nBeverages of any kind\nPersonal & medical expenses",
+				'class'       => 'tzh-field--half',
+			),
+		);
+	}
+
+	/**
+	 * Terms and other details tab.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function terms_fields(): array {
+		return array(
+			array(
+				'key'         => TZH_Package::META_TERMS,
+				'type'        => 'lines',
+				'label'       => __( 'Terms & conditions', 'travelz-holidays' ),
+				'rows'        => 7,
+				'description' => __( 'Left empty, the package shows the terms set under Settings.', 'travelz-holidays' ),
+			),
+			array(
+				'key'         => TZH_Package::META_OTHER,
+				'type'        => 'textarea',
+				'label'       => __( 'Other details', 'travelz-holidays' ),
+				'rows'        => 8,
+				'description' => __( 'Longer notes — what to pack, passport validity, special requests. Leave a blank line between paragraphs.', 'travelz-holidays' ),
+			),
+		);
+	}
+
+	/**
+	 * Visa tab.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function visa_fields(): array {
+		return array(
+			array(
+				'key'         => TZH_Package::META_VISA_DOC,
+				'type'        => 'media',
+				'label'       => __( 'Visa requirements document', 'travelz-holidays' ),
+				'description' => __( 'An image or scan travellers can open full size and download.', 'travelz-holidays' ),
+			),
+			array(
+				'key'         => TZH_Package::META_VISA_NOTE,
+				'type'        => 'textarea',
+				'label'       => __( 'Note above the document', 'travelz-holidays' ),
+				'rows'        => 3,
+				'description' => __( 'Left empty, the note set under Settings is used.', 'travelz-holidays' ),
 			),
 		);
 	}

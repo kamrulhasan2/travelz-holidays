@@ -586,3 +586,33 @@
 .tzh-rep .tzh-rep .tzh-rep__body {
 	padding: 12px 12px 14px;
 }
+
+/* Lines field */
+
+.tzh-lines {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+	line-height: 1.8;
+}
+
+.tzh-field__hint {
+	margin: 4px 0 0;
+	font-size: 11px;
+	color: #8c8f94;
+}
+
+/* Settings screen */
+
+.tzh-wrap form .tzh-panel {
+	margin-bottom: 20px;
+}
+
+.tzh-settings-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 18px 20px;
+}
+
+.tzh-wrap .form-table th {
+	width: 200px;
+}

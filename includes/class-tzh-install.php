@@ -19,7 +19,7 @@ class TZH_Install {
 	/**
 	 * Bump when a new step is added below.
 	 */
-	private const DB_VERSION = 2;
+	private const DB_VERSION = 3;
 
 	/**
 	 * Option holding the schema version already applied.
@@ -47,10 +47,37 @@ class TZH_Install {
 			$this->seed_tiers();
 		}
 
+		if ( $installed < 3 ) {
+			$this->seed_settings();
+		}
+
 		update_option( self::OPTION, self::DB_VERSION, false );
 		update_option( 'tzh_version', TZH_VERSION, false );
 
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * Give a fresh install the company-wide terms to start from.
+	 *
+	 * Only runs when nothing has been saved yet, so an administrator who
+	 * cleared the list on purpose does not get it back.
+	 */
+	private function seed_settings(): void {
+		$saved = get_option( TZH_Settings::OPTION, array() );
+
+		if ( ! is_array( $saved ) ) {
+			$saved = array();
+		}
+
+		if ( ! empty( $saved['default_terms'] ) ) {
+			return;
+		}
+
+		$saved['default_terms'] = TZH_Settings::starter_terms();
+
+		update_option( TZH_Settings::OPTION, wp_parse_args( $saved, TZH_Settings::defaults() ), false );
+		TZH_Settings::flush();
 	}
 
 	/**
