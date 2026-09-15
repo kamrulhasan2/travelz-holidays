@@ -78,6 +78,43 @@ $tzh_lines = static function ( $value ): string {
 		</div>
 
 		<div class="tzh-panel">
+			<h2><?php esc_html_e( 'Catalogue page', 'travelz-holidays' ); ?></h2>
+			<p class="tzh-note">
+				<?php
+				printf(
+					/* translators: %s: URL of the destination grid */
+					esc_html__( 'The heading travellers see at %s.', 'travelz-holidays' ),
+					'<a href="' . esc_url( TZH_Rewrites::grid_url() ) . '" target="_blank" rel="noreferrer">' . esc_html( TZH_Rewrites::grid_url() ) . '</a>'
+				);
+				?>
+			</p>
+
+			<table class="form-table" role="presentation">
+				<tbody>
+				<?php
+				$tzh_copy = array(
+					'archive_eyebrow'  => __( 'Eyebrow badge', 'travelz-holidays' ),
+					'archive_title'    => __( 'Heading', 'travelz-holidays' ),
+					'archive_subtitle' => __( 'Subheading', 'travelz-holidays' ),
+				);
+
+				foreach ( $tzh_copy as $tzh_key => $tzh_label ) :
+					$tzh_id = 'tzh-' . str_replace( '_', '-', $tzh_key );
+					?>
+					<tr>
+						<th scope="row"><label for="<?php echo esc_attr( $tzh_id ); ?>"><?php echo esc_html( $tzh_label ); ?></label></th>
+						<td>
+							<input type="text" id="<?php echo esc_attr( $tzh_id ); ?>" class="regular-text"
+								name="<?php echo esc_attr( $tzh_name( $tzh_key ) ); ?>"
+								value="<?php echo esc_attr( (string) $values[ $tzh_key ] ); ?>" />
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="tzh-panel">
 			<h2><?php esc_html_e( 'Default pricing', 'travelz-holidays' ); ?></h2>
 
 			<table class="form-table" role="presentation">

@@ -40,6 +40,9 @@ class TZH_Settings {
 			'default_inclusion' => array(),
 			'default_exclusion' => array(),
 			'default_terms'     => array(),
+			'archive_eyebrow'   => __( 'Curated for Bangladeshi travelers', 'travelz-holidays' ),
+			'archive_title'     => __( 'Explore Holiday Packages', 'travelz-holidays' ),
+			'archive_subtitle'  => __( 'Handpicked destinations, unforgettable journeys.', 'travelz-holidays' ),
 			'visa_note'         => __( 'Please review the visa document below carefully. Requirements may change; contact your booking consultant for the latest updates.', 'travelz-holidays' ),
 		);
 	}

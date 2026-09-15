@@ -63,11 +63,12 @@ class TZH_Post_Types {
 				'show_in_rest'    => true,
 				'menu_icon'       => 'dashicons-palmtree',
 				'supports'        => array( 'title', 'thumbnail', 'excerpt', 'revisions' ),
-				'has_archive'     => 'holiday-packages',
-				'rewrite'         => array(
-					'slug'       => 'holiday-packages',
-					'with_front' => false,
-				),
+				// has_archive stays true so is_post_type_archive() works, but
+				// rewrite is off: TZH_Rewrites writes every rule by hand so the
+				// post type and the destination taxonomy can share one base.
+				'has_archive'     => true,
+				'rewrite'         => false,
+				'query_var'       => true,
 				'capability_type' => 'post',
 				'map_meta_cap'    => true,
 				'hierarchical'    => false,

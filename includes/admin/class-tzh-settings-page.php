@@ -70,6 +70,10 @@ class TZH_Settings_Page {
 			$clean[ $key ] = $this->lines( $input[ $key ] ?? '' );
 		}
 
+		foreach ( array( 'archive_eyebrow', 'archive_title', 'archive_subtitle' ) as $key ) {
+			$clean[ $key ] = sanitize_text_field( (string) ( $input[ $key ] ?? '' ) );
+		}
+
 		$clean['visa_note'] = sanitize_textarea_field( (string) ( $input['visa_note'] ?? '' ) );
 
 		TZH_Settings::flush();

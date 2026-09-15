@@ -62,11 +62,8 @@ class TZH_Taxonomies {
 				'show_admin_column' => false,
 				'show_in_rest'      => true,
 				'show_in_menu'      => true,
-				'rewrite'           => array(
-					'slug'         => 'destination',
-					'with_front'   => false,
-					'hierarchical' => false,
-				),
+				'rewrite'           => false,
+				'query_var'         => true,
 			)
 		);
 	}
@@ -99,11 +96,8 @@ class TZH_Taxonomies {
 				'show_admin_column' => false,
 				'show_in_rest'      => true,
 				'show_in_menu'      => true,
-				'rewrite'           => array(
-					'slug'         => 'package-category',
-					'with_front'   => false,
-					'hierarchical' => false,
-				),
+				'rewrite'           => false,
+				'query_var'         => true,
 			)
 		);
 	}

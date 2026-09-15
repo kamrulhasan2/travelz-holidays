@@ -100,6 +100,10 @@ final class TZH_Plugin {
 			'post_types' => 'TZH_Post_Types',
 			'install'    => 'TZH_Install',
 			'assets'     => 'TZH_Assets',
+			'rewrites'   => 'TZH_Rewrites',
+			'router'     => 'TZH_Router',
+			'shortcodes' => 'TZH_Shortcodes',
+			'theme_compat' => 'TZH_Theme_Compat',
 		);
 
 		if ( is_admin() ) {
