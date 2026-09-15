@@ -6,7 +6,6 @@
  *
  * @var array<int, array<string, mixed>> $steps
  * @var array<int, array<string, mixed>> $shortcodes
- * @var array<int, array<string, mixed>> $urls
  * @var int                              $done
  */
 
@@ -84,27 +83,6 @@ $total = count( $steps );
 		</section>
 
 		<section class="tzh-panel">
-			<h2><?php esc_html_e( 'Addresses on your site', 'travelz-holidays' ); ?></h2>
-			<p class="tzh-note">
-				<?php esc_html_e( 'The plugin builds these itself — no page has to be created for any of them.', 'travelz-holidays' ); ?>
-			</p>
-
-			<table class="tzh-list">
-				<tbody>
-				<?php foreach ( $urls as $tzh_url ) : ?>
-					<tr>
-						<td>
-							<b><?php echo esc_html( (string) $tzh_url['title'] ); ?></b>
-							<code class="tzh-url"><?php echo wp_kses( (string) $tzh_url['url'], array() ); ?></code>
-							<span class="tzh-muted"><?php echo esc_html( (string) $tzh_url['body'] ); ?></span>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table>
-		</section>
-
-		<section class="tzh-panel">
 			<h2><?php esc_html_e( 'Worth knowing', 'travelz-holidays' ); ?></h2>
 
 			<ul class="tzh-tips">
@@ -135,16 +113,5 @@ $total = count( $steps );
 			</ul>
 		</section>
 
-		<section class="tzh-panel">
-			<h2><?php esc_html_e( 'Going live', 'travelz-holidays' ); ?></h2>
-
-			<ol class="tzh-tips tzh-tips--ordered">
-				<li><?php esc_html_e( 'Copy the plugin folder to the live site and activate it.', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Open Settings → Permalinks and press Save once, so the package URLs register.', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Re-enter the WhatsApp number, currency and default lists — settings do not travel with the plugin files.', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Clear the site cache and open one package to confirm the styling loaded.', 'travelz-holidays' ); ?></li>
-				<li><?php esc_html_e( 'Place one test booking, then refund or cancel it.', 'travelz-holidays' ); ?></li>
-			</ol>
-		</section>
 	</div>
 </div>

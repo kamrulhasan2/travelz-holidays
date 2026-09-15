@@ -31,7 +31,6 @@ class TZH_Setup_Page {
 			array(
 				'steps'      => $this->steps(),
 				'shortcodes' => $this->shortcodes(),
-				'urls'       => $this->urls(),
 				'done'       => count(
 					array_filter(
 						$this->steps(),
@@ -156,45 +155,6 @@ class TZH_Setup_Page {
 					: sprintf( '[travelz_packages destination="%s" limit="3"]', $destination ),
 				'title' => __( 'A row of packages', 'travelz-holidays' ),
 				'body'  => __( 'The same cards the catalogue uses. Narrow it with destination="slug" or category="deluxe", show only your best with bestseller="yes", and order by orderby="price" instead of by package code.', 'travelz-holidays' ),
-			),
-		);
-	}
-
-	/**
-	 * The addresses the plugin answers on.
-	 *
-	 * @return array<int, array{url: string, title: string, body: string}>
-	 */
-	private function urls(): array {
-		$base        = trailingslashit( TZH_Rewrites::grid_url() );
-		$destination = $this->first_destination_slug();
-		$sample      = '' === $destination ? 'maldives' : $destination;
-
-		return array(
-			array(
-				'url'   => TZH_Rewrites::grid_url(),
-				'title' => __( 'Catalogue', 'travelz-holidays' ),
-				'body'  => __( 'Every destination. This is the link to put in your menu.', 'travelz-holidays' ),
-			),
-			array(
-				'url'   => $base . $sample . '/',
-				'title' => __( 'One destination', 'travelz-holidays' ),
-				'body'  => __( 'Its packages, with filters for category, duration, price and tour type.', 'travelz-holidays' ),
-			),
-			array(
-				'url'   => $base . $sample . '/&lt;package&gt;/',
-				'title' => __( 'One package', 'travelz-holidays' ),
-				'body'  => __( 'The full page: itinerary, prices, inclusions, terms.', 'travelz-holidays' ),
-			),
-			array(
-				'url'   => $base . $sample . '/&lt;package&gt;/details/',
-				'title' => __( 'Printable details sheet', 'travelz-holidays' ),
-				'body'  => __( 'What the Download PDF button opens. Print or save as PDF from the browser.', 'travelz-holidays' ),
-			),
-			array(
-				'url'   => $base . $sample . '/&lt;package&gt;/book/',
-				'title' => __( 'Booking screen', 'travelz-holidays' ),
-				'body'  => __( 'Travel date, travellers and the live price breakdown.', 'travelz-holidays' ),
 			),
 		);
 	}
