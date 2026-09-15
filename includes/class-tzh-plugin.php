@@ -121,6 +121,7 @@ final class TZH_Plugin {
 			$modules['variant']         = 'TZH_Variant';
 			$modules['bookings_page']   = 'TZH_Bookings_Page';
 			$modules['dashboard']       = 'TZH_Dashboard';
+			$modules['setup_page']      = 'TZH_Setup_Page';
 		}
 
 		/**

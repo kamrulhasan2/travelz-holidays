@@ -21,6 +21,110 @@ class TZH_Shortcodes {
 	 */
 	public function hooks(): void {
 		add_shortcode( 'travelz_destinations', array( $this, 'destinations' ) );
+		add_shortcode( 'travelz_packages', array( $this, 'packages' ) );
+	}
+
+	/**
+	 * [travelz_packages destination="maldives" limit="3" bestseller="yes"]
+	 *
+	 * A row of package cards for a home page or a landing page. The cards are
+	 * the same ones the catalogue uses, so a package never has two looks.
+	 *
+	 * @param array<string, string>|string $atts Shortcode attributes.
+	 */
+	public function packages( $atts ): string {
+		$atts = shortcode_atts(
+			array(
+				'destination' => '',
+				'category'    => '',
+				'limit'       => 3,
+				'bestseller'  => 'no',
+				'orderby'     => 'serial',
+			),
+			(array) $atts,
+			'travelz_packages'
+		);
+
+		$query = array(
+			'post_type'        => TZH_Package::POST_TYPE,
+			'post_status'      => 'publish',
+			'posts_per_page'   => max( 1, min( 24, (int) $atts['limit'] ) ),
+			'suppress_filters' => false,
+			'no_found_rows'    => true,
+		);
+
+		$tax = array();
+
+		foreach ( array(
+			TZH_Package::TAX_DESTINATION => $atts['destination'],
+			TZH_Package::TAX_TIER        => $atts['category'],
+		) as $taxonomy => $slug ) {
+			$slug = sanitize_title( (string) $slug );
+
+			if ( '' !== $slug ) {
+				$tax[] = array(
+					'taxonomy' => $taxonomy,
+					'field'    => 'slug',
+					'terms'    => $slug,
+				);
+			}
+		}
+
+		if ( $tax ) {
+			$query['tax_query'] = $tax; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		}
+
+		if ( 'yes' === $atts['bestseller'] ) {
+			$query['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'   => TZH_Package::META_BESTSELLER,
+					'value' => '1',
+				),
+			);
+		}
+
+		if ( 'price' === $atts['orderby'] ) {
+			$query['meta_key'] = TZH_Package::META_PRICE; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			$query['orderby']  = 'meta_value_num';
+			$query['order']    = 'ASC';
+		}
+
+		$posts = get_posts( $query );
+
+		if ( ! $posts ) {
+			return '';
+		}
+
+		if ( 'serial' === $atts['orderby'] ) {
+			usort(
+				$posts,
+				static function ( WP_Post $a, WP_Post $b ): int {
+					return TZH_Package::serial_from_code( (string) get_post_meta( $a->ID, TZH_Package::META_CODE, true ) )
+						<=> TZH_Package::serial_from_code( (string) get_post_meta( $b->ID, TZH_Package::META_CODE, true ) );
+				}
+			);
+		}
+
+		TZH_Assets::need();
+
+		ob_start();
+		?>
+		<div id="tz-app">
+			<div class="tz-results">
+				<?php foreach ( $posts as $post ) : ?>
+					<?php
+					$package = TZH_Package::from( $post );
+
+					if ( $package ) {
+						tzh_template( 'parts/card-package', array( 'package' => $package ) );
+					}
+					?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+
+		return (string) ob_get_clean();
 	}
 
 	/**

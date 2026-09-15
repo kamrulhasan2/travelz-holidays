@@ -50,6 +50,7 @@ class TZH_Admin_Menu {
 			'edit-tags.php?taxonomy=' . TZH_Package::TAX_TIER . '&post_type=' . $type,
 			'edit-tags.php?taxonomy=' . TZH_Package::TAX_FAMILY . '&post_type=' . $type,
 			TZH_Bookings_Page::SLUG,
+			TZH_Setup_Page::SLUG,
 			'travelz-holidays-settings',
 		);
 	}
@@ -89,6 +90,16 @@ class TZH_Admin_Menu {
 			TZH_Bookings_Page::SLUG,
 			array( $this, 'render_bookings' ),
 			80
+		);
+
+		$this->screens['setup'] = (string) add_submenu_page(
+			tzh_menu_slug(),
+			__( 'Setup Guide', 'travelz-holidays' ),
+			__( 'Setup Guide', 'travelz-holidays' ),
+			$capability,
+			TZH_Setup_Page::SLUG,
+			array( $this, 'render_setup' ),
+			85
 		);
 
 		$this->screens['settings'] = (string) add_submenu_page(
@@ -224,6 +235,25 @@ class TZH_Admin_Menu {
 			array(),
 			TZH_Assets::version( 'assets/css/admin.css' )
 		);
+
+		if ( ( $this->screens['setup'] ?? '' ) === $hook_suffix ) {
+			wp_enqueue_script(
+				'tzh-setup',
+				TZH_URL . 'assets/js/setup.js',
+				array(),
+				TZH_Assets::version( 'assets/js/setup.js' ),
+				true
+			);
+
+			wp_localize_script(
+				'tzh-setup',
+				'tzhSetup',
+				array(
+					'copied' => __( 'Copied', 'travelz-holidays' ),
+					'copy'   => __( 'Copy', 'travelz-holidays' ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -264,6 +294,17 @@ class TZH_Admin_Menu {
 		$page = TZH_Plugin::instance()->module( 'bookings_page' );
 
 		if ( $page instanceof TZH_Bookings_Page ) {
+			$page->render();
+		}
+	}
+
+	/**
+	 * Setup guide screen.
+	 */
+	public function render_setup(): void {
+		$page = TZH_Plugin::instance()->module( 'setup_page' );
+
+		if ( $page instanceof TZH_Setup_Page ) {
 			$page->render();
 		}
 	}
