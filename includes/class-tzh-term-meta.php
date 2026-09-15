@@ -58,6 +58,25 @@ class TZH_Term_Meta {
 	 * @return WP_Term[]
 	 */
 	public static function ordered( string $taxonomy, bool $hide_empty = false ): array {
+		$key = 'terms_' . sanitize_key( $taxonomy ) . ( $hide_empty ? '_ne' : '' );
+
+		return (array) TZH_Cache::remember(
+			$key,
+			static function () use ( $taxonomy, $hide_empty ): array {
+				return self::sorted( $taxonomy, $hide_empty );
+			}
+		);
+	}
+
+	/**
+	 * Build the ordered list, without the cache in front of it.
+	 *
+	 * @param string $taxonomy   Taxonomy name.
+	 * @param bool   $hide_empty Skip terms with no packages.
+	 *
+	 * @return WP_Term[]
+	 */
+	private static function sorted( string $taxonomy, bool $hide_empty ): array {
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,

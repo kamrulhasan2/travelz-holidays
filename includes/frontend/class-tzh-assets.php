@@ -143,6 +143,11 @@ class TZH_Assets {
 			true
 		);
 
+		// Nothing on these screens needs the script before first paint: the
+		// tabs, the steppers and the filters all enhance markup that already
+		// works without them.
+		wp_script_add_data( 'tzh-front', 'strategy', 'defer' );
+
 		wp_localize_script(
 			'tzh-front',
 			'tzhFront',

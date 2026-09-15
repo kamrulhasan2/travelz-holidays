@@ -107,6 +107,8 @@ final class TZH_Plugin {
 			'rest'       => 'TZH_Rest',
 			'booking'    => 'TZH_Booking',
 			'woo'        => 'TZH_Woo',
+			'seo'        => 'TZH_Seo',
+			'cache'      => 'TZH_Cache',
 		);
 
 		if ( is_admin() ) {

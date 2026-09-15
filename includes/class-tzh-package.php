@@ -55,6 +55,13 @@ class TZH_Package {
 	private WP_Post $post;
 
 	/**
+	 * Variants already looked up this request, keyed by package ID.
+	 *
+	 * @var array<int, array<string, TZH_Package>>
+	 */
+	private static array $variant_cache = array();
+
+	/**
 	 * @param WP_Post $post Package post.
 	 */
 	private function __construct( WP_Post $post ) {
@@ -398,6 +405,23 @@ class TZH_Package {
 	 * @return array<string, TZH_Package>
 	 */
 	public function variants(): array {
+		// The detail page asks for these three times over — the tier switcher,
+		// the price tab and the booking card — and each call is a tax query.
+		if ( isset( self::$variant_cache[ $this->id() ] ) ) {
+			return self::$variant_cache[ $this->id() ];
+		}
+
+		self::$variant_cache[ $this->id() ] = $this->find_variants();
+
+		return self::$variant_cache[ $this->id() ];
+	}
+
+	/**
+	 * Look the variants up.
+	 *
+	 * @return array<string, TZH_Package>
+	 */
+	private function find_variants(): array {
 		$family = $this->family();
 
 		if ( ! $family instanceof WP_Term ) {

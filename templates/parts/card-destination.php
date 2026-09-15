@@ -27,7 +27,8 @@ $tzh_count = (int) $term->count;
 			array(
 				'class'   => 'tz-dest__img',
 				'alt'     => esc_attr( $term->name ),
-				'loading' => 'lazy',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
 			)
 		);
 		?>

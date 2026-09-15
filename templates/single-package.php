@@ -102,7 +102,8 @@ $tzh_first = (string) array_key_first( $tzh_tabs );
 	<section class="tz-hero<?php echo '' === $tzh_hero ? ' tz-hero--empty' : ''; ?>">
 		<?php if ( '' !== $tzh_hero ) : ?>
 			<img class="tz-hero__img" src="<?php echo esc_url( $tzh_hero ); ?>"
-				alt="<?php echo esc_attr( $tzh_destination ? $tzh_destination->name : get_the_title( $tzh_package->id() ) ); ?>" />
+				alt="<?php echo esc_attr( $tzh_destination ? $tzh_destination->name : get_the_title( $tzh_package->id() ) ); ?>"
+				fetchpriority="high" decoding="async" />
 		<?php endif; ?>
 
 		<span class="tz-hero__shade" aria-hidden="true"></span>

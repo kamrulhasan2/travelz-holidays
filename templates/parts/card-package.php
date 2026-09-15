@@ -27,7 +27,8 @@ $tzh_permalink   = get_permalink( $package->id() );
 					'large',
 					array(
 						'alt'     => esc_attr( get_the_title( $package->id() ) ),
-						'loading' => 'lazy',
+						'loading'  => 'lazy',
+				'decoding' => 'async',
 					)
 				);
 				?>
