@@ -99,6 +99,7 @@ final class TZH_Plugin {
 			'taxonomies' => 'TZH_Taxonomies',
 			'post_types' => 'TZH_Post_Types',
 			'install'    => 'TZH_Install',
+			'assets'     => 'TZH_Assets',
 		);
 
 		if ( is_admin() ) {

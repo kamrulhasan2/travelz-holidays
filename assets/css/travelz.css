@@ -1,0 +1,1484 @@
+/**
+ * TravelZ Holidays — front-end design system.
+ *
+ * Every rule is scoped under #tz-app so nothing here can reach the theme, and
+ * nothing is wrapped in a cascade layer: an unlayered theme rule beats a
+ * layered one no matter how specific, which is why this is hand-written plain
+ * CSS rather than compiled utilities.
+ *
+ * Tokens are the ones from the original design, declared twice — a hex first
+ * for older browsers, then the exact OKLCH value, which wins wherever it parses.
+ */
+
+#tz-app {
+	--tz-radius: 0.75rem;
+	--tz-radius-sm: 0.5rem;
+	--tz-radius-lg: 1rem;
+	--tz-radius-xl: 1.5rem;
+	--tz-radius-pill: 999px;
+
+	--tz-background: #ffffff;
+	--tz-background: oklch(1 0 0);
+	--tz-surface: #f8f9fa;
+	--tz-surface: oklch(0.984 0.003 247);
+	--tz-foreground: #1e293b;
+	--tz-foreground: oklch(0.279 0.041 260);
+	--tz-card: #ffffff;
+	--tz-card: oklch(1 0 0);
+
+	--tz-primary: #2ca89e;
+	--tz-primary: oklch(0.68 0.093 187);
+	--tz-primary-fg: #ffffff;
+	--tz-primary-fg: oklch(1 0 0);
+	--tz-primary-soft: #e3f5f2;
+	--tz-primary-soft: oklch(0.95 0.03 187);
+	--tz-primary-ink: #1d6f68;
+	--tz-primary-ink: oklch(0.4 0.09 187);
+
+	--tz-muted: #f1f5f9;
+	--tz-muted: oklch(0.968 0.007 247);
+	--tz-muted-fg: #64748b;
+	--tz-muted-fg: oklch(0.554 0.046 257);
+
+	--tz-sunset-from: #f97316;
+	--tz-sunset-from: oklch(0.7 0.19 47);
+	--tz-sunset-to: #fb923c;
+	--tz-sunset-to: oklch(0.76 0.17 55);
+
+	--tz-urgency: #ef4444;
+	--tz-urgency: oklch(0.637 0.237 25);
+	--tz-success: #16a34a;
+	--tz-success: oklch(0.68 0.15 155);
+
+	--tz-border: #e2e8f0;
+	--tz-border: oklch(0.929 0.013 255);
+	--tz-ring: var(--tz-primary);
+
+	--tz-shadow-card: 0 4px 20px -4px rgba(30, 41, 59, .08);
+	--tz-shadow-card-hover: 0 12px 40px -8px rgba(30, 41, 59, .18);
+	--tz-shadow-sunset: 0 10px 30px -10px rgba(249, 115, 22, .5);
+
+	--tz-font: "Poppins", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+	font-family: var(--tz-font);
+	color: var(--tz-foreground);
+	background: var(--tz-background);
+	-webkit-font-smoothing: antialiased;
+	line-height: 1.6;
+}
+
+/* Reset just enough, inside the scope only. */
+
+:where(#tz-app) *,
+:where(#tz-app) *::before,
+:where(#tz-app) *::after {
+	box-sizing: border-box;
+}
+
+:where(#tz-app) img,
+:where(#tz-app) svg {
+	max-width: 100%;
+}
+
+:where(#tz-app) img {
+	display: block;
+	height: auto;
+}
+
+:where(#tz-app) h1,
+:where(#tz-app) h2,
+:where(#tz-app) h3,
+:where(#tz-app) h4 {
+	font-family: var(--tz-font);
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	margin: 0;
+	text-wrap: balance;
+	color: var(--tz-foreground);
+}
+
+:where(#tz-app) p {
+	margin: 0;
+}
+
+:where(#tz-app) ul,
+:where(#tz-app) ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+:where(#tz-app) a {
+	color: inherit;
+	text-decoration: none;
+}
+
+:where(#tz-app) button {
+	font: inherit;
+	color: inherit;
+}
+
+#tz-app :where(a, button, input, select, textarea, summary, details):focus-visible {
+	outline: 2px solid var(--tz-ring);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* ---------- Layout ---------- */
+
+#tz-app .tz-wrap {
+	width: 100%;
+	max-width: 80rem;
+	margin-inline: auto;
+	padding-inline: 16px;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-wrap {
+		padding-inline: 24px;
+	}
+}
+
+#tz-app .tz-section {
+	padding-block: 48px;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-section {
+		padding-block: 64px;
+	}
+}
+
+#tz-app .tz-stack {
+	display: grid;
+	gap: 20px;
+}
+
+#tz-app .tz-icon {
+	width: 1em;
+	height: 1em;
+	flex: none;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	vertical-align: -0.125em;
+}
+
+#tz-app .tz-icon--fill {
+	fill: currentColor;
+	stroke: none;
+}
+
+/* ---------- Typography ---------- */
+
+#tz-app .tz-title {
+	font-size: 2.25rem;
+	font-weight: 700;
+	letter-spacing: -0.025em;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-title {
+		font-size: 3rem;
+	}
+}
+
+#tz-app .tz-title--sm {
+	font-size: 1.875rem;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-title--sm {
+		font-size: 2.25rem;
+	}
+}
+
+#tz-app .tz-heading {
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+#tz-app .tz-lede {
+	font-size: 1rem;
+	color: var(--tz-muted-fg);
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-lede {
+		font-size: 1.125rem;
+	}
+}
+
+#tz-app .tz-meta {
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-muted {
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-sunset-text {
+	background-image: linear-gradient(135deg, var(--tz-sunset-from), var(--tz-sunset-to));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* ---------- Badges & chips ---------- */
+
+#tz-app .tz-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 10px;
+	border-radius: var(--tz-radius-pill);
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.4;
+	white-space: nowrap;
+	background: var(--tz-primary);
+	color: var(--tz-primary-fg);
+}
+
+#tz-app .tz-badge--soft {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-badge--outline {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+	box-shadow: inset 0 0 0 1px rgba(44, 168, 158, .3);
+}
+
+#tz-app .tz-badge--sunset {
+	background-image: linear-gradient(135deg, var(--tz-sunset-from), var(--tz-sunset-to));
+	color: #fff;
+	box-shadow: var(--tz-shadow-sunset);
+}
+
+#tz-app .tz-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 11px;
+	border-radius: var(--tz-radius-pill);
+	background: var(--tz-surface);
+	font-size: 0.75rem;
+	color: var(--tz-foreground);
+	white-space: nowrap;
+}
+
+#tz-app .tz-chip .tz-icon {
+	color: var(--tz-primary);
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-chip--accent {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+	font-weight: 600;
+}
+
+#tz-app .tz-chip--bordered {
+	background: var(--tz-background);
+	box-shadow: inset 0 0 0 1px var(--tz-border);
+	font-weight: 500;
+}
+
+#tz-app .tz-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+/* ---------- Buttons ---------- */
+
+#tz-app .tz-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 18px;
+	border: 0;
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-primary);
+	color: var(--tz-primary-fg);
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.3;
+	cursor: pointer;
+	transition: background-color .18s ease, opacity .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+#tz-app .tz-btn:hover {
+	background: color-mix(in oklab, var(--tz-primary) 90%, #000);
+	color: var(--tz-primary-fg);
+}
+
+#tz-app .tz-btn--sunset {
+	background-image: linear-gradient(135deg, var(--tz-sunset-from), var(--tz-sunset-to));
+	color: #fff;
+	box-shadow: var(--tz-shadow-sunset);
+}
+
+#tz-app .tz-btn--sunset:hover {
+	background-image: linear-gradient(135deg, var(--tz-sunset-from), var(--tz-sunset-to));
+	opacity: .95;
+	color: #fff;
+}
+
+#tz-app .tz-btn--outline {
+	background: var(--tz-background);
+	color: var(--tz-foreground);
+	box-shadow: inset 0 0 0 1px var(--tz-border);
+}
+
+#tz-app .tz-btn--outline:hover {
+	background: var(--tz-surface);
+	color: var(--tz-foreground);
+}
+
+#tz-app .tz-btn--teal-outline {
+	background: var(--tz-background);
+	color: var(--tz-primary-ink);
+	box-shadow: inset 0 0 0 1px rgba(44, 168, 158, .3);
+}
+
+#tz-app .tz-btn--teal-outline:hover {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-btn--ghost {
+	background: transparent;
+	color: var(--tz-foreground);
+}
+
+#tz-app .tz-btn--ghost:hover {
+	background: var(--tz-muted);
+	color: var(--tz-foreground);
+}
+
+#tz-app .tz-btn--lg {
+	height: 48px;
+	padding-inline: 22px;
+	font-size: 1rem;
+}
+
+#tz-app .tz-btn--block {
+	width: 100%;
+}
+
+#tz-app .tz-btn--icon {
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	flex: none;
+}
+
+#tz-app .tz-btn--icon .tz-icon {
+	font-size: 1.25rem;
+}
+
+#tz-app .tz-btn[disabled] {
+	opacity: .5;
+	cursor: not-allowed;
+}
+
+#tz-app .tz-link {
+	color: var(--tz-primary-ink);
+	font-weight: 500;
+	cursor: pointer;
+	background: none;
+	border: 0;
+	padding: 0;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-link:hover {
+	text-decoration: underline;
+}
+
+/* ---------- Cards ---------- */
+
+#tz-app .tz-card {
+	background: var(--tz-card);
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	box-shadow: var(--tz-shadow-card);
+}
+
+#tz-app .tz-card--flat {
+	box-shadow: none;
+}
+
+#tz-app .tz-card__body {
+	padding: 24px;
+}
+
+/* ---------- Breadcrumb ---------- */
+
+#tz-app .tz-crumbs {
+	border-top: 1px solid var(--tz-border);
+	border-bottom: 1px solid var(--tz-border);
+	background: var(--tz-surface);
+}
+
+#tz-app .tz-crumbs__inner {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding-block: 10px;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-crumbs a:hover {
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-crumbs .tz-icon {
+	color: var(--tz-muted-fg);
+	opacity: .6;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-crumbs__current {
+	font-weight: 600;
+	color: var(--tz-primary-ink);
+}
+
+/* ---------- Destination grid (view 1) ---------- */
+
+#tz-app .tz-dest-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 20px;
+}
+
+@media (min-width: 640px) {
+	#tz-app .tz-dest-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-dest-grid {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+#tz-app .tz-dest {
+	position: relative;
+	display: block;
+	aspect-ratio: 3 / 4;
+	overflow: hidden;
+	border-radius: var(--tz-radius-xl);
+	box-shadow: var(--tz-shadow-card);
+	transition: transform .25s ease, box-shadow .25s ease;
+	background: var(--tz-muted);
+}
+
+#tz-app .tz-dest:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--tz-shadow-card-hover);
+}
+
+#tz-app .tz-dest__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform .5s ease;
+}
+
+#tz-app .tz-dest:hover .tz-dest__img {
+	transform: scale(1.1);
+}
+
+#tz-app .tz-dest__shade {
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .45) 28%, rgba(0, 0, 0, .06) 62%, transparent 100%);
+}
+
+#tz-app .tz-dest__count {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+}
+
+#tz-app .tz-dest__foot {
+	position: absolute;
+	inset: auto 0 0 0;
+	padding: 16px;
+}
+
+#tz-app .tz-dest__name {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #fff;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+}
+
+#tz-app .tz-dest__blurb {
+	margin-top: 4px;
+	font-size: 0.75rem;
+	color: rgba(255, 255, 255, .85);
+}
+
+/* ---------- Package list (view 2) ---------- */
+
+#tz-app .tz-list-layout {
+	display: grid;
+	gap: 32px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-list-layout {
+		grid-template-columns: 260px minmax(0, 1fr);
+	}
+}
+
+#tz-app .tz-filters {
+	position: sticky;
+	top: 32px;
+	padding: 20px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	background: var(--tz-card);
+	box-shadow: 0 1px 2px rgba(30, 41, 59, .04);
+}
+
+#tz-app .tz-filters__group + .tz-filters__group {
+	margin-top: 24px;
+}
+
+#tz-app .tz-filters__legend {
+	display: block;
+	margin-bottom: 12px;
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+#tz-app .tz-filters__scroll {
+	max-height: 14rem;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+#tz-app .tz-opt {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 0.875rem;
+	cursor: pointer;
+	padding-block: 5px;
+}
+
+#tz-app .tz-opt input {
+	width: 16px;
+	height: 16px;
+	accent-color: var(--tz-primary);
+	flex: none;
+	margin: 0;
+}
+
+#tz-app .tz-pkg {
+	display: grid;
+	overflow: hidden;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	background: var(--tz-card);
+	box-shadow: var(--tz-shadow-card);
+	transition: box-shadow .25s ease;
+}
+
+#tz-app .tz-pkg:hover {
+	box-shadow: var(--tz-shadow-card-hover);
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-pkg {
+		grid-template-columns: 280px minmax(0, 1fr);
+	}
+}
+
+#tz-app .tz-pkg__media {
+	position: relative;
+	aspect-ratio: 4 / 3;
+	background: var(--tz-muted);
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-pkg__media {
+		aspect-ratio: auto;
+	}
+}
+
+#tz-app .tz-pkg__media img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+#tz-app .tz-pkg__tag {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+}
+
+#tz-app .tz-pkg__body {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 24px;
+	gap: 20px;
+}
+
+#tz-app .tz-pkg__name {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-top: 6px;
+}
+
+#tz-app .tz-pkg__short {
+	margin-top: 8px;
+	font-size: 0.875rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-pkg__foot {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	padding-top: 16px;
+	border-top: 1px solid var(--tz-border);
+}
+
+#tz-app .tz-price-tag {
+	display: inline-block;
+	padding: 6px 12px;
+	border-radius: var(--tz-radius-sm);
+	background-image: linear-gradient(135deg, var(--tz-sunset-from), var(--tz-sunset-to));
+	box-shadow: var(--tz-shadow-sunset);
+	color: #fff;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-price-tag span {
+	font-size: 0.75rem;
+	font-weight: 500;
+	opacity: .9;
+}
+
+#tz-app .tz-empty {
+	padding: 40px;
+	border: 1px dashed var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	text-align: center;
+	color: var(--tz-muted-fg);
+}
+
+/* ---------- Detail hero (view 3) ---------- */
+
+#tz-app .tz-hero {
+	position: relative;
+	height: 340px;
+	background: var(--tz-muted);
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-hero {
+		height: 440px;
+	}
+}
+
+#tz-app .tz-hero__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+#tz-app .tz-hero__shade {
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, .7), rgba(0, 0, 0, .3));
+}
+
+#tz-app .tz-hero__inner {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	height: 100%;
+	padding-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-hero__inner {
+		padding-bottom: 56px;
+	}
+}
+
+#tz-app .tz-hero__title {
+	max-width: 48rem;
+	font-size: 1.875rem;
+	font-weight: 700;
+	color: #fff;
+}
+
+@media (min-width: 768px) {
+	#tz-app .tz-hero__title {
+		font-size: 3rem;
+	}
+}
+
+#tz-app .tz-hero__rating {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+	color: rgba(255, 255, 255, .9);
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+#tz-app .tz-hero__rating .tz-icon {
+	color: #facc15;
+	fill: #facc15;
+	stroke: none;
+	font-size: 1rem;
+}
+
+#tz-app .tz-quickinfo {
+	border-bottom: 1px solid var(--tz-border);
+	background: var(--tz-surface);
+}
+
+#tz-app .tz-quickinfo__inner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding-block: 16px;
+}
+
+/* ---------- Detail body ---------- */
+
+#tz-app .tz-detail {
+	display: grid;
+	gap: 40px;
+	padding-block: 40px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-detail {
+		grid-template-columns: minmax(0, 1fr) 340px;
+	}
+}
+
+#tz-app .tz-tablist {
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+	overflow-x: auto;
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-surface);
+	scrollbar-width: thin;
+}
+
+#tz-app .tz-tabbar {
+	position: sticky;
+	top: 0;
+	z-index: 30;
+	margin-bottom: 24px;
+	padding-block: 12px;
+	border-bottom: 1px solid var(--tz-border);
+	background: rgba(255, 255, 255, .95);
+	backdrop-filter: blur(6px);
+}
+
+#tz-app .tz-tab {
+	flex: none;
+	padding: 8px 14px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--tz-muted-fg);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+#tz-app .tz-tab:hover {
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-tab[aria-selected="true"] {
+	background: var(--tz-primary);
+	color: var(--tz-primary-fg);
+}
+
+#tz-app .tz-panel {
+	display: grid;
+	gap: 24px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-panel--split {
+		grid-template-columns: minmax(0, 1fr) 320px;
+		align-items: start;
+	}
+}
+
+/* Itinerary accordion */
+
+#tz-app .tz-acc {
+	border-top: 1px solid var(--tz-border);
+}
+
+#tz-app .tz-acc__item {
+	border-bottom: 1px solid var(--tz-border);
+}
+
+#tz-app .tz-acc__item > summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-block: 16px;
+	cursor: pointer;
+	list-style: none;
+	font-weight: 500;
+}
+
+#tz-app .tz-acc__item > summary::-webkit-details-marker {
+	display: none;
+}
+
+#tz-app .tz-acc__caret {
+	flex: none;
+	color: var(--tz-muted-fg);
+	transition: transform .2s ease;
+}
+
+#tz-app .tz-acc__item[open] .tz-acc__caret {
+	transform: rotate(180deg);
+}
+
+#tz-app .tz-acc__body {
+	padding-bottom: 18px;
+	font-size: 0.875rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-acc__label {
+	display: block;
+	margin: 14px 0 8px;
+	font-size: 0.6875rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: var(--tz-foreground);
+	opacity: .7;
+}
+
+#tz-app .tz-hotels {
+	display: grid;
+	gap: 8px;
+}
+
+@media (min-width: 640px) {
+	#tz-app .tz-hotels {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+#tz-app .tz-hotel {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 12px;
+	border-radius: var(--tz-radius);
+	background: var(--tz-surface);
+}
+
+#tz-app .tz-hotel__icon {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 36px;
+	height: 36px;
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-hotel__city {
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 700;
+	color: var(--tz-foreground);
+}
+
+#tz-app .tz-hotel__name {
+	display: block;
+	font-size: 0.875rem;
+	color: var(--tz-foreground);
+	opacity: .8;
+}
+
+#tz-app .tz-hotel__class {
+	display: block;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+/* Tick / cross lists */
+
+#tz-app .tz-ticks {
+	display: grid;
+	gap: 12px;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-ticks li {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+#tz-app .tz-ticks__mark {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 20px;
+	height: 20px;
+	margin-top: 2px;
+	border-radius: 50%;
+	font-size: 0.75rem;
+}
+
+#tz-app .tz-ticks--yes .tz-ticks__mark {
+	background: rgba(22, 163, 74, .15);
+	color: var(--tz-success);
+}
+
+#tz-app .tz-ticks--no .tz-ticks__mark {
+	background: rgba(239, 68, 68, .15);
+	color: var(--tz-urgency);
+}
+
+#tz-app .tz-ticks--soft .tz-ticks__mark {
+	width: 24px;
+	height: 24px;
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-ticks--soft li span:last-child {
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-bullets {
+	display: grid;
+	gap: 10px;
+	padding-left: 20px;
+	list-style: disc;
+	font-size: 0.875rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-bullets li::marker {
+	color: var(--tz-primary);
+}
+
+#tz-app .tz-prose {
+	display: grid;
+	gap: 12px;
+	font-size: 0.875rem;
+	line-height: 1.75;
+	color: var(--tz-muted-fg);
+}
+
+/* Price tab */
+
+#tz-app .tz-bigprice {
+	font-size: 3rem;
+	font-weight: 800;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-pricegrid {
+	display: grid;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+@media (min-width: 640px) {
+	#tz-app .tz-pricegrid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+#tz-app .tz-pricegrid__cell {
+	padding: 16px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius);
+}
+
+#tz-app .tz-pricegrid__cell b {
+	display: block;
+	margin-top: 4px;
+	font-size: 1rem;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Tier switcher */
+
+#tz-app .tz-tiers {
+	display: grid;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+@media (min-width: 640px) {
+	#tz-app .tz-tiers {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+#tz-app .tz-tier {
+	display: block;
+	width: 100%;
+	padding: 16px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius);
+	background: var(--tz-background);
+	text-align: left;
+	cursor: pointer;
+	transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+#tz-app .tz-tier:hover:not([disabled]):not(.is-current) {
+	border-color: var(--tz-primary);
+	box-shadow: var(--tz-shadow-card);
+}
+
+#tz-app .tz-tier.is-current {
+	border-color: var(--tz-primary);
+	background: var(--tz-primary-soft);
+}
+
+#tz-app .tz-tier[disabled] {
+	cursor: not-allowed;
+	background: var(--tz-muted);
+	color: var(--tz-muted-fg);
+	opacity: .6;
+}
+
+#tz-app .tz-tier__name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+#tz-app .tz-tier__name .tz-icon {
+	color: var(--tz-primary);
+}
+
+#tz-app .tz-tier[disabled] .tz-tier__name .tz-icon {
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-tier__price {
+	display: block;
+	margin-top: 8px;
+	font-size: 1.125rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-tier__note {
+	display: block;
+	margin-top: 4px;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+/* Booking card */
+
+#tz-app .tz-booking {
+	position: sticky;
+	top: 96px;
+	padding: 24px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	background: var(--tz-card);
+	box-shadow: var(--tz-shadow-card);
+}
+
+#tz-app .tz-booking__from {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+#tz-app .tz-booking__amount {
+	font-size: 2.25rem;
+	font-weight: 800;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-booking__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 20px;
+}
+
+#tz-app .tz-note {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin-top: 16px;
+	padding: 12px;
+	border-radius: var(--tz-radius-sm);
+	font-size: 0.75rem;
+	line-height: 1.5;
+}
+
+#tz-app .tz-note--urgency {
+	background: rgba(239, 68, 68, .1);
+	color: var(--tz-urgency);
+}
+
+#tz-app .tz-note--soft {
+	background: var(--tz-primary-soft);
+	color: var(--tz-primary-ink);
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-assurances {
+	display: grid;
+	gap: 8px;
+	margin-top: 20px;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-assurances li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#tz-app .tz-assurances .tz-icon {
+	color: var(--tz-primary);
+	font-size: 0.875rem;
+}
+
+/* Mobile sticky book bar */
+
+#tz-app .tz-stickybar {
+	position: sticky;
+	bottom: 0;
+	z-index: 30;
+	padding: 12px 0;
+	border-top: 1px solid var(--tz-border);
+	background: rgba(255, 255, 255, .95);
+	backdrop-filter: blur(6px);
+}
+
+#tz-app .tz-stickybar__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-stickybar {
+		display: none;
+	}
+}
+
+#tz-app .tz-only-desktop {
+	display: none;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-only-desktop {
+		display: block;
+	}
+
+	#tz-app .tz-only-mobile {
+		display: none;
+	}
+}
+
+/* ---------- Booking form (view 4) ---------- */
+
+#tz-app .tz-book-layout {
+	display: grid;
+	gap: 32px;
+	margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+	#tz-app .tz-book-layout {
+		grid-template-columns: minmax(0, 1fr) 360px;
+	}
+}
+
+#tz-app .tz-summary {
+	display: flex;
+	gap: 16px;
+	padding: 16px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-xl);
+	background: var(--tz-card);
+	box-shadow: var(--tz-shadow-card);
+}
+
+#tz-app .tz-summary img {
+	flex: none;
+	width: 128px;
+	height: 96px;
+	border-radius: var(--tz-radius);
+	object-fit: cover;
+}
+
+#tz-app .tz-summary__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 10px;
+	min-width: 0;
+}
+
+#tz-app .tz-stepper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding-block: 16px;
+}
+
+#tz-app .tz-stepper + .tz-stepper {
+	border-top: 1px solid var(--tz-border);
+}
+
+#tz-app .tz-stepper__label {
+	display: block;
+	font-weight: 500;
+}
+
+#tz-app .tz-stepper__sub {
+	display: block;
+	font-size: 0.75rem;
+	color: var(--tz-muted-fg);
+}
+
+#tz-app .tz-stepper__controls {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex: none;
+}
+
+#tz-app .tz-round {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border: 1px solid var(--tz-border);
+	border-radius: 50%;
+	background: var(--tz-background);
+	color: var(--tz-foreground);
+	cursor: pointer;
+	transition: border-color .18s ease, color .18s ease;
+}
+
+#tz-app .tz-round:hover:not([disabled]) {
+	border-color: var(--tz-primary);
+	color: var(--tz-primary-ink);
+}
+
+#tz-app .tz-round[disabled] {
+	opacity: .4;
+	cursor: not-allowed;
+}
+
+#tz-app .tz-round--solid {
+	border-color: transparent;
+	background: var(--tz-primary);
+	color: var(--tz-primary-fg);
+}
+
+#tz-app .tz-round--solid:hover:not([disabled]) {
+	background: color-mix(in oklab, var(--tz-primary) 90%, #000);
+	color: var(--tz-primary-fg);
+	border-color: transparent;
+}
+
+#tz-app .tz-count {
+	width: 24px;
+	text-align: center;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-breakdown {
+	display: grid;
+	gap: 12px;
+	margin-top: 16px;
+	font-size: 0.875rem;
+}
+
+#tz-app .tz-breakdown__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-breakdown__row.is-zero {
+	opacity: .5;
+}
+
+#tz-app .tz-breakdown__rule {
+	height: 1px;
+	background: var(--tz-border);
+	margin-block: 4px;
+}
+
+#tz-app .tz-breakdown__total {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+#tz-app .tz-breakdown__total b {
+	font-size: 1.875rem;
+	font-weight: 800;
+	color: var(--tz-primary-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+#tz-app .tz-date {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 7px 12px;
+	border: 1px solid var(--tz-border);
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-background);
+	font-size: 0.875rem;
+	font-family: inherit;
+	color: var(--tz-foreground);
+}
+
+#tz-app .tz-date::-webkit-calendar-picker-indicator {
+	cursor: pointer;
+}
+
+/* ---------- Toast ---------- */
+
+#tz-app .tz-toasts {
+	position: fixed;
+	top: 16px;
+	left: 50%;
+	z-index: 9999;
+	display: grid;
+	gap: 8px;
+	transform: translateX(-50%);
+	width: min(92vw, 360px);
+}
+
+#tz-app .tz-toast {
+	padding: 12px 16px;
+	border-radius: var(--tz-radius-sm);
+	background: var(--tz-foreground);
+	color: #fff;
+	font-size: 0.875rem;
+	box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .4);
+	animation: tz-slide-up .3s ease;
+}
+
+#tz-app .tz-toast--error {
+	background: var(--tz-urgency);
+}
+
+#tz-app .tz-toast--success {
+	background: var(--tz-success);
+}
+
+#tz-app .tz-toast__sub {
+	margin-top: 2px;
+	font-size: 0.75rem;
+	opacity: .85;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes tz-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes tz-slide-up {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+#tz-app .tz-fade-in {
+	animation: tz-fade-in .4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#tz-app *,
+	#tz-app *::before,
+	#tz-app *::after {
+		animation-duration: .01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: .01ms !important;
+	}
+}

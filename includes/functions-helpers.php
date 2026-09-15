@@ -103,3 +103,54 @@ function tzh_admin_view( string $view, array $data = array() ): void {
 
 	require $file;
 }
+
+/**
+ * Render an icon from the sprite.
+ *
+ * @param string               $name  Icon name without the tz-icon- prefix.
+ * @param array<string, mixed> $args  class: extra classes; size: CSS font-size;
+ *                                    label: accessible name, otherwise hidden.
+ */
+function tzh_icon( string $name, array $args = array() ): string {
+	$classes = 'tz-icon';
+
+	if ( ! empty( $args['class'] ) ) {
+		$classes .= ' ' . $args['class'];
+	}
+
+	$label = (string) ( $args['label'] ?? '' );
+
+	return sprintf(
+		'<svg class="%s"%s %s><use href="#tz-icon-%s"></use></svg>',
+		esc_attr( $classes ),
+		isset( $args['size'] ) ? ' style="font-size:' . esc_attr( (string) $args['size'] ) . '"' : '',
+		'' === $label
+			? 'aria-hidden="true" focusable="false"'
+			: 'role="img" aria-label="' . esc_attr( $label ) . '"',
+		esc_attr( sanitize_key( $name ) )
+	);
+}
+
+/**
+ * Render a front-end template.
+ *
+ * @param string               $name Template path relative to templates/.
+ * @param array<string, mixed> $data Variables made available to it.
+ */
+function tzh_template( string $name, array $data = array() ): void {
+	TZH_Template::render( $name, $data );
+}
+
+/**
+ * Attachment URL with a sensible fallback chain.
+ *
+ * @param int    $attachment_id Attachment ID, or 0.
+ * @param string $size          Image size name.
+ */
+function tzh_image_url( int $attachment_id, string $size = 'large' ): string {
+	if ( $attachment_id <= 0 ) {
+		return '';
+	}
+
+	return (string) wp_get_attachment_image_url( $attachment_id, $size );
+}
