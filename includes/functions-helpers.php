@@ -154,3 +154,33 @@ function tzh_image_url( int $attachment_id, string $size = 'large' ): string {
 
 	return (string) wp_get_attachment_image_url( $attachment_id, $size );
 }
+
+/**
+ * How far off a date is, in words: "in 12 days", "tomorrow", "today".
+ *
+ * @param string $date Date in Y-m-d.
+ */
+function tzh_days_away( string $date ): string {
+	$then = strtotime( $date . ' 00:00:00' );
+
+	if ( ! $then ) {
+		return '';
+	}
+
+	$today = strtotime( (string) wp_date( 'Y-m-d' ) . ' 00:00:00' );
+	$days  = (int) round( ( $then - $today ) / DAY_IN_SECONDS );
+
+	if ( $days <= 0 ) {
+		return __( 'today', 'travelz-holidays' );
+	}
+
+	if ( 1 === $days ) {
+		return __( 'tomorrow', 'travelz-holidays' );
+	}
+
+	return sprintf(
+		/* translators: %s: number of days */
+		_n( 'in %s day', 'in %s days', $days, 'travelz-holidays' ),
+		number_format_i18n( $days )
+	);
+}

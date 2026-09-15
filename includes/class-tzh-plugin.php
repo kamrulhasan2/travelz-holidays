@@ -120,6 +120,7 @@ final class TZH_Plugin {
 			$modules['term_fields']     = 'TZH_Term_Fields';
 			$modules['variant']         = 'TZH_Variant';
 			$modules['bookings_page']   = 'TZH_Bookings_Page';
+			$modules['dashboard']       = 'TZH_Dashboard';
 		}
 
 		/**

@@ -70,9 +70,7 @@ class TZH_Assets {
 	 * @param string $relative Path under the plugin folder.
 	 */
 	public static function version( string $relative ): string {
-		$environment = function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production';
-
-		if ( ! in_array( $environment, array( 'local', 'development' ), true ) && ! ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+		if ( ! self::is_development() ) {
 			return TZH_VERSION;
 		}
 
@@ -81,6 +79,40 @@ class TZH_Assets {
 		return is_readable( $file )
 			? TZH_VERSION . '.' . (string) filemtime( $file )
 			: TZH_VERSION;
+	}
+
+	/**
+	 * Whether this install is somebody's working copy.
+	 *
+	 * wp_get_environment_type() answers "production" unless a site has been
+	 * told otherwise in wp-config.php, which a local XAMPP or MAMP install
+	 * almost never has been — and the one place a stale stylesheet costs real
+	 * time is exactly there. So the host name is consulted too.
+	 */
+	public static function is_development(): bool {
+		$environment = function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production';
+
+		if ( in_array( $environment, array( 'local', 'development' ), true ) ) {
+			return true;
+		}
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return true;
+		}
+
+		$host = strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+
+		if ( in_array( $host, array( 'localhost', '127.0.0.1', '::1' ), true ) ) {
+			return true;
+		}
+
+		foreach ( array( '.local', '.test', '.localhost', '.dev' ) as $suffix ) {
+			if ( str_ends_with( $host, $suffix ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

@@ -250,13 +250,11 @@ class TZH_Admin_Menu {
 	 * Dashboard screen.
 	 */
 	public function render_dashboard(): void {
-		tzh_admin_view(
-			'dashboard',
-			array(
-				'checks'    => $this->system_checks(),
-				'catalogue' => $this->catalogue_counts(),
-			)
-		);
+		$page = TZH_Plugin::instance()->module( 'dashboard' );
+
+		if ( $page instanceof TZH_Dashboard ) {
+			$page->render();
+		}
 	}
 
 	/**
@@ -308,96 +306,6 @@ class TZH_Admin_Menu {
 			$screen->taxonomy,
 			array( TZH_Package::TAX_DESTINATION, TZH_Package::TAX_TIER, TZH_Package::TAX_FAMILY ),
 			true
-		);
-	}
-
-	/**
-	 * Catalogue tallies shown on the dashboard.
-	 *
-	 * @return array<int, array{label: string, count: int, url: string}>
-	 */
-	private function catalogue_counts(): array {
-		$counts = wp_count_posts( TZH_Package::POST_TYPE );
-
-		return array(
-			array(
-				'label' => __( 'Published packages', 'travelz-holidays' ),
-				'count' => (int) ( $counts->publish ?? 0 ),
-				'url'   => admin_url( 'edit.php?post_type=' . TZH_Package::POST_TYPE ),
-			),
-			array(
-				'label' => __( 'Drafts', 'travelz-holidays' ),
-				'count' => (int) ( $counts->draft ?? 0 ),
-				'url'   => admin_url( 'edit.php?post_status=draft&post_type=' . TZH_Package::POST_TYPE ),
-			),
-			array(
-				'label' => __( 'Destinations', 'travelz-holidays' ),
-				'count' => (int) wp_count_terms(
-					array(
-						'taxonomy'   => TZH_Package::TAX_DESTINATION,
-						'hide_empty' => false,
-					)
-				),
-				'url'   => admin_url( 'edit-tags.php?taxonomy=' . TZH_Package::TAX_DESTINATION . '&post_type=' . TZH_Package::POST_TYPE ),
-			),
-			array(
-				'label' => __( 'Tour groups', 'travelz-holidays' ),
-				'count' => (int) wp_count_terms(
-					array(
-						'taxonomy'   => TZH_Package::TAX_FAMILY,
-						'hide_empty' => false,
-					)
-				),
-				'url'   => admin_url( 'edit-tags.php?taxonomy=' . TZH_Package::TAX_FAMILY . '&post_type=' . TZH_Package::POST_TYPE ),
-			),
-		);
-	}
-
-	/**
-	 * Environment checks shown on the dashboard.
-	 *
-	 * Each entry is [ label, value, status ] where status is ok | warn | fail.
-	 *
-	 * @return array<int, array{label: string, value: string, status: string}>
-	 */
-	private function system_checks(): array {
-		$permalinks = get_option( 'permalink_structure' );
-
-		return array(
-			array(
-				'label'  => __( 'Plugin version', 'travelz-holidays' ),
-				'value'  => TZH_VERSION,
-				'status' => 'ok',
-			),
-			array(
-				'label'  => __( 'WordPress', 'travelz-holidays' ),
-				'value'  => get_bloginfo( 'version' ),
-				'status' => 'ok',
-			),
-			array(
-				'label'  => __( 'PHP', 'travelz-holidays' ),
-				'value'  => PHP_VERSION,
-				'status' => version_compare( PHP_VERSION, '8.1', '<' ) ? 'warn' : 'ok',
-			),
-			array(
-				'label'  => __( 'Pretty permalinks', 'travelz-holidays' ),
-				'value'  => $permalinks
-					? __( 'Enabled', 'travelz-holidays' )
-					: __( 'Plain — package URLs need this', 'travelz-holidays' ),
-				'status' => $permalinks ? 'ok' : 'fail',
-			),
-			array(
-				'label'  => __( 'WooCommerce', 'travelz-holidays' ),
-				'value'  => class_exists( 'WooCommerce' )
-					? __( 'Active', 'travelz-holidays' )
-					: __( 'Not active — needed from phase 13', 'travelz-holidays' ),
-				'status' => class_exists( 'WooCommerce' ) ? 'ok' : 'warn',
-			),
-			array(
-				'label'  => __( 'Active theme', 'travelz-holidays' ),
-				'value'  => wp_get_theme()->get( 'Name' ),
-				'status' => 'ok',
-			),
 		);
 	}
 }
