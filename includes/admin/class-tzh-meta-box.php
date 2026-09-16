@@ -34,7 +34,9 @@ class TZH_Meta_Box {
 	 * @param string  $post_type Current post type.
 	 * @param WP_Post $post      Post being edited.
 	 */
-	public function register( string $post_type, WP_Post $post ): void {
+	public function register( $post_type, $post = null ) {
+		unset( $post );
+
 		if ( TZH_Package::POST_TYPE !== $post_type ) {
 			return;
 		}
@@ -480,7 +482,7 @@ class TZH_Meta_Box {
 	 *
 	 * @param string $hook_suffix Current screen hook.
 	 */
-	public function enqueue( string $hook_suffix ): void {
+	public function enqueue( $hook_suffix = '' ) {
 		if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
 			return;
 		}

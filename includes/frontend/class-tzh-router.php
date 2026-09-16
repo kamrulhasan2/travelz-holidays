@@ -30,7 +30,7 @@ class TZH_Router {
 	 *
 	 * @param string $template Template WordPress settled on.
 	 */
-	public function route( string $template ): string {
+	public function route( $template ) {
 		$name = $this->template_name();
 
 		if ( '' === $name ) {
@@ -60,8 +60,8 @@ class TZH_Router {
 	 *
 	 * @return array<string, string>
 	 */
-	public function title( array $parts ): array {
-		if ( is_post_type_archive( TZH_Package::POST_TYPE ) ) {
+	public function title( $parts ) {
+		if ( is_array( $parts ) && is_post_type_archive( TZH_Package::POST_TYPE ) ) {
 			$parts['title'] = (string) TZH_Settings::get(
 				'archive_title',
 				__( 'Explore Holiday Packages', 'travelz-holidays' )

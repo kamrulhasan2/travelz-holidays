@@ -181,7 +181,15 @@ class TZH_Admin_Menu {
 	 *
 	 * @param string $parent_file Current parent menu slug.
 	 */
-	public function keep_menu_open( string $parent_file ): string {
+	/*
+	 * Hook callbacks take their arguments untyped on purpose. WordPress lets
+	 * any plugin filter a value before this one sees it, and a plugin that
+	 * hands back null where a string is documented would turn a declared
+	 * parameter into a fatal TypeError on somebody else's screen. Values are
+	 * checked here instead, where a surprise is a no-op rather than a crash.
+	 */
+
+	public function keep_menu_open( $parent_file ) {
 		$screen = get_current_screen();
 
 		if ( ! $screen ) {
@@ -200,7 +208,7 @@ class TZH_Admin_Menu {
 	 *
 	 * @param string|null $submenu_file Current submenu slug.
 	 */
-	public function highlight_submenu( ?string $submenu_file ): ?string {
+	public function highlight_submenu( $submenu_file = null ) {
 		$screen = get_current_screen();
 
 		if ( ! $screen || 'edit-tags' !== $screen->base ) {
@@ -225,8 +233,8 @@ class TZH_Admin_Menu {
 	 *
 	 * @param string $hook_suffix Current screen hook.
 	 */
-	public function enqueue( string $hook_suffix ): void {
-		if ( ! $this->is_plugin_screen( $hook_suffix ) ) {
+	public function enqueue( $hook_suffix = '' ) {
+		if ( ! $this->is_plugin_screen( (string) $hook_suffix ) ) {
 			return;
 		}
 
@@ -264,7 +272,11 @@ class TZH_Admin_Menu {
 	 *
 	 * @return string[]
 	 */
-	public function action_links( array $links ): array {
+	public function action_links( $links ) {
+		if ( ! is_array( $links ) ) {
+			return $links;
+		}
+
 		array_unshift(
 			$links,
 			sprintf(
@@ -290,8 +302,8 @@ class TZH_Admin_Menu {
 	 *
 	 * @return string[]
 	 */
-	public function row_meta( array $meta, string $file, array $data = array() ): array {
-		if ( TZH_BASENAME !== $file ) {
+	public function row_meta( $meta, $file = '', $data = array() ) {
+		if ( ! is_array( $meta ) || ! is_array( $data ) || TZH_BASENAME !== $file ) {
 			return $meta;
 		}
 

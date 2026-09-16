@@ -88,7 +88,7 @@ class TZH_Post_Types {
 	 * @param bool   $use_block_editor Whether to use the block editor.
 	 * @param string $post_type        Post type being edited.
 	 */
-	public function disable_block_editor( bool $use_block_editor, string $post_type ): bool {
+	public function disable_block_editor( $use_block_editor, $post_type = '' ) {
 		if ( TZH_Package::POST_TYPE === $post_type ) {
 			return false;
 		}
@@ -102,8 +102,8 @@ class TZH_Post_Types {
 	 * @param string  $text Placeholder text.
 	 * @param WP_Post $post Post being edited.
 	 */
-	public function title_placeholder( string $text, WP_Post $post ): string {
-		if ( TZH_Package::POST_TYPE !== $post->post_type ) {
+	public function title_placeholder( $text, $post = null ) {
+		if ( ! $post instanceof WP_Post || TZH_Package::POST_TYPE !== $post->post_type ) {
 			return $text;
 		}
 
@@ -117,7 +117,11 @@ class TZH_Post_Types {
 	 *
 	 * @return array<string, array<int, string>>
 	 */
-	public function updated_messages( array $messages ): array {
+	public function updated_messages( $messages ) {
+		if ( ! is_array( $messages ) ) {
+			return $messages;
+		}
+
 		$messages[ TZH_Package::POST_TYPE ] = array(
 			0  => '',
 			1  => __( 'Package updated.', 'travelz-holidays' ),

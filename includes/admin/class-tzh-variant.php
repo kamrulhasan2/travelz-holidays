@@ -47,7 +47,11 @@ class TZH_Variant {
 	 *
 	 * @return array<string, string>
 	 */
-	public function row_actions( array $actions, WP_Post $post ): array {
+	public function row_actions( $actions, $post = null ) {
+		if ( ! is_array( $actions ) || ! $post instanceof WP_Post ) {
+			return $actions;
+		}
+
 		$package = TZH_Package::from( $post );
 
 		if ( ! $package || ! current_user_can( 'edit_post', $post->ID ) ) {

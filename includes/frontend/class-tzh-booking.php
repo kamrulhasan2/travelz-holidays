@@ -64,7 +64,11 @@ class TZH_Booking {
 	 *
 	 * @return string[]
 	 */
-	public function query_vars( array $vars ): array {
+	public function query_vars( $vars ) {
+		if ( ! is_array( $vars ) ) {
+			return $vars;
+		}
+
 		$vars[] = self::REF_VAR;
 
 		return $vars;

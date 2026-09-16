@@ -71,8 +71,8 @@ class TZH_Rewrites {
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function robots( array $robots ): array {
-		if ( '' === self::current_action() ) {
+	public function robots( $robots ) {
+		if ( ! is_array( $robots ) || '' === self::current_action() ) {
 			return $robots;
 		}
 
@@ -135,7 +135,11 @@ class TZH_Rewrites {
 	 *
 	 * @return string[]
 	 */
-	public function query_vars( array $vars ): array {
+	public function query_vars( $vars ) {
+		if ( ! is_array( $vars ) ) {
+			return $vars;
+		}
+
 		$vars[] = self::ACTION_VAR;
 
 		return $vars;
@@ -148,8 +152,8 @@ class TZH_Rewrites {
 	 * @param WP_Post $post      Post being linked.
 	 * @param bool    $leavename Whether to leave the %postname% placeholder in place.
 	 */
-	public function package_link( string $permalink, WP_Post $post, bool $leavename = false ): string {
-		if ( TZH_Package::POST_TYPE !== $post->post_type ) {
+	public function package_link( $permalink, $post = null, $leavename = false ) {
+		if ( ! $post instanceof WP_Post || TZH_Package::POST_TYPE !== $post->post_type ) {
 			return $permalink;
 		}
 
@@ -174,8 +178,8 @@ class TZH_Rewrites {
 	 * @param WP_Term $term     Term being linked.
 	 * @param string  $taxonomy Taxonomy name.
 	 */
-	public function destination_link( string $link, WP_Term $term, string $taxonomy ): string {
-		if ( TZH_Package::TAX_DESTINATION !== $taxonomy ) {
+	public function destination_link( $link, $term = null, $taxonomy = '' ) {
+		if ( ! $term instanceof WP_Term || TZH_Package::TAX_DESTINATION !== $taxonomy ) {
 			return $link;
 		}
 
@@ -188,7 +192,7 @@ class TZH_Rewrites {
 	 * @param string $link      Current archive link.
 	 * @param string $post_type Post type name.
 	 */
-	public function archive_link( string $link, string $post_type ): string {
+	public function archive_link( $link, $post_type = '' ) {
 		if ( TZH_Package::POST_TYPE !== $post_type ) {
 			return $link;
 		}

@@ -35,7 +35,11 @@ class TZH_Package_Columns {
 	 *
 	 * @return array<string, string>
 	 */
-	public function columns( array $columns ): array {
+	public function columns( $columns ) {
+		if ( ! is_array( $columns ) ) {
+			return $columns;
+		}
+
 		$date = $columns['date'] ?? '';
 		unset( $columns['date'] );
 
@@ -66,7 +70,7 @@ class TZH_Package_Columns {
 	 * @param string $column  Column key.
 	 * @param int    $post_id Package ID.
 	 */
-	public function render( string $column, int $post_id ): void {
+	public function render( $column = '', $post_id = 0 ) {
 		$package = TZH_Package::from( $post_id );
 
 		if ( ! $package ) {
@@ -117,7 +121,11 @@ class TZH_Package_Columns {
 	 *
 	 * @return array<string, string>
 	 */
-	public function sortable( array $columns ): array {
+	public function sortable( $columns ) {
+		if ( ! is_array( $columns ) ) {
+			return $columns;
+		}
+
 		$columns['tzh_code']     = 'tzh_serial';
 		$columns['tzh_price']    = 'tzh_price';
 		$columns['tzh_duration'] = 'tzh_days';

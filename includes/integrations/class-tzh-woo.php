@@ -222,8 +222,8 @@ class TZH_Woo {
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function from_session( array $item, array $session ): array {
-		if ( isset( $session[ self::ITEM_KEY ] ) ) {
+	public function from_session( $item, $session = array() ) {
+		if ( is_array( $item ) && is_array( $session ) && isset( $session[ self::ITEM_KEY ] ) ) {
 			$item[ self::ITEM_KEY ] = $session[ self::ITEM_KEY ];
 		}
 
@@ -263,10 +263,10 @@ class TZH_Woo {
 	 *
 	 * @return array<int, array{key: string, value: string}>
 	 */
-	public function cart_details( array $data, array $item ): array {
-		$booking = $item[ self::ITEM_KEY ] ?? null;
+	public function cart_details( $data, $item = array() ) {
+		$booking = is_array( $item ) ? ( $item[ self::ITEM_KEY ] ?? null ) : null;
 
-		if ( ! is_array( $booking ) ) {
+		if ( ! is_array( $data ) || ! is_array( $booking ) ) {
 			return $data;
 		}
 
@@ -287,10 +287,10 @@ class TZH_Woo {
 	 * @param array<string, mixed> $item Cart item.
 	 * @param string               $key  Cart item key.
 	 */
-	public function cart_name( string $name, array $item, string $key ): string {
+	public function cart_name( $name, $item = array(), $key = '' ) {
 		unset( $key );
 
-		$package = $this->package_of( $item );
+		$package = is_array( $item ) ? $this->package_of( $item ) : null;
 
 		if ( ! $package ) {
 			return $name;
@@ -310,10 +310,10 @@ class TZH_Woo {
 	 * @param array<string, mixed> $item      Cart item.
 	 * @param string               $key       Cart item key.
 	 */
-	public function cart_permalink( string $permalink, array $item, string $key ): string {
+	public function cart_permalink( $permalink, $item = array(), $key = '' ) {
 		unset( $key );
 
-		$package = $this->package_of( $item );
+		$package = is_array( $item ) ? $this->package_of( $item ) : null;
 
 		return $package ? (string) get_permalink( $package->id() ) : $permalink;
 	}

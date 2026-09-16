@@ -61,8 +61,8 @@ class TZH_Seo {
 	 *
 	 * @return array<string, string>
 	 */
-	public function title( array $parts ): array {
-		if ( self::seo_plugin_active() ) {
+	public function title( $parts ) {
+		if ( ! is_array( $parts ) || self::seo_plugin_active() ) {
 			return $parts;
 		}
 
@@ -172,8 +172,8 @@ class TZH_Seo {
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function hide_mirror_products( array $args, string $post_type ): array {
-		if ( 'product' !== $post_type ) {
+	public function hide_mirror_products( $args, $post_type = '' ) {
+		if ( ! is_array( $args ) || 'product' !== $post_type ) {
 			return $args;
 		}
 

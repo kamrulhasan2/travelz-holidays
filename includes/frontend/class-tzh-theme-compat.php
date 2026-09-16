@@ -80,7 +80,7 @@ class TZH_Theme_Compat {
 	 * @param bool   $is_active Whether the sidebar has widgets.
 	 * @param string $index     Sidebar id.
 	 */
-	public function hide_sidebar( bool $is_active, $index ): bool {
+	public function hide_sidebar( $is_active, $index = '' ) {
 		if ( in_array( (string) $index, array( 'sidebar-1', 'sidebar-2' ), true ) ) {
 			return false;
 		}
@@ -95,7 +95,11 @@ class TZH_Theme_Compat {
 	 *
 	 * @return string[]
 	 */
-	public function body_class( array $classes ): array {
+	public function body_class( $classes ) {
+		if ( ! is_array( $classes ) ) {
+			return $classes;
+		}
+
 		if ( self::is_plugin_screen() ) {
 			$classes[] = 'tzh-screen';
 		}

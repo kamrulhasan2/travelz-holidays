@@ -135,7 +135,11 @@ class TZH_Term_Fields {
 	 *
 	 * @return array<string, string>
 	 */
-	public function columns( array $columns ): array {
+	public function columns( $columns ) {
+		if ( ! is_array( $columns ) ) {
+			return $columns;
+		}
+
 		$screen = get_current_screen();
 
 		if ( $screen && TZH_Package::TAX_DESTINATION === $screen->taxonomy ) {
@@ -162,7 +166,7 @@ class TZH_Term_Fields {
 	 * @param string $column  Column key.
 	 * @param int    $term_id Term ID.
 	 */
-	public function column( string $content, string $column, int $term_id ): string {
+	public function column( $content, $column = '', $term_id = 0 ) {
 		switch ( $column ) {
 			case 'tzh_image':
 				$image_id = TZH_Term_Meta::image_id( $term_id );
@@ -192,7 +196,7 @@ class TZH_Term_Fields {
 	 *
 	 * @param string $hook_suffix Current screen hook.
 	 */
-	public function enqueue( string $hook_suffix ): void {
+	public function enqueue( $hook_suffix = '' ) {
 		if ( ! in_array( $hook_suffix, array( 'edit-tags.php', 'term.php' ), true ) ) {
 			return;
 		}
