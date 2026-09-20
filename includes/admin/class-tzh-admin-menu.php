@@ -245,6 +245,22 @@ class TZH_Admin_Menu {
 			TZH_Assets::version( 'assets/css/admin.css' )
 		);
 
+		if ( ( $this->screens['bookings'] ?? '' ) === $hook_suffix ) {
+			wp_enqueue_script(
+				'tzh-bookings',
+				TZH_URL . 'assets/js/bookings.js',
+				array(),
+				TZH_Assets::version( 'assets/js/bookings.js' ),
+				true
+			);
+
+			wp_localize_script(
+				'tzh-bookings',
+				'tzhBookings',
+				array( 'saving' => __( 'Saving…', 'travelz-holidays' ) )
+			);
+		}
+
 		if ( ( $this->screens['setup'] ?? '' ) === $hook_suffix ) {
 			wp_enqueue_script(
 				'tzh-setup',

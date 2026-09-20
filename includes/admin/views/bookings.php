@@ -9,9 +9,16 @@
  * @var int|null                              $paged    Current page.
  * @var int|null                              $pages    Total pages.
  * @var int|null                              $total    Total orders.
+ * @var array<string, string>|null            $statuses WooCommerce order statuses.
+ * @var bool|null                             $editable Whether statuses may be changed.
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only confirmation message.
+$tzh_changed = isset( $_GET['tzh-status'] ) ? sanitize_key( wp_unslash( $_GET['tzh-status'] ) ) : '';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only confirmation message.
+$tzh_order = isset( $_GET['tzh-order'] ) ? sanitize_text_field( wp_unslash( $_GET['tzh-order'] ) ) : '';
 ?>
 <div class="wrap tzh-wrap">
 	<h1><?php esc_html_e( 'Bookings', 'travelz-holidays' ); ?></h1>
@@ -24,6 +31,27 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<?php return; ?>
+	<?php endif; ?>
+
+	<?php if ( '' !== $tzh_changed ) : ?>
+		<?php if ( 'failed' === $tzh_changed ) : ?>
+			<div class="notice notice-error is-dismissible">
+				<p><?php esc_html_e( 'That status could not be applied. The order may have been deleted.', 'travelz-holidays' ); ?></p>
+			</div>
+		<?php else : ?>
+			<div class="notice notice-success is-dismissible">
+				<p>
+					<?php
+					printf(
+						/* translators: 1: order number, 2: status name */
+						esc_html__( 'Order #%1$s is now %2$s.', 'travelz-holidays' ),
+						esc_html( $tzh_order ),
+						esc_html( wc_get_order_status_name( $tzh_changed ) )
+					);
+					?>
+				</p>
+			</div>
+		<?php endif; ?>
 	<?php endif; ?>
 
 	<p class="tzh-lede">
@@ -91,7 +119,37 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 						</td>
 						<td><?php echo wp_kses_post( wc_price( (float) $row['total'] ) ); ?></td>
-						<td><?php echo esc_html( (string) $row['status'] ); ?></td>
+						<td>
+							<?php if ( empty( $editable ) || empty( $row['first'] ) ) : ?>
+								<span class="tzh-state tzh-state--<?php echo esc_attr( str_replace( 'wc-', '', (string) $row['state'] ) ); ?>">
+									<?php echo esc_html( (string) $row['status'] ); ?>
+								</span>
+							<?php else : ?>
+								<form class="tzh-status" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+									<?php wp_nonce_field( TZH_Bookings_Page::ACTION . '-' . (int) $row['order'] ); ?>
+									<input type="hidden" name="action" value="<?php echo esc_attr( TZH_Bookings_Page::ACTION ); ?>" />
+									<input type="hidden" name="order" value="<?php echo esc_attr( (string) $row['order'] ); ?>" />
+
+									<label class="screen-reader-text" for="tzh-status-<?php echo esc_attr( (string) $row['order'] ); ?>">
+										<?php esc_html_e( 'Booking status', 'travelz-holidays' ); ?>
+									</label>
+									<select class="tzh-status__select" name="status"
+										id="tzh-status-<?php echo esc_attr( (string) $row['order'] ); ?>"
+										data-initial="<?php echo esc_attr( (string) $row['state'] ); ?>">
+										<?php foreach ( (array) $statuses as $tzh_key => $tzh_label ) : ?>
+											<option value="<?php echo esc_attr( (string) $tzh_key ); ?>"
+												<?php selected( (string) $tzh_key, (string) $row['state'] ); ?>>
+												<?php echo esc_html( (string) $tzh_label ); ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+
+									<button type="submit" class="button button-small tzh-status__go">
+										<?php esc_html_e( 'Update', 'travelz-holidays' ); ?>
+									</button>
+								</form>
+							<?php endif; ?>
+						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

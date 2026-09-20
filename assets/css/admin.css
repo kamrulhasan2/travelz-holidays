@@ -885,6 +885,60 @@ select.tzh-input {
 	font-size: 12px;
 }
 
+.tzh-status {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tzh-wrap .tzh-status__select {
+	max-width: 150px;
+	min-height: 30px;
+	padding: 0 24px 0 8px;
+	font-size: 13px;
+	line-height: 28px;
+}
+
+/* Once the script is running the button is a save button, so it only appears
+   for a row whose status has actually been changed. Without JS it is simply
+   always there and the form still submits. */
+.tzh-status--live .tzh-status__go {
+	visibility: hidden;
+}
+
+.tzh-status--dirty .tzh-status__go {
+	visibility: visible;
+}
+
+.tzh-state {
+	display: inline-block;
+	padding: 3px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.6;
+	color: #50575e;
+	background: #f0f0f1;
+}
+
+.tzh-state--processing,
+.tzh-state--on-hold {
+	color: #8a5700;
+	background: #fcf3dc;
+}
+
+.tzh-state--completed {
+	color: #1f6f43;
+	background: #e3f4e9;
+}
+
+.tzh-state--cancelled,
+.tzh-state--failed,
+.tzh-state--refunded {
+	color: #8a2424;
+	background: #fbeaea;
+}
+
 /* ---------- Setup guide ---------- */
 
 .tzh-progress {
