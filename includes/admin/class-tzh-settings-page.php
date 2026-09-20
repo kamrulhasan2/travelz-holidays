@@ -88,6 +88,15 @@ class TZH_Settings_Page {
 
 		$clean['visa_note'] = sanitize_textarea_field( (string) ( $input['visa_note'] ?? '' ) );
 
+		// GitHub tokens are ASCII; anything else is a paste accident.
+		$clean['github_token'] = preg_replace( '/[^A-Za-z0-9_\-]/', '', (string) ( $input['github_token'] ?? '' ) );
+
+		// A cached "latest version" was answered with the old credentials, so
+		// it stops being trustworthy the moment the token changes.
+		if ( $clean['github_token'] !== (string) TZH_Settings::get( 'github_token', '' ) ) {
+			delete_site_transient( TZH_Updater::CACHE );
+		}
+
 		TZH_Settings::flush();
 
 		return $clean;

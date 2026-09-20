@@ -1,0 +1,50 @@
+name: Release
+
+# Pushing a version tag builds a clean plugin zip and publishes it as a
+# GitHub Release. The plugin's own updater prefers that zip over GitHub's
+# source archive, so what a site installs holds only the plugin's files.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the version from the plugin header
+        id: version
+        run: |
+          HEADER=$(grep -m1 -oP '^\s*\*\s*Version:\s*\K.+' travelz-holidays.php | tr -d '[:space:]')
+          TAG="${GITHUB_REF_NAME#v}"
+          echo "header=$HEADER" >> "$GITHUB_OUTPUT"
+          if [ "$HEADER" != "$TAG" ]; then
+            echo "Tag $TAG does not match the plugin header version $HEADER." >&2
+            exit 1
+          fi
+
+      - name: Build the plugin zip
+        run: |
+          mkdir -p build/travelz-holidays
+          rsync -a ./ build/travelz-holidays \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'build' \
+            --exclude '.gitignore' \
+            --exclude '.distignore' \
+            --exclude 'node_modules' \
+            --exclude '*.md'
+          cd build && zip -qr "../travelz-holidays-${{ steps.version.outputs.header }}.zip" travelz-holidays
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: travelz-holidays-${{ steps.version.outputs.header }}.zip

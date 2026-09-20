@@ -268,6 +268,53 @@ $tzh_lines = static function ( $value ): string {
 			</div>
 		</div>
 
+		<div class="tzh-panel">
+			<h2><?php esc_html_e( 'Updates', 'travelz-holidays' ); ?></h2>
+
+			<p class="description">
+				<?php
+				printf(
+					/* translators: %s: repository link. */
+					esc_html__( 'This plugin updates itself from %s. When a new release is published there, WordPress shows it on the Plugins screen like any other update.', 'travelz-holidays' ),
+					'<a href="' . esc_url( ( new TZH_Updater() )->repo_url() ) . '" target="_blank" rel="noopener">GitHub</a>'
+				);
+				?>
+			</p>
+
+			<p>
+				<a class="button" href="<?php echo esc_url( ( new TZH_Updater() )->check_url() ); ?>">
+					<?php esc_html_e( 'Check for updates now', 'travelz-holidays' ); ?>
+				</a>
+				<span class="description" style="margin-left:8px;">
+					<?php
+					printf(
+						/* translators: %s: version number. */
+						esc_html__( 'Installed version: %s', 'travelz-holidays' ),
+						esc_html( TZH_VERSION )
+					);
+					?>
+				</span>
+			</p>
+
+			<table class="form-table" role="presentation">
+				<tbody>
+				<tr>
+					<th scope="row">
+						<label for="tzh-github-token"><?php esc_html_e( 'GitHub token', 'travelz-holidays' ); ?></label>
+					</th>
+					<td>
+						<input type="password" id="tzh-github-token" class="regular-text" autocomplete="off"
+							name="<?php echo esc_attr( $tzh_name( 'github_token' ) ); ?>"
+							value="<?php echo esc_attr( (string) ( $values['github_token'] ?? '' ) ); ?>" />
+						<p class="description">
+							<?php esc_html_e( 'Only needed if the repository is private. Leave empty for a public repository. A TZH_GITHUB_TOKEN constant in wp-config.php is used instead when it exists.', 'travelz-holidays' ); ?>
+						</p>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<?php submit_button(); ?>
 	</form>
 </div>

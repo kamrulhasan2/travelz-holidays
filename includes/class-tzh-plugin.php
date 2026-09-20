@@ -111,6 +111,12 @@ final class TZH_Plugin {
 			'cache'      => 'TZH_Cache',
 		);
 
+		// The updater also has to run outside the admin: WordPress checks for
+		// plugin updates from cron, which is what makes auto-updates work.
+		if ( is_admin() || wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			$modules['updater'] = 'TZH_Updater';
+		}
+
 		if ( is_admin() ) {
 			$modules['admin_menu']      = 'TZH_Admin_Menu';
 			$modules['admin_notices']   = 'TZH_Admin_Notices';

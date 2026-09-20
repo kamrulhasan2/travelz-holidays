@@ -12,6 +12,10 @@
 defined( 'ABSPATH' ) || exit;
 
 $total = count( $steps );
+
+$tzh_updater   = new TZH_Updater();
+$tzh_repo      = $tzh_updater->repo_url();
+$tzh_check_url = $tzh_updater->check_url();
 ?>
 <div class="wrap tzh-wrap tzh-setup">
 	<h1><?php esc_html_e( 'Setup Guide', 'travelz-holidays' ); ?></h1>
@@ -111,6 +115,50 @@ $total = count( $steps );
 					<?php esc_html_e( 'The plugin already tells LiteSpeed, WP Rocket and W3 Total Cache to skip it. If you use another cache plugin, exclude any URL ending in /book/ by hand.', 'travelz-holidays' ); ?>
 				</li>
 			</ul>
+		</section>
+
+		<section class="tzh-panel">
+			<h2><?php esc_html_e( 'Updates', 'travelz-holidays' ); ?></h2>
+
+			<p class="description">
+				<?php
+				printf(
+					/* translators: %s: repository link. */
+					esc_html__( 'The plugin checks %s for new versions, so an update arrives on the Plugins screen the same way it would for any plugin from the directory.', 'travelz-holidays' ),
+					'<a href="' . esc_url( $tzh_repo ) . '" target="_blank" rel="noopener">GitHub</a>'
+				);
+				?>
+			</p>
+
+			<ol class="tzh-tips">
+				<li>
+					<b><?php esc_html_e( 'Bump the version.', 'travelz-holidays' ); ?></b>
+					<?php esc_html_e( 'Edit travelz-holidays.php: the Version line in the header and the TZH_VERSION constant must match. This number is what every site compares against.', 'travelz-holidays' ); ?>
+				</li>
+				<li>
+					<b><?php esc_html_e( 'Push the code.', 'travelz-holidays' ); ?></b>
+					<code>git push origin main</code>
+				</li>
+				<li>
+					<b><?php esc_html_e( 'Publish a release.', 'travelz-holidays' ); ?></b>
+					<?php esc_html_e( 'Tag it with the same version — v0.1.2 — and write the release notes; they show up in the plugin\'s "View details" window.', 'travelz-holidays' ); ?>
+					<code>git tag v0.1.2 &amp;&amp; git push origin v0.1.2</code>
+				</li>
+				<li>
+					<b><?php esc_html_e( 'The site picks it up.', 'travelz-holidays' ); ?></b>
+					<?php esc_html_e( 'Within six hours, or immediately via "Check for updates" on the Plugins screen. Turn on auto-updates there and the site installs it by itself.', 'travelz-holidays' ); ?>
+				</li>
+			</ol>
+
+			<p class="description">
+				<?php esc_html_e( 'With no release published yet, the version in the plugin header on the main branch is used instead, and the branch is downloaded as the update. A private repository needs a token in Settings → Updates.', 'travelz-holidays' ); ?>
+			</p>
+
+			<p>
+				<a class="button" href="<?php echo esc_url( $tzh_check_url ); ?>">
+					<?php esc_html_e( 'Check for updates now', 'travelz-holidays' ); ?>
+				</a>
+			</p>
 		</section>
 
 	</div>
