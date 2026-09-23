@@ -9,9 +9,12 @@
  *
  * @var array<string, mixed> $filters Sanitized filters.
  * @var string               $action  Form action URL.
+ * @var string|null          $reset   Where "Clear Filters" goes back to.
  */
 
 defined( 'ABSPATH' ) || exit;
+
+$reset = isset( $reset ) && '' !== $reset ? (string) $reset : $action;
 
 $tzh_destinations = TZH_Term_Meta::ordered( TZH_Package::TAX_DESTINATION, true );
 $tzh_tiers        = TZH_Term_Meta::ordered( TZH_Package::TAX_TIER, true );
@@ -27,7 +30,9 @@ $tzh_bounds       = $filters['bounds'];
 			<div class="tz-filters__scroll">
 				<?php foreach ( $tzh_destinations as $tzh_term ) : ?>
 					<label class="tz-opt">
+						<?php // The country's own page, so clearing can return to it. ?>
 						<input type="checkbox" name="dest[]" value="<?php echo esc_attr( $tzh_term->slug ); ?>"
+							data-tz-url="<?php echo esc_url( TZH_Rewrites::destination_url( $tzh_term->slug ) ); ?>"
 							<?php checked( in_array( $tzh_term->slug, $filters['dest'], true ) ); ?> />
 						<span><?php echo esc_html( $tzh_term->name ); ?></span>
 					</label>
@@ -118,7 +123,8 @@ $tzh_bounds       = $filters['bounds'];
 			<?php esc_html_e( 'Apply Filters', 'travelz-holidays' ); ?>
 		</button>
 
-		<a class="tz-link" href="<?php echo esc_url( $action ); ?>" data-tz-filters-clear>
+		<a class="tz-link" href="<?php echo esc_url( $reset ); ?>"
+			data-tz-filters-clear data-tz-grid="<?php echo esc_url( $action ); ?>">
 			<?php esc_html_e( 'Clear Filters', 'travelz-holidays' ); ?>
 		</a>
 	</div>

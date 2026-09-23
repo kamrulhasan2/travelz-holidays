@@ -203,6 +203,33 @@
 		}
 
 		var token = 0;
+		var clear = form.querySelector( '[data-tz-filters-clear]' );
+		var grid = ( clear && clear.getAttribute( 'data-tz-grid' ) ) || form.action;
+
+		/*
+		 * Where the current selection lives. One country has a page of its own
+		 * and that is where it belongs; two or more belong to the catalogue,
+		 * which is tied to no country in particular.
+		 */
+		function home() {
+			var picked = form.querySelectorAll( 'input[name="dest[]"]:checked' );
+
+			if ( 1 === picked.length && picked[ 0 ].getAttribute( 'data-tz-url' ) ) {
+				return picked[ 0 ].getAttribute( 'data-tz-url' );
+			}
+
+			return grid;
+		}
+
+		// Clearing undoes the filters, not the journey: it goes back to the
+		// country being browsed rather than to the top of the catalogue.
+		function syncClear() {
+			if ( clear ) {
+				clear.href = home();
+			}
+		}
+
+		syncClear();
 
 		function load( page, push ) {
 			var data = new FormData( form );
@@ -236,8 +263,18 @@
 					results = main.querySelector( '[data-tz-results]' );
 
 					if ( push && window.history.pushState ) {
-						var query = params.toString();
-						window.history.pushState( {}, '', query ? form.action + '?' + query : form.action );
+						var base = home();
+						var shown = new URLSearchParams( params.toString() );
+
+						// On a country's own page the country is already in the
+						// path, so repeating it in the query would only make
+						// the URL longer and the page harder to share.
+						if ( base !== grid ) {
+							shown.delete( 'dest[]' );
+						}
+
+						var query = shown.toString();
+						window.history.pushState( {}, '', query ? base + '?' + query : base );
 					}
 				} )
 				.catch( function () {
@@ -252,6 +289,7 @@
 		var debounce = null;
 
 		form.addEventListener( 'change', function () {
+			syncClear();
 			load( 1, true );
 		} );
 

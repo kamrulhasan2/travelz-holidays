@@ -26,6 +26,16 @@ $tzh_action = TZH_Rewrites::grid_url();
 $tzh_blurb  = $tzh_term ? TZH_Term_Meta::blurb( $tzh_term->term_id ) : (string) TZH_Settings::get( 'archive_subtitle', '' );
 $tzh_title  = $tzh_term ? $tzh_term->name : (string) TZH_Settings::get( 'archive_title', __( 'Holiday Packages', 'travelz-holidays' ) );
 
+/*
+ * "Clear Filters" undoes the filtering, not the visitor's whole journey: it
+ * returns to the country page they came in through rather than to the top of
+ * the catalogue. On the catalogue itself a single ticked country still has a
+ * page of its own, and that is the page to go back to.
+ */
+$tzh_reset = TZH_Rewrites::destination_url(
+	$tzh_term ? $tzh_term->slug : ( 1 === count( $tzh_filters['dest'] ) ? $tzh_filters['dest'][0] : '' )
+);
+
 ?>
 <div id="tz-app">
 	<?php
@@ -66,6 +76,7 @@ $tzh_title  = $tzh_term ? $tzh_term->name : (string) TZH_Settings::get( 'archive
 					array(
 						'filters' => $tzh_filters,
 						'action'  => $tzh_action,
+						'reset'   => $tzh_reset,
 					)
 				);
 				?>

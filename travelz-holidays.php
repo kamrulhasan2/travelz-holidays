@@ -3,7 +3,7 @@
  * Plugin Name:       TravelZ Holidays
  * Plugin URI:        https://github.com/kamrulhasan2/travelz-holidays
  * Description:       Holiday package management for TravelZ — destinations, tour packages, itineraries, pricing tiers and bookings.
- * Version:           0.1.3
+ * Version:           0.1.4
  * Requires at least: 6.4
  * Requires PHP:      8.0
  * Author:            Kamrul Hasan
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TZH_VERSION', '0.1.3' );
+define( 'TZH_VERSION', '0.1.4' );
 define( 'TZH_FILE', __FILE__ );
 define( 'TZH_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TZH_URL', plugin_dir_url( __FILE__ ) );

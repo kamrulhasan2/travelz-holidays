@@ -99,6 +99,19 @@ class TZH_Rewrites {
 	}
 
 	/**
+	 * URL of one destination's package list, or the grid when there isn't one.
+	 *
+	 * @param string $slug Destination slug. An empty slug gives the grid.
+	 */
+	public static function destination_url( string $slug ): string {
+		if ( '' === $slug ) {
+			return self::grid_url();
+		}
+
+		return user_trailingslashit( home_url( '/' . self::base() . '/' . $slug . '/' ) );
+	}
+
+	/**
 	 * Add the rules, most specific first.
 	 */
 	public function add_rules(): void {
