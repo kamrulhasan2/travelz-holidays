@@ -1492,7 +1492,8 @@
 
 #tz-app .tz-toasts {
 	position: fixed;
-	top: 16px;
+	/* JS sets --tz-toast-top below the admin bar / sticky header. */
+	top: var(--tz-toast-top, 16px);
 	left: 50%;
 	z-index: 9999;
 	display: grid;

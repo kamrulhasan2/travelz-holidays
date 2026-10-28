@@ -23,6 +23,33 @@
 
 	/* ---------- Toasts ---------- */
 
+	/*
+	 * Keep toasts clear of whatever is pinned to the top of the screen: the
+	 * admin bar and a sticky / fixed site header. Measured on every toast
+	 * because the header can change height on scroll or between breakpoints.
+	 */
+	function toastTopOffset() {
+		var bottom = 0;
+		var pinned = document.querySelectorAll( '#wpadminbar, .ekit-template-content-header, #masthead, header.site-header, .site-header' );
+
+		Array.prototype.forEach.call( pinned, function ( el ) {
+			var position = window.getComputedStyle( el ).position;
+
+			if ( 'fixed' !== position && 'sticky' !== position ) {
+				return;
+			}
+
+			var rect = el.getBoundingClientRect();
+
+			// Only count it while it is actually covering the top edge.
+			if ( rect.top <= 1 && rect.bottom > bottom ) {
+				bottom = rect.bottom;
+			}
+		} );
+
+		return Math.round( bottom ) + 16;
+	}
+
 	function toast( message, options ) {
 		options = options || {};
 
@@ -38,6 +65,8 @@
 			// parked on <body> would arrive with no styling at all.
 			( document.getElementById( 'tz-app' ) || document.body ).appendChild( host );
 		}
+
+		host.style.setProperty( '--tz-toast-top', toastTopOffset() + 'px' );
 
 		var box = document.createElement( 'div' );
 		box.className = 'tz-toast' + ( options.type ? ' tz-toast--' + options.type : '' );
