@@ -33,6 +33,8 @@ class TZH_Settings {
 	public static function defaults(): array {
 		return array(
 			'whatsapp'          => '',
+			'whatsapp_enabled'  => true,
+			'whatsapp_message'  => __( 'Hi, I would like to know more about {package}.', 'travelz-holidays' ),
 			'currency_symbol'   => '৳',
 			'woo_checkout'      => true,
 			'price_min'         => 0,
@@ -108,6 +110,62 @@ class TZH_Settings {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * WhatsApp number in the digits-only form wa.me expects.
+	 *
+	 * Accepts what people actually type — "+88 01711-258451", "01711258451" —
+	 * and turns a local Bangladeshi mobile number into its international form.
+	 */
+	public static function whatsapp_number(): string {
+		$digits = preg_replace( '/\D+/', '', (string) self::get( 'whatsapp', '' ) );
+
+		if ( 11 === strlen( $digits ) && 0 === strpos( $digits, '01' ) ) {
+			$digits = '88' . $digits;
+		}
+
+		return $digits;
+	}
+
+	/**
+	 * Whether the WhatsApp buttons should be shown at all.
+	 */
+	public static function whatsapp_active(): bool {
+		return ! empty( self::all()['whatsapp_enabled'] ) && '' !== self::whatsapp_number();
+	}
+
+	/**
+	 * Chat link with a pre-filled message, or '' when WhatsApp is off.
+	 *
+	 * @param string $message Text to pre-fill.
+	 */
+	public static function whatsapp_url( string $message = '' ): string {
+		if ( ! self::whatsapp_active() ) {
+			return '';
+		}
+
+		$url = 'https://wa.me/' . self::whatsapp_number();
+
+		return '' === $message ? $url : $url . '?text=' . rawurlencode( $message );
+	}
+
+	/**
+	 * The enquiry message for one package, from the saved template.
+	 *
+	 * @param string $package_title Package title.
+	 */
+	public static function whatsapp_enquiry( string $package_title ): string {
+		$template = trim( (string) self::get( 'whatsapp_message', '' ) );
+
+		if ( '' === $template ) {
+			$template = (string) self::defaults()['whatsapp_message'];
+		}
+
+		// Titles arrive texturised (&#8211; and friends); WhatsApp wants plain text.
+		$package_title = html_entity_decode( $package_title, ENT_QUOTES, 'UTF-8' );
+
+		return str_replace( '{package}', $package_title, $template );
 	}
 
 	/**

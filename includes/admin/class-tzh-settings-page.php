@@ -58,7 +58,12 @@ class TZH_Settings_Page {
 		$input  = is_array( $input ) ? $input : array();
 		$clean  = TZH_Settings::defaults();
 
-		$clean['whatsapp'] = preg_replace( '/[^0-9+]/', '', (string) ( $input['whatsapp'] ?? '' ) );
+		// Digits only: wa.me rejects a "+" and the helper fills in the 88 prefix.
+		$clean['whatsapp']         = preg_replace( '/\D+/', '', (string) ( $input['whatsapp'] ?? '' ) );
+		$clean['whatsapp_enabled'] = ! empty( $input['whatsapp_enabled'] );
+
+		$message                   = sanitize_textarea_field( (string) ( $input['whatsapp_message'] ?? '' ) );
+		$clean['whatsapp_message'] = '' === trim( $message ) ? $clean['whatsapp_message'] : $message;
 
 		$symbol                   = trim( (string) ( $input['currency_symbol'] ?? '' ) );
 		$clean['currency_symbol'] = '' === $symbol ? '৳' : sanitize_text_field( $symbol );

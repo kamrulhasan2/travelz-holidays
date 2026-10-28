@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$tzh_whatsapp = (string) TZH_Settings::get( 'whatsapp', '' );
+$tzh_whatsapp = TZH_Settings::whatsapp_active();
 $tzh_date     = TZH_Booking::date_label( (string) $party['date'] );
 
 $tzh_message = sprintf(
@@ -82,9 +82,9 @@ $tzh_message = sprintf(
 	</div>
 
 	<div class="tz-done__actions">
-		<?php if ( '' !== $tzh_whatsapp ) : ?>
+		<?php if ( $tzh_whatsapp ) : ?>
 			<a class="tz-btn tz-btn--teal tz-btn--lg"
-				href="<?php echo esc_url( 'https://wa.me/' . rawurlencode( $tzh_whatsapp ) . '?text=' . rawurlencode( $tzh_message ) ); ?>"
+				href="<?php echo esc_url( TZH_Settings::whatsapp_url( $tzh_message ) ); ?>"
 				target="_blank" rel="noopener noreferrer">
 				<?php echo tzh_icon( 'whatsapp', array( 'class' => 'tz-icon--fill' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed sprite id. ?>
 				<?php esc_html_e( 'Confirm on WhatsApp', 'travelz-holidays' ); ?>

@@ -201,9 +201,21 @@ $tzh_first = (string) array_key_first( $tzh_tabs );
 				</span>
 			</div>
 
-			<a class="tz-btn tz-btn--sunset tz-btn--lg tz-stickybar__book" href="<?php echo esc_url( $tzh_package->action_url( 'book' ) ); ?>">
-				<?php esc_html_e( 'Book Now', 'travelz-holidays' ); ?>
-			</a>
+			<div class="tz-stickybar__actions">
+				<?php $tzh_wa = TZH_Settings::whatsapp_url( TZH_Settings::whatsapp_enquiry( get_the_title( $tzh_package->id() ) ) ); ?>
+				<?php if ( '' !== $tzh_wa ) : ?>
+					<a class="tz-btn tz-btn--teal-outline tz-btn--icon tz-btn--wa"
+						href="<?php echo esc_url( $tzh_wa ); ?>"
+						target="_blank" rel="noopener noreferrer"
+						aria-label="<?php esc_attr_e( 'Chat on WhatsApp', 'travelz-holidays' ); ?>">
+						<?php echo tzh_icon( 'whatsapp', array( 'class' => 'tz-icon--fill' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed sprite id. ?>
+					</a>
+				<?php endif; ?>
+
+				<a class="tz-btn tz-btn--sunset tz-btn--lg tz-stickybar__book" href="<?php echo esc_url( $tzh_package->action_url( 'book' ) ); ?>">
+					<?php esc_html_e( 'Book Now', 'travelz-holidays' ); ?>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

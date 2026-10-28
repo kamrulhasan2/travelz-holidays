@@ -2013,6 +2013,33 @@ body.tz-locked {
 	max-width: 14rem;
 }
 
+#tz-app .tz-stickybar__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1;
+	justify-content: flex-end;
+}
+
+/* WhatsApp enquiry button: WhatsApp green on hover so it reads instantly. */
+#tz-app .tz-btn--wa {
+	color: #128C7E;
+	border-color: rgba(18, 140, 126, .35);
+	background: rgba(37, 211, 102, .08);
+}
+
+#tz-app .tz-btn--wa:hover,
+#tz-app .tz-btn--wa:focus-visible {
+	color: #fff;
+	border-color: #25D366;
+	background: #25D366;
+}
+
+#tz-app .tz-stickybar .tz-btn--wa {
+	width: 44px;
+	height: 44px;
+}
+
 /*
  * Without a banner the hero would be a tall grey slab. Give it the brand
  * gradient and less height, so a package published before its photography is

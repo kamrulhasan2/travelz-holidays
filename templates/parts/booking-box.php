@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$tzh_whatsapp = (string) TZH_Settings::get( 'whatsapp', '' );
+$tzh_whatsapp = TZH_Settings::whatsapp_url( TZH_Settings::whatsapp_enquiry( get_the_title( $package->id() ) ) );
 ?>
 <div class="tz-booking">
 	<span class="tz-meta"><?php esc_html_e( 'Starting from', 'travelz-holidays' ); ?></span>
@@ -29,9 +29,10 @@ $tzh_whatsapp = (string) TZH_Settings::get( 'whatsapp', '' );
 
 	<div class="tz-booking__actions">
 		<?php if ( '' !== $tzh_whatsapp ) : ?>
-			<a class="tz-btn tz-btn--teal-outline tz-btn--icon"
-				href="<?php echo esc_url( 'https://wa.me/' . rawurlencode( $tzh_whatsapp ) . '?text=' . rawurlencode( sprintf( /* translators: %s: package title */ __( 'Hi, I would like to know more about %s.', 'travelz-holidays' ), get_the_title( $package->id() ) ) ) ); ?>"
+			<a class="tz-btn tz-btn--teal-outline tz-btn--icon tz-btn--wa"
+				href="<?php echo esc_url( $tzh_whatsapp ); ?>"
 				target="_blank" rel="noopener noreferrer"
+				title="<?php esc_attr_e( 'Chat on WhatsApp', 'travelz-holidays' ); ?>"
 				aria-label="<?php esc_attr_e( 'Chat on WhatsApp', 'travelz-holidays' ); ?>">
 				<?php echo tzh_icon( 'whatsapp', array( 'class' => 'tz-icon--fill' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed sprite id. ?>
 			</a>

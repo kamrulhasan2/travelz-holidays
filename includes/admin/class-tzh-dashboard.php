@@ -144,7 +144,7 @@ class TZH_Dashboard {
 			);
 		}
 
-		if ( '' === trim( (string) TZH_Settings::get( 'whatsapp', '' ) ) ) {
+		if ( TZH_Settings::get( 'whatsapp_enabled', true ) && '' === TZH_Settings::whatsapp_number() ) {
 			$warnings[] = array(
 				'text'  => __( 'No WhatsApp number is set, so the enquiry button is hidden on every package.', 'travelz-holidays' ),
 				'url'   => tzh_admin_url( 'travelz-holidays-settings' ),

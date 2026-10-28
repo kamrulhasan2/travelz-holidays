@@ -50,6 +50,20 @@ $tzh_lines = static function ( $value ): string {
 			<table class="form-table" role="presentation">
 				<tbody>
 				<tr>
+					<th scope="row"><?php esc_html_e( 'WhatsApp button', 'travelz-holidays' ); ?></th>
+					<td>
+						<label for="tzh-whatsapp-enabled">
+							<input type="checkbox" id="tzh-whatsapp-enabled" value="1"
+								name="<?php echo esc_attr( $tzh_name( 'whatsapp_enabled' ) ); ?>"
+								<?php checked( ! empty( $values['whatsapp_enabled'] ) ); ?> />
+							<?php esc_html_e( 'Show the WhatsApp enquiry button on packages', 'travelz-holidays' ); ?>
+						</label>
+						<p class="description">
+							<?php esc_html_e( 'Appears next to Book Now (desktop and the mobile bottom bar) and on the booking confirmation screen. Untick to hide it everywhere without deleting the number.', 'travelz-holidays' ); ?>
+						</p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row">
 						<label for="tzh-whatsapp"><?php esc_html_e( 'WhatsApp number', 'travelz-holidays' ); ?></label>
 					</th>
@@ -57,9 +71,32 @@ $tzh_lines = static function ( $value ): string {
 						<input type="text" id="tzh-whatsapp" class="regular-text"
 							name="<?php echo esc_attr( $tzh_name( 'whatsapp' ) ); ?>"
 							value="<?php echo esc_attr( (string) $values['whatsapp'] ); ?>"
-							placeholder="8801700000000" />
+							placeholder="8801711258451" />
 						<p class="description">
-							<?php esc_html_e( 'Country code first, no plus sign or spaces. Used by the enquiry button on every package.', 'travelz-holidays' ); ?>
+							<?php esc_html_e( 'With country code, e.g. 8801711258451. Spaces, dashes or a + are removed, and a local 01… number gets 88 added automatically.', 'travelz-holidays' ); ?>
+						</p>
+						<?php if ( '' !== TZH_Settings::whatsapp_number() ) : ?>
+							<p class="description">
+								<?php
+								printf(
+									/* translators: %s: test link */
+									esc_html__( 'Test it: %s', 'travelz-holidays' ),
+									'<a href="' . esc_url( 'https://wa.me/' . TZH_Settings::whatsapp_number() ) . '" target="_blank" rel="noopener noreferrer">wa.me/' . esc_html( TZH_Settings::whatsapp_number() ) . '</a>'
+								);
+								?>
+							</p>
+						<?php endif; ?>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
+						<label for="tzh-whatsapp-message"><?php esc_html_e( 'WhatsApp message', 'travelz-holidays' ); ?></label>
+					</th>
+					<td>
+						<textarea id="tzh-whatsapp-message" class="large-text" rows="2"
+							name="<?php echo esc_attr( $tzh_name( 'whatsapp_message' ) ); ?>"><?php echo esc_textarea( (string) $values['whatsapp_message'] ); ?></textarea>
+						<p class="description">
+							<?php esc_html_e( 'Pre-filled when a traveler taps the button on a package. {package} is replaced with the package name.', 'travelz-holidays' ); ?>
 						</p>
 					</td>
 				</tr>
